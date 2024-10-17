@@ -458,8 +458,6 @@ void dibuixa(GLuint sh_programID, char obj, glm::mat4 MatriuVista, glm::mat4 Mat
 	
 	tras[0] = 0.0;	tras[1] = 0.0; tras[2] = 0.0;
 
-	Astre prova(6.0f, sh_programID, MatriuTG, MatriuVista);
-
 	switch(obj)
 	{
 
@@ -503,9 +501,6 @@ void dibuixa(GLuint sh_programID, char obj, glm::mat4 MatriuVista, glm::mat4 Mat
 		glUniformMatrix4fv(glGetUniformLocation(sh_programID, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 		draw_TriEBO_Object(GLU_SPHERE); //draw_TriVAO_Object(GLU_SPHERE); //gluSphere(1.0, 40, 40);
 		//glPopMatrix();
-
-
-		prova.draw();
 
 		break;
 
