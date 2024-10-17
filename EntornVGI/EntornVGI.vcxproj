@@ -235,6 +235,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Astre.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="constants.h" />
@@ -257,6 +258,7 @@
     <ClInclude Include="visualitzacio.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Astre.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="EntornVGI.cpp" />

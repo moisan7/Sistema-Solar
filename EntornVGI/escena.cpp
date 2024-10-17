@@ -15,6 +15,7 @@
 #include "material.h"
 #include "visualitzacio.h"
 #include "escena.h"
+#include "Astre.h"
 
 // Dibuixa Eixos Coordenades Món i Reixes, activant un shader propi.
 void dibuixa_Eixos(GLuint ax_programID, bool eix, GLuint axis_Id, CMask3D reixa, CPunt3D hreixa, 
@@ -457,6 +458,8 @@ void dibuixa(GLuint sh_programID, char obj, glm::mat4 MatriuVista, glm::mat4 Mat
 	
 	tras[0] = 0.0;	tras[1] = 0.0; tras[2] = 0.0;
 
+	Astre prova(6.0f, sh_programID, MatriuTG, MatriuVista);
+
 	switch(obj)
 	{
 
@@ -500,6 +503,10 @@ void dibuixa(GLuint sh_programID, char obj, glm::mat4 MatriuVista, glm::mat4 Mat
 		glUniformMatrix4fv(glGetUniformLocation(sh_programID, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 		draw_TriEBO_Object(GLU_SPHERE); //draw_TriVAO_Object(GLU_SPHERE); //gluSphere(1.0, 40, 40);
 		//glPopMatrix();
+
+
+		prova.draw();
+
 		break;
 
 // Tetera
