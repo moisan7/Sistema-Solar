@@ -22,7 +22,6 @@ public:
 private:
 	vec3 m_radius; // Radi de l'objecte
 	vec3 m_possition; // Possició a on volem tenir l'objecte 
-	// bool m_light_emiter; // Emet llum? WIP
 	GLuint m_sh_programID; // ID del tipus de shader aplicat
 	// Matrius de Transformació
 	mat4 m_normalMatrix,
