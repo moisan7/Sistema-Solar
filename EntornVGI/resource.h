@@ -217,13 +217,16 @@
 #define ID_CORBES_HERMITTE              32897
 #define ID_OBJECTE_CORBA_HERMITTE       32898
 #define ID_CORBES_CATMULLROM            32899
+#define ID_SISTEMASOLAR_START           32900
+#define ID_SISTEMASOLAR_TESTROTACIO     32901
+#define ID_SISTEMASOLAR_TESTTRANSLACIO  32902
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32900
+#define _APS_NEXT_COMMAND_VALUE         32903
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

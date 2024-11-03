@@ -432,6 +432,12 @@ BEGIN
     BEGIN
         MENUITEM "&Acerca de EntornVGI (Tecla ALT)...", ID_APP_ABOUT
     END
+    POPUP "Sistema Solar"
+    BEGIN
+        MENUITEM "Start",                       ID_SISTEMASOLAR_START
+        MENUITEM "Test Rotacio",                ID_SISTEMASOLAR_TESTROTACIO
+        MENUITEM "Test Translacio",             ID_SISTEMASOLAR_TESTTRANSLACIO
+    END
 END
 
 IDR_HELP_MENU MENU
