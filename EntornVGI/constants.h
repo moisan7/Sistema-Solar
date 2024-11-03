@@ -171,6 +171,7 @@ struct INSTANCIA
 {	CPunt3D VTras;	// Vector de Traslació
 	CPunt3D VScal;	// Vector d'Escalatge
 	CPunt3D VRota;	// Vector de Rotació
+	float rotationAngle; // Ángulo de rotación
 };
 
 // --------------- VGI: Coeficients equació d'atenuació de la llum fatt=1/(ad2+bd+c)

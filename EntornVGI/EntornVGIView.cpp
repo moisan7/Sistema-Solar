@@ -215,6 +215,11 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 		// AÑADIDO PARA EL SISTEMA SOLAR:
 		//ON_COMMAND(ID_SISTEMASOLAR_START, &CEntornVGIView::OnSistemasolarStart)
 		//ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_START, &CEntornVGIView::OnUpdateSistemasolarStart)
+		ON_COMMAND(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnSistemasolarTestTranslacio)
+		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnUpdateSistemasolarTestTranslacio)
+		ON_COMMAND(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnSistemasolarTestRotacio)
+		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnUpdateSistemasolarTestRotacio)
+		
 		// FIN AÑADIDO PARA EL SISTEMA SOLAR
 		END_MESSAGE_MAP()
 
@@ -424,7 +429,7 @@ CEntornVGIView::CEntornVGIView()
 	VT = { 0.0, 0.0, 1.0 };		VNP = { 1.0, 0.0, 0.0 };	VBN = { 0.0, 1.0, 0.0 };
 
 // Entorn VGI: Variables del Timer
-	t = 0;			anima = false;
+	t = 0; anima = false; translation = false; rotation = false;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	t_fractal = CAP;	soroll = 'C';
@@ -870,100 +875,10 @@ void CEntornVGIView::OnPaint()
 // Entorn VGI: Activació el contexte OpenGL
 	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
-// Cridem a les funcions de l'escena i la projecció segons s'hagi 
-// seleccionat una projecció o un altra
 	switch (projeccio)
 	{
-	case AXONOM:
-// PROJECCIÓ AXONOMÈTRICA
-// Activació del retall de pantalla
-		glEnable(GL_SCISSOR_TEST);
-
-// Retall
-		glScissor(0, 0, w, h);
-		glViewport(0, 0, w, h);
-
-// Aquí farem les crides per a definir Viewport, Projecció i Càmara: INICI -------------------------
-
-// Aquí farem les cridesper a definir Viewport, Projecció i Càmara:: FI -------------------------
-		// Dibuixar Model (escena)
-		configura_Escena();     // Aplicar Transformacions Geometriques segons persiana Transformacio i configurar objectes
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
-
-// Intercanvia l'escena al front de la pantalla
-		SwapBuffers(m_pDC->GetSafeHdc());
-		break;
-
-	case ORTO:
-// PROJECCIÓ ORTOGRÀFICA
-// Activació del retall de pantalla
-		glEnable(GL_SCISSOR_TEST);
-
-// Retall
-		glScissor(0, 0, w, h);
-		glViewport(0, 0, w, h);
-
-// Fons condicionat al color de fons
-		if ((c_fons.r < 0.5) || (c_fons.g < 0.5) || (c_fons.b<0.5))
-			FonsB();
-		else
-			FonsN();
-
-// Entorn VGI: TO DO -> Aquí farem les quatre crides a ProjeccioOrto i Ortografica per obtenir 
-//						les quatre vistes ortogràfiques. De moment n'activem només una de prova
-//						IMPORTANT: DESCOMENTAR LA RESTA QUAN FUNCIONI LA PRIMERA
-// PLANTA (Inferior Esquerra)
-		// Definició de Viewport, Projecció i Càmara
-		ProjectionMatrix = Projeccio_Orto();
-		ViewMatrix = Vista_Ortografica(shader_programID, 0, OPV.R, c_fons, col_obj, objecte, mida, pas, 
-			front_faces, oculta, test_vis, 
-			ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-			eixos, grid, hgrid);
-		// Dibuix de l'Objecte o l'Escena
-		configura_Escena();     // Aplicar Transformacions Geometriques segons persiana Transformacio i configurar objectes
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
-/*
-// ISOMÈTRICA (Inferior Dreta)
-		// Definició de Viewport, Projecció i Càmara
-		ProjectionMatrix = Projeccio_Orto();
-		ViewMatrix = Vista_Ortografica(shader_programID, 3, OPV.R, c_fons, col_obj, objecte, mida, pas, 
-			front_faces, oculta, test_vis,
-			ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-			eixos, grid, hgrid);
-		// Dibuix de l'Objecte o l'Escena
-		configura_Escena();     // Aplicar Transformacions Geometriques segons persiana Transformacio i configurar objectes
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
-
-// ALÇAT (Superior Esquerra)
-		// Definició de Viewport, Projecció i Càmara
-		ProjectionMatrix = Projeccio_Orto();
-		ViewMatrix = Vista_Ortografica(shader_programID, 1, OPV.R, c_fons, col_obj, objecte, mida, pas, 
-			front_faces, oculta,
-			test_vis, back_line, 
-			ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-			eixos, grid, hgrid);
-		// Dibuix de l'Objecte o l'Escena
-		configura_Escena();     // Aplicar Transformacions Geom?triques segons persiana Transformacio i configurar objectes
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
-
-// PERFIL (Superior Dreta)
-		// Definició de Viewport, Projecció i Càmara
-		ProjectionMatrix = Projeccio_Orto();
-		ViewMatrix = Vista_Ortografica(shader_programID, 2, OPV.R, c_fons, col_obj, objecte, mida, pas, 
-			front_faces, oculta, test_vis, back_line, 
-			ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-			eixos, grid, hgrid);
-		// Dibuix de l'Objecte o l'Escena
-		configura_Escena();     // Aplicar Transformacions Geom?triques segons persiana Transformacio i configurar objectes
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
-*/
-// Intercanvia l'escena al front de la pantalla
-		SwapBuffers(m_pDC->GetSafeHdc());
-		break;
-
 	case PERSPECT:
-// PROJECCIÓ PERSPECTIVA
-		//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Set Perspective Calculations To Most Accurate
+		// PROJECCIÓ PERSPECTIVA
 		glDisable(GL_SCISSOR_TEST);		// Desactivació del retall de pantalla
 
 		// Definició de Viewport, Projecció i Càmara
@@ -978,57 +893,57 @@ void CEntornVGIView::OnPaint()
 				}
 		else if (camera == CAM_NAVEGA) {
 			if (Vis_Polar == POLARZ) {	vpv[0] = 0.0;	vpv[1] = 0.0;	vpv[2] = 1.0;
-									}
+			}
 			else if (Vis_Polar == POLARY) {	vpv[0] = 0.0;	vpv[1] = 1.0;	vpv[2] = 0.0;
-											}
+			}
 			else if (Vis_Polar == POLARX) {	vpv[0] = 1.0;	vpv[1] = 0.0;	vpv[2] = 0.0;
-										}
+			}
 			ViewMatrix = Vista_Navega(shader_programID, opvN, n, vpv, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, true, pas,
 				front_faces, oculta, test_vis,
 				ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
 				eixos, grid, hgrid);
-			}
+		}
 		else if (camera == CAM_GEODE) {
 			ViewMatrix = Vista_Geode(shader_programID, OPV_G, Vis_Polar, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, mida, pas,
 				front_faces, oculta, test_vis,
 				ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
 				eixos, grid, hgrid);
-				}
+		}
 
 		// Dibuix de l'Objecte o l'Escena
 		configura_Escena();     // Aplicar Transformacions Geometriques segons persiana Transformacio i configurar objectes.
 		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
 
-// Intercanvia l'escena al front de la pantalla
+		// Intercanvia l'escena al front de la pantalla
 		SwapBuffers(m_pDC->GetSafeHdc());
 		break;
 
 	default:
-// Càrrega SHADERS
-// Càrrega Shader Eixos
+		// Càrrega SHADERS
+		// Càrrega Shader Eixos
 		if (!eixos_programID) eixos_programID = shaderEixos.loadFileShaders(".\\shaders\\eixos.VERT", ".\\shaders\\eixos.FRAG");
 
-// Càrrega Shader de Gouraud
+		// Càrrega Shader de Gouraud
 		if (!shader_programID) {
 			shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
 			shader = GOURAUD_SHADER;
-			}
+		}
 
-// Entorn VGI: Creació de la llista que dibuixarà els eixos Coordenades Món. Funció on està codi per dibuixar eixos	
+		// Entorn VGI: Creació de la llista que dibuixarà els eixos Coordenades Món. Funció on està codi per dibuixar eixos	
 		if (!eixos_Id) eixos_Id = deixos();						// Funció que defineix els Eixos Coordenades Món com un VAO.
 
-// Crida a la funció Fons Blanc
+		// Crida a la funció Fons Blanc
 		FonsB();
 
-// Intercanvia l'escena al front de la pantalla
+		// Intercanvia l'escena al front de la pantalla
 		SwapBuffers(m_pDC->GetSafeHdc());
 		break;
-}
+	}
 
-// Entorn VGI: Desactivació el contexte OpenGL. Permet la coexistencia d'altres contextes de generació
+	// Entorn VGI: Desactivació el contexte OpenGL. Permet la coexistencia d'altres contextes de generació
 	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
 
-//  Actualitzar la barra d'estat de l'aplicació amb els valors R,A,B,PVx,PVy,PVz
+	//  Actualitzar la barra d'estat de l'aplicació amb els valors R,A,B,PVx,PVy,PVz
 	Barra_Estat();
 }
 
@@ -2958,31 +2873,7 @@ BOOL CEntornVGIView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 }
 
 
-/* ------------------------------------------------------------------------- */
-/*					     TIMER (ANIMACIÓ)									 */
-/* ------------------------------------------------------------------------- */
-float orbitAngle = 0.0f;    // Ángulo de rotación de la órbita del planeta
-float orbitRadius = 10.0f;  // Radio de la órbita del planeta
-float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
 
-
-void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
-{
-	// TODO: Agregue aquí su código de controlador de mensajes o llame al valor predeterminado
-	if (anima) {
-		// Codi de tractament de l'animació quan transcorren els ms. del crono.
-		orbitAngle += orbitSpeed;
-		if (orbitAngle >= 360.0f) orbitAngle -= 360.0f;
-		// Calcular la nueva posición de traslación del planeta en la órbita
-		TG.VTras.x = orbitRadius * cos(orbitAngle); // Coordenada X en la órbita
-		TG.VTras.z = orbitRadius * sin(orbitAngle); // Coordenada Z en la órbita
-		TG.VTras.y = 0.0f; // Mantener en el plano XZ
-		// Crida a OnPaint() per redibuixar l'escena
-		InvalidateRect(NULL, false);
-	}
-
-	CView::OnTimer(nIDEvent);
-}
 
 
 /* ------------------------------------------------------------------------- */
@@ -4486,43 +4377,13 @@ void CEntornVGIView::OnUpdateObjecteMatriuPrimitivesVBO(CCmdUI* pCmdUI)
 // TRANSFORMA: TRASLACIÓ
 void CEntornVGIView::OnTransformaTraslacio()
 {
-	// TODO: Agregue aquí su código de controlador de comandos
-		// TODO: Agregue aquí su código de controlador de comandos
-		// Alternar entre activar y desactivar la traslación
-	trasl = !trasl;
-	rota = false;
-	if (trasl) escal = true;
-	if (trasl) {
-		escal = true;
-		anima = true; // Activar animación
-		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
-	}
-	else {
-		anima = false; // Desactivar animación
-		KillTimer(1);  // Detener el temporizador
-	}
-	transf = trasl || rota || escal;
-
-	// Crida a OnPaint() per redibuixar l'escena
-	InvalidateRect(NULL, false);
+	
 }
 
 
 void CEntornVGIView::OnUpdateTransformaTraslacio(CCmdUI* pCmdUI)
 {
-	// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-	if (trasl) {
-		fact_Tras = 1;
-		TG.VTras.x = 0.0;
-		TG.VTras.y = 0.0;
-		TG.VTras.z = 0.0;
-		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
-		anima = false;  // Desactivar la animación
-		KillTimer(1);   // Detener el temporizador
-	}
-
-	// Llamada a OnPaint() para redibujar la escena
-	InvalidateRect(NULL, false);
+	
 }
 
 
@@ -5816,43 +5677,154 @@ std::string CEntornVGIView::CString2String(const CString& cString)
 	return strStd;
 }
 
+/* ------------------------------------------------------------------------- */
+/*					     TIMER (ANIMACIÓ)									 */
+/* ------------------------------------------------------------------------- */
+// ROTATION
+float rotationAngle = 0.0f;    // Ángulo de rotación del planeta
+float rotationSpeed = 0.05f;   // Velocidad angular de la rotación
+// TRANSLATION
+float orbitAngle = 0.0f;    // Ángulo de rotación de la órbita del planeta
+float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
+float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
+float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
+
+
+void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
+{
+	if (rotation) {
+		// Movimiento de rotación sobre el eje Y
+		rotationAngle += rotationSpeed;
+		if (rotationAngle >= 360.0f) rotationAngle -= 360.0f;
+
+		glPushMatrix();           // Guarda el estado de la matriz actual
+		glRotatef(rotationAngle, 0.0f, 1.0f, 0.0f); // Rota sobre el eje Y
+		// Dibuja el planeta aquí
+		glPopMatrix();            // Restaura el estado de la matriz
+		
+		/*
+		// Movimiento de rotación
+		rotationAngle += rotationSpeed;
+		if (rotationAngle >= 360.0f) rotationAngle -= 360.0f;
+		// Aplicar la rotación al planeta
+		TG.rotationAngle = rotationAngle; // Rotar alrededor del eje Y
+		*/
+	}
+	if (translation) {
+		// Movimiento traslación
+		orbitAngle += orbitSpeed;
+		if (orbitAngle >= 360.0f) orbitAngle -= 360.0f;
+		// Calcular la nueva posición de traslación del planeta en la órbita
+		TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
+		TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
+		TG.VTras.y = 0.0f; // Mantener en el plano XZ
+	}
+
+	// Crida a OnPaint() per redibuixar l'escena
+	InvalidateRect(NULL, false);
+
+	CView::OnTimer(nIDEvent);
+}
 
 /* ------------------------------------------------------------------------- */
 /*					   FUNCIONES PARA EL SISTEMA SOLAR	     				 */
 /* ------------------------------------------------------------------------- */
-//void CEntornVGIView::OnSistemasolarStart()
-//{
-//	// TODO: Agregue aquí su código de controlador de comandos
-//	objecte = SIS;
-//
-//	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
-//
-//	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
-//
-//	// Entorn VGI: Activació el contexte OpenGL
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-//
-//	// Càrrega dels VAO's per a construir objecte OCT
-//	netejaVAOList();                        // Neteja Llista VAO.
-//
-//	// Posar color objecte (col_obj) al vector de colors del VAO.
-//	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
-//
-//	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
-//	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
-//	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
-//
-//	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-//
-//	// Crida a OnPaint() per redibuixar l'escena
-//	InvalidateRect(NULL, false);
-//}
-//
-//
-//void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
-//{
-//	// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-//	if (objecte == SIS) pCmdUI->SetCheck(1);
-//	else pCmdUI->SetCheck(0);
-//}
+/*
+void CEntornVGIView::OnSistemasolarStart()
+{
+	// TODO: Agregue aquí su código de controlador de comandos
+	objecte = SIS;
+
+	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
+
+	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
+
+	// Entorn VGI: Activació el contexte OpenGL
+	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+
+	// Càrrega dels VAO's per a construir objecte OCT
+	netejaVAOList();                        // Neteja Llista VAO.
+
+	// Posar color objecte (col_obj) al vector de colors del VAO.
+	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
+
+	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
+	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
+	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
+
+	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
+	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
+
+	// Crida a OnPaint() per redibuixar l'escena
+	InvalidateRect(NULL, false);
+}
+*/
+/*
+void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
+{
+	// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
+	if (objecte == SIS) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+*/
+
+/* ---------------------------ROTACIÓN-------------------------- */
+void CEntornVGIView::OnSistemasolarTestRotacio()
+{
+	// Alternar entre activar y desactivar la rotación
+    rotation = !rotation;
+    translation = false; // Desactivar traslación si se activa rotación
+    if (rotation) {
+        SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
+    } else {
+        KillTimer(1);  // Detener el temporizador
+    }
+    transf = translation || rotation;
+
+    // Crida a OnPaint() per redibuixar l'escena
+    InvalidateRect(NULL, false);
+}
+void CEntornVGIView::OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI)
+{
+	if (rotation) {
+        rotationAngle = 0.0f;   // Reiniciar el ángulo de rotación
+        TG.rotationAngle = 0.0f; // Reiniciar el ángulo de rotación en la estructura TG
+        rotation = false;  // Desactivar la rotación
+        KillTimer(1);   // Detener el temporizador
+    }
+
+    // Llamada a OnPaint() para redibujar la escena
+    InvalidateRect(NULL, false);
+}
+
+/* ---------------------------TRANSLACIÓN-------------------------- */
+void CEntornVGIView::OnSistemasolarTestTranslacio()
+{
+	// Alternar entre activar y desactivar la traslación
+    translation = !translation;
+    rotation = false; // Desactivar rotación si se activa traslación
+    if (translation) {
+        SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
+    } else {
+        KillTimer(1);  // Detener el temporizador
+    }
+    transf = translation || rotation;
+
+    // Crida a OnPaint() per redibuixar l'escena
+    InvalidateRect(NULL, false);
+}
+void CEntornVGIView::OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI)
+{
+	if (translation) {
+        fact_Tras = 1;
+        TG.VTras.x = 0.0;
+        TG.VTras.y = 0.0;
+        TG.VTras.z = 0.0;
+        orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
+        translation = false;  // Desactivar la translación
+        KillTimer(1);   // Detener el temporizador
+    }
+
+    // Llamada a OnPaint() para redibujar la escena
+    InvalidateRect(NULL, false);
+}

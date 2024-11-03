@@ -174,6 +174,8 @@ public:
 	double t;		// Paràmetre t pel Timer.
 	bool anima;		// Booleana que controla si l'animació és activa (TRUE) o no (FALSE)
 					//    dins la funció de control del rellotge OnTimer.
+	bool translation;
+	bool rotation;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.
@@ -443,6 +445,15 @@ public:
 	afx_msg void OnUpdateObjecteCorbaHermitte(CCmdUI* pCmdUI);
 	afx_msg void OnObjecteCorbaCatmullRom();
 	afx_msg void OnUpdateObjecteCorbaCatmullRom(CCmdUI* pCmdUI);
+	// AÑADIDO PARA EL SISTEMA SOLAR:
+	//afx_msg void OnSistemasolarStart();
+	//afx_msg void OnUpdateSistemasolarStart(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestRotacio();
+	afx_msg void OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestTranslacio();
+	afx_msg void OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI);
+	//float rotationAngle = 0.0f;
+	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 };
 
 #ifndef _DEBUG  // Versión de depuración en EntornVGIView.cpp
