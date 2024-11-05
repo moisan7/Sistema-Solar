@@ -443,6 +443,9 @@ CEntornVGIView::CEntornVGIView()
 	ContextMenu = new CMenu();
 	if (!ContextMenu->LoadMenu(IDR_MENU_WINDOW))	AfxMessageBox(_T("Fail to create context menu"));
 
+
+// Proyecto Skybox
+	int skyb = 0;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -902,6 +905,14 @@ void CEntornVGIView::OnPaint()
     // PROYECCIÓN PERSPECTIVA
     glDisable(GL_SCISSOR_TEST);  // Desactiva el recorte de pantalla
 
+	///
+	// Càrrega Shader de Gouraud
+	if (!shader_programID) {
+		shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
+		shader = GOURAUD_SHADER;
+	}
+	///
+
     // Definición del Viewport, Proyección y Cámara
     ProjectionMatrix = Projeccio_Perspectiva(shader_programID, 0, 0, w, h, OPV.R);
 
@@ -941,8 +952,32 @@ void CEntornVGIView::configura_Escena()
 // dibuixa_Escena: Funcio que crida al dibuix dels diferents elements de l'escana
 void CEntornVGIView::dibuixa_Escena() 
 {
+	//Load skyboxs parameters. (OnVistaSkyBox())
+	if (skyb == 0) {
+		// Càrrega Shader Skybox
+		if (!skC_programID) skC_programID = shader_SkyBoxC.loadFileShaders(".\\shaders\\skybox.VERT", ".\\shaders\\skybox.FRAG");
+
+		// Càrrega VAO Skybox Cube
+		if (skC_VAOID.vaoId == 0) skC_VAOID = loadCubeSkybox_VAO();
+		Set_VAOList(CUBE_SKYBOX, skC_VAOID);
+
+		if (!cubemapTexture)
+		{	// load Skybox textures
+			// -------------
+			std::vector<std::string> faces =
+			{ ".\\textures\\skybox\\right.jpg",
+				".\\textures\\skybox\\left.jpg",
+				".\\textures\\skybox\\top.jpg",
+				".\\textures\\skybox\\bottom.jpg",
+				".\\textures\\skybox\\front.jpg",
+				".\\textures\\skybox\\back.jpg"
+			};
+			cubemapTexture = loadCubemap(faces);
+		}
+		skyb = 1;
+	}
 //	Dibuix SkyBox Cúbic.
-	if (SkyBoxCube) dibuixa_Skybox(skC_programID, cubemapTexture, Vis_Polar, ProjectionMatrix, ViewMatrix);
+	dibuixa_Skybox(skC_programID, cubemapTexture, Vis_Polar, ProjectionMatrix, ViewMatrix);
 
 //	Dibuix Coordenades Món i Reixes.
 	dibuixa_Eixos(eixos_programID, eixos, eixos_Id, grid, hgrid, ProjectionMatrix, ViewMatrix);

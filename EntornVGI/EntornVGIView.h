@@ -188,6 +188,9 @@ public:
 	GLdouble mida;	// Factor d'escala per calcular Volum de Visualització de l'objecte que encaixi.
 	CString nom;	// Nom de fitxer.
 	CString buffer; // Buffer que magatzema string caracters corresponent a variables double a printar en Status Bar (funció Barra_Estat).
+
+
+	int skyb;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
