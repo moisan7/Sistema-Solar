@@ -2568,8 +2568,8 @@ void CEntornVGIView::OnMouseMove(UINT nFlags, CPoint point)
 		m_PosEAvall = point;
 		if (camera == CAM_ESFERICA)
 		{	// Càmera Esfèrica
-			OPV.beta = OPV.beta - gir.cx / 2.0;
-			OPV.alfa = OPV.alfa + gir.cy / 2.0;
+			OPV.beta = OPV.beta + gir.cx / 2.0;
+			OPV.alfa = OPV.alfa - gir.cy / 2.0;
 
 			// Entorn VGI: Control per evitar el creixement desmesurat dels angles.
 			if (OPV.alfa >= 360)	OPV.alfa = OPV.alfa - 360.0;
@@ -2578,8 +2578,8 @@ void CEntornVGIView::OnMouseMove(UINT nFlags, CPoint point)
 			if (OPV.beta < 0)		OPV.beta = OPV.beta + 360.0;
 		}
 		else { // Càmera Geode
-				OPV_G.beta = OPV_G.beta + gir.cx / 2;
-				OPV_G.alfa = OPV_G.alfa + gir.cy / 2;
+				OPV_G.beta = OPV_G.beta - gir.cx / 2;
+				OPV_G.alfa = OPV_G.alfa - gir.cy / 2;
 				// Entorn VGI: Control per evitar el creixement desmesurat dels angles
 				if (OPV_G.alfa >= 360.0f)	OPV_G.alfa = OPV_G.alfa - 360.0;
 				if (OPV_G.alfa < 0.0f)		OPV_G.alfa = OPV_G.alfa + 360.0;
@@ -2708,11 +2708,11 @@ void CEntornVGIView::OnMouseMove(UINT nFlags, CPoint point)
 	{	CSize zoomincr = m_PosDAvall - point;
 		long int incr = zoomincr.cy / 1.0;
 		if (camera == CAM_ESFERICA) {	// Càmera Esfèrica
-										OPV.R = OPV.R + incr;
+										OPV.R = OPV.R - incr;
 										if (OPV.R < 0.25) OPV.R = 0.25;
 									}
 		else { // Càmera Geode
-				OPV_G.R = OPV_G.R + incr;
+				OPV_G.R = OPV_G.R - incr;
 				if (OPV_G.R < 0.0f) OPV_G.R = 0.0f;
 			}
 		m_PosDAvall = point;
