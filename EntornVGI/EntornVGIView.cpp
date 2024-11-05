@@ -219,7 +219,6 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnUpdateSistemasolarTestTranslacio)
 		ON_COMMAND(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnSistemasolarTestRotacio)
 		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnUpdateSistemasolarTestRotacio)
-		
 		// FIN AÑADIDO PARA EL SISTEMA SOLAR
 		END_MESSAGE_MAP()
 
@@ -260,7 +259,7 @@ CEntornVGIView::CEntornVGIView()
 	tr_cpv.x = 0;	tr_cpv.y = 0;	tr_cpv.z = 0;		tr_cpvF.x = 0;	tr_cpvF.y = 0;	tr_cpvF.z = 0;
 
 // Entorn VGI: Variables de control per les opcions de menú Projecció, Objecte
-	projeccio = CAP;	// projeccio = PERSPECT;
+	projeccio = CAP;	// projeccio = PERSPEC;
 	ProjectionMatrix = glm::mat4(1.0);	// Inicialitzar a identitat
 	objecte = CAP;		// objecte = TETERA;
 
@@ -847,7 +846,30 @@ void CEntornVGIView::OnInitialUpdate()
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
+
+	// Activa el contexto de OpenGL
+	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+
+	// Configura la proyección inicial como perspectiva
+	projeccio = PERSPECT;
+	// Configura la cámara inicial como esférica (o el tipo que prefieras)
+	camera = CAM_ESFERICA;
+
+	// Carga los shaders necesarios para el renderizado
+	if (!eixos_programID)
+		eixos_programID = shaderEixos.loadFileShaders(".\\shaders\\eixos.VERT", ".\\shaders\\eixos.FRAG");
+
+	if (!shader_programID) {
+		shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
+		shader = GOURAUD_SHADER; // Configura el shader inicial, en este caso el de Gouraud
+	}
+	// Libera el contexto de OpenGL después de la carga de shaders
+	wglMakeCurrent(NULL, NULL);
+
+	// Libera el contexto de dispositivo después de la configuración inicial
 	ReleaseDC(pDC);
+
+	Invalidate(); // Forzar llamada a OnPaint()
 }
 
 
@@ -868,84 +890,44 @@ void CEntornVGIView::OnDraw(CDC* /*pDC*/)
 
 void CEntornVGIView::OnPaint()
 {
-	CPaintDC dc(this); // device context for painting
-// TODO: Agregue aquí su código de controlador de mensajes
-	GLdouble vpv[3] = { 0.0, 0.0, 1.0 };
+    CPaintDC dc(this); // device context for painting
+    GLdouble vpv[3] = { 0.0, 0.0, 1.0 };
 
-// Entorn VGI: Activació el contexte OpenGL
-	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+    // Activa el contexto OpenGL
+    wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
-	switch (projeccio)
-	{
-	case PERSPECT:
-		// PROJECCIÓ PERSPECTIVA
-		glDisable(GL_SCISSOR_TEST);		// Desactivació del retall de pantalla
+    // Cargar los ejes si aún no están cargados
+    if (!eixos_Id) eixos_Id = deixos();  // Define los Ejes Coordenadas Món como un VAO
 
-		// Definició de Viewport, Projecció i Càmara
-		ProjectionMatrix = Projeccio_Perspectiva(shader_programID, 0, 0, w, h, OPV.R);
+    // PROYECCIÓN PERSPECTIVA
+    glDisable(GL_SCISSOR_TEST);  // Desactiva el recorte de pantalla
 
-		// Definició de la càmera.
-		if (camera == CAM_ESFERICA) {	n[0] = 0;		n[1] = 0;		n[2] = 0;
-				ViewMatrix = Vista_Esferica(shader_programID, OPV, Vis_Polar, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, mida, pas,
-				front_faces, oculta, test_vis,
-				ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-				eixos, grid, hgrid);
-				}
-		else if (camera == CAM_NAVEGA) {
-			if (Vis_Polar == POLARZ) {	vpv[0] = 0.0;	vpv[1] = 0.0;	vpv[2] = 1.0;
-			}
-			else if (Vis_Polar == POLARY) {	vpv[0] = 0.0;	vpv[1] = 1.0;	vpv[2] = 0.0;
-			}
-			else if (Vis_Polar == POLARX) {	vpv[0] = 1.0;	vpv[1] = 0.0;	vpv[2] = 0.0;
-			}
-			ViewMatrix = Vista_Navega(shader_programID, opvN, n, vpv, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, true, pas,
-				front_faces, oculta, test_vis,
-				ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-				eixos, grid, hgrid);
-		}
-		else if (camera == CAM_GEODE) {
-			ViewMatrix = Vista_Geode(shader_programID, OPV_G, Vis_Polar, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, mida, pas,
-				front_faces, oculta, test_vis,
-				ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-				eixos, grid, hgrid);
-		}
+    // Definición del Viewport, Proyección y Cámara
+    ProjectionMatrix = Projeccio_Perspectiva(shader_programID, 0, 0, w, h, OPV.R);
 
-		// Dibuix de l'Objecte o l'Escena
-		configura_Escena();     // Aplicar Transformacions Geometriques segons persiana Transformacio i configurar objectes.
-		dibuixa_Escena();		// Dibuix geometria de l'escena amb comandes GL.
+    // Configuración de la cámara esférica
+    if (camera == CAM_ESFERICA) {
+        n[0] = 0; n[1] = 0; n[2] = 0;
+        ViewMatrix = Vista_Esferica(shader_programID, OPV, Vis_Polar, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, mida, pas,
+                                    front_faces, oculta, test_vis,
+                                    ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
+                                    eixos, grid, hgrid);
+    }
 
-		// Intercanvia l'escena al front de la pantalla
-		SwapBuffers(m_pDC->GetSafeHdc());
-		break;
+    // Dibujo de la Escena
+    configura_Escena();  // Aplica transformaciones geométricas y configura objetos
+    dibuixa_Escena();    // Dibuja geometría de la escena con comandos GL
 
-	default:
-		// Càrrega SHADERS
-		// Càrrega Shader Eixos
-		if (!eixos_programID) eixos_programID = shaderEixos.loadFileShaders(".\\shaders\\eixos.VERT", ".\\shaders\\eixos.FRAG");
+    // Intercambia el buffer después de dibujar la escena y los ejes
+    SwapBuffers(m_pDC->GetSafeHdc());
 
-		// Càrrega Shader de Gouraud
-		if (!shader_programID) {
-			shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
-			shader = GOURAUD_SHADER;
-		}
+    // Libera el contexto de OpenGL
+    wglMakeCurrent(NULL, NULL);
 
-		// Entorn VGI: Creació de la llista que dibuixarà els eixos Coordenades Món. Funció on està codi per dibuixar eixos	
-		if (!eixos_Id) eixos_Id = deixos();						// Funció que defineix els Eixos Coordenades Món com un VAO.
-
-		// Crida a la funció Fons Blanc
-		FonsB();
-
-		// Intercanvia l'escena al front de la pantalla
-		SwapBuffers(m_pDC->GetSafeHdc());
-		break;
-	}
-
-	// Entorn VGI: Desactivació el contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-
-	//  Actualitzar la barra d'estat de l'aplicació amb els valors R,A,B,PVx,PVy,PVz
-	Barra_Estat();
+    // Actualiza la barra de estado con los valores actuales
+    Barra_Estat();
 }
+
 
 
 // configura_Escena: Funcio que configura els parametres de Model i dibuixa les
@@ -5693,27 +5675,16 @@ float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
 	if (rotation) {
-		// Movimiento de rotación sobre el eje Y
-		rotationAngle += rotationSpeed;
-		if (rotationAngle >= 360.0f) rotationAngle -= 360.0f;
-
-		glPushMatrix();           // Guarda el estado de la matriz actual
-		glRotatef(rotationAngle, 0.0f, 1.0f, 0.0f); // Rota sobre el eje Y
-		// Dibuja el planeta aquí
-		glPopMatrix();            // Restaura el estado de la matriz
-		
-		/*
 		// Movimiento de rotación
 		rotationAngle += rotationSpeed;
-		if (rotationAngle >= 360.0f) rotationAngle -= 360.0f;
-		// Aplicar la rotación al planeta
-		TG.rotationAngle = rotationAngle; // Rotar alrededor del eje Y
-		*/
+		if (rotationAngle >= 360.0f)
+			rotationAngle -= 360.0f;
 	}
 	if (translation) {
-		// Movimiento traslación
+		// Movimiento de traslación
 		orbitAngle += orbitSpeed;
-		if (orbitAngle >= 360.0f) orbitAngle -= 360.0f;
+		if (orbitAngle >= 360.0f)
+			orbitAngle -= 360.0f;
 		// Calcular la nueva posición de traslación del planeta en la órbita
 		TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
 		TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
@@ -5788,7 +5759,6 @@ void CEntornVGIView::OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI)
 {
 	if (rotation) {
         rotationAngle = 0.0f;   // Reiniciar el ángulo de rotación
-        TG.rotationAngle = 0.0f; // Reiniciar el ángulo de rotación en la estructura TG
         rotation = false;  // Desactivar la rotación
         KillTimer(1);   // Detener el temporizador
     }
