@@ -445,7 +445,7 @@ CEntornVGIView::CEntornVGIView()
 
 
 // Proyecto Skybox
-	int skyb = 0;
+	skyb = 0;
 }
 
 CEntornVGIView::~CEntornVGIView()
