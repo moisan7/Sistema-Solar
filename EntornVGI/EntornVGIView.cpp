@@ -5699,21 +5699,25 @@ std::string CEntornVGIView::CString2String(const CString& cString)
 /* ------------------------------------------------------------------------- */
 // ROTATION
 float rotationAngle = 0.0f;    // Ángulo de rotación del planeta
-float rotationSpeed = 0.05f;   // Velocidad angular de la rotación
+float newAngle = 0.05f;
+float rotationSpeed = 5.0f;   // Velocidad angular de la rotación
 // TRANSLATION
 float orbitAngle = 0.0f;    // Ángulo de rotación de la órbita del planeta
-float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
-float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
 float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
 
+float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
+float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
 
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
 	if (rotation) {
 		// Movimiento de rotación
-		rotationAngle += rotationSpeed;
+		rotationAngle += newAngle;
 		if (rotationAngle >= 360.0f)
 			rotationAngle -= 360.0f;
+		//// Calcular la nueva orientación de rotación del planeta
+		// Calcular la nueva posición de traslación del planeta en la órbita
+		TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
 	}
 	if (translation) {
 		// Movimiento de traslación
@@ -5723,7 +5727,6 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		// Calcular la nueva posición de traslación del planeta en la órbita
 		TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
 		TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
-		TG.VTras.y = 0.0f; // Mantener en el plano XZ
 	}
 
 	// Crida a OnPaint() per redibuixar l'escena
