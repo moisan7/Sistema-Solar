@@ -279,10 +279,10 @@ CEntornVGIView::CEntornVGIView()
 	GTMatrix = glm::mat4(1.0);		// Inicialitzar a identitat
 
 // Entorn VGI: Variables de control per les opcions de menú Ocultacions
-	front_faces = true;	test_vis = false;	oculta = false;	
+	front_faces = true;	test_vis = false;	oculta = true;	
 
 // Entorn VGI: Variables de control del menú Iluminació		
-	ilumina = FILFERROS;			ifixe = false;					ilum2sides = false;
+	ilumina = PLANA;			ifixe = false;					ilum2sides = false;
 // Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
 	sw_material[0] = false;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
@@ -389,7 +389,7 @@ CEntornVGIView::CEntornVGIView()
 	llumGL[7].spotcoscutoff = 0.0;		llumGL[7].spotexponent = 0.0;
 
 // Entorn VGI: Variables de control del menú Shaders		
-	shader = CAP_SHADER;		shader_programID = 0;
+	shader = PHONG_SHADER;		shader_programID = 0;
 
 // Entorn VGI: Variables de control dels botons de mouse
 	m_PosEAvall = (0, 0);		m_PosDAvall = (0, 0);
@@ -445,7 +445,7 @@ CEntornVGIView::CEntornVGIView()
 
 
 // Proyecto Skybox
-	skyb = 0;
+	skyb = false;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -953,7 +953,7 @@ void CEntornVGIView::configura_Escena()
 void CEntornVGIView::dibuixa_Escena() 
 {
 	//Load skyboxs parameters. (OnVistaSkyBox())
-	if (skyb == 0) {
+	if (skyb == false) {
 		// Càrrega Shader Skybox
 		if (!skC_programID) skC_programID = shader_SkyBoxC.loadFileShaders(".\\shaders\\skybox.VERT", ".\\shaders\\skybox.FRAG");
 
@@ -974,7 +974,7 @@ void CEntornVGIView::dibuixa_Escena()
 			};
 			cubemapTexture = loadCubemap(faces);
 		}
-		skyb = 1;
+		skyb = true;
 	}
 //	Dibuix SkyBox Cúbic.
 	dibuixa_Skybox(skC_programID, cubemapTexture, Vis_Polar, ProjectionMatrix, ViewMatrix);

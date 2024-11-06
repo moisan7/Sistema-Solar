@@ -190,7 +190,7 @@ public:
 	CString buffer; // Buffer que magatzema string caracters corresponent a variables double a printar en Status Bar (funció Barra_Estat).
 
 
-	int skyb;
+	bool skyb;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
