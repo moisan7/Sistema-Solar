@@ -456,6 +456,10 @@ public:
 	afx_msg void OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarTestTranslacio();
 	afx_msg void OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestTextures();
+	afx_msg void OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestOrbita();
+	afx_msg void OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI);
 	//float rotationAngle = 0.0f;
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 };

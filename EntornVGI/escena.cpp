@@ -1378,16 +1378,16 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	GLint uni_id, GLuint* textures_planeta)
 {
 	float p_scale[10] = {
+		10.0,
+		1.0,
+		4.0,
+		3.0,
+		2.0,
+		3.0,
 		7.0,
-		0.1,
-		0.4,
-		0.3,
-		0.2,
-		0.3,
 		6.0,
 		5.0,
-		1.5,
-		1.5
+		5.0
 	};
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;

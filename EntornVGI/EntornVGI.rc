@@ -437,6 +437,8 @@ BEGIN
         MENUITEM "Start",                       ID_SISTEMASOLAR_START
         MENUITEM "Test Rotacio",                ID_SISTEMASOLAR_TESTROTACIO
         MENUITEM "Test Translacio",             ID_SISTEMASOLAR_TESTTRANSLACIO
+        MENUITEM "Test Textures",               ID_SISTEMASOLAR_TESTTEXTURES
+        MENUITEM "Test Orbita",                 ID_SISTEMASOLAR_TESTORBITA
     END
 END
 

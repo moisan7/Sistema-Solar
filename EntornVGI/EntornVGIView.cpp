@@ -220,6 +220,10 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnUpdateSistemasolarTestTranslacio)
 		ON_COMMAND(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnSistemasolarTestRotacio)
 		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnUpdateSistemasolarTestRotacio)
+		ON_COMMAND(ID_SISTEMASOLAR_TESTTEXTURES, &CEntornVGIView::OnSistemasolarTestTextures)
+		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTEXTURES, &CEntornVGIView::OnUpdateSistemasolarTestTextures)
+		ON_COMMAND(ID_SISTEMASOLAR_TESTORBITA, &CEntornVGIView::OnSistemasolarTestOrbita)
+		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTORBITA, &CEntornVGIView::OnUpdateSistemasolarTestOrbita)
 		// FIN AÑADIDO PARA EL SISTEMA SOLAR
 		END_MESSAGE_MAP()
 
@@ -5751,37 +5755,11 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 
 void CEntornVGIView::OnSistemasolarStart()
 {
-	// TODO: Agregue aquí su código de controlador de comandos
-	objecte = SIS;
-
-	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
-
-	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
-
-	// Entorn VGI: Activació el contexte OpenGL
-	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-
-	// Càrrega dels VAO's per a construir objecte OCT
-	netejaVAOList();                        // Neteja Llista VAO.
-
-	// Posar color objecte (col_obj) al vector de colors del VAO.
-	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
-
-	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
-	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
-	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
-
-	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-
-	// Crida a OnPaint() per redibuixar l'escena
-	InvalidateRect(NULL, false);
+	// TODO
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
-	// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-	if (objecte == SIS) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
+	// TODO
 }
 
 /* ---------------------------ROTACIÓN-------------------------- */
@@ -5842,4 +5820,42 @@ void CEntornVGIView::OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI)
 
     // Llamada a OnPaint() para redibujar la escena
     InvalidateRect(NULL, false);
+}
+/* ---------------------------TEXTURAS-------------------------- */
+void CEntornVGIView::OnSistemasolarTestTextures()
+{
+	objecte = SIS;
+
+	// Entorn VGI: Activació el contexte OpenGL
+	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+
+	// Càrrega dels VAO's per a construir objecte OCT
+	netejaVAOList();                        // Neteja Llista VAO.
+
+	// Posar color objecte (col_obj) al vector de colors del VAO.
+	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
+
+	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
+	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
+	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
+
+	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
+	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
+
+	// Crida a OnPaint() per redibuixar l'escena
+	InvalidateRect(NULL, false);
+}
+void CEntornVGIView::OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI)
+{
+	if (objecte == SIS) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+/* ---------------------------ÓRBITAS-------------------------- */
+void CEntornVGIView::OnSistemasolarTestOrbita()
+{
+	
+}
+void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
+{
+	
 }
