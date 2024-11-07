@@ -189,7 +189,8 @@ public:
 	CString nom;	// Nom de fitxer.
 	CString buffer; // Buffer que magatzema string caracters corresponent a variables double a printar en Status Bar (funció Barra_Estat).
 
-
+	GLuint* texturesID_planets;
+	bool load_textures;
 	bool skyb;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
@@ -449,8 +450,8 @@ public:
 	afx_msg void OnObjecteCorbaCatmullRom();
 	afx_msg void OnUpdateObjecteCorbaCatmullRom(CCmdUI* pCmdUI);
 	// AÑADIDO PARA EL SISTEMA SOLAR:
-	//afx_msg void OnSistemasolarStart();
-	//afx_msg void OnUpdateSistemasolarStart(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarStart();
+	afx_msg void OnUpdateSistemasolarStart(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarTestRotacio();
 	afx_msg void OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarTestTranslacio();

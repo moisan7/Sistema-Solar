@@ -76,12 +76,12 @@ void dibuixa_Skybox(GLuint sk_programID, GLuint cmTexture, char eix_Polar, glm::
 
 
 // dibuixa_EscenaGL: Dibuix de l'escena amb comandes GL
-void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D reixa, CPunt3D hreixa, char objecte, 
-			CColor col_object, bool sw_mat[5],
-			bool textur, GLuint texturID[NUM_MAX_TEXTURES], bool textur_map, bool flagInvertY,
-			int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
-			COBJModel* objecteOBJ,
-			glm::mat4 MatriuVista, glm::mat4 MatriuTG)
+void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D reixa, CPunt3D hreixa, char objecte,
+	CColor col_object, bool sw_mat[5],				//Añadido textures_planeta
+	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
+	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
+	COBJModel* objecteOBJ,
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG)
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -104,29 +104,32 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 // Shader Visualització Objectes
 	glUseProgram(sh_programID);
 
-// Parametrització i activació/desactivació de textures
-	if (texturID[0] != -1) SetTextureParameters(texturID[0], true, true, textur_map, false);
-	if (textur) {	glUniform1i(glGetUniformLocation(sh_programID, "textur"), GL_TRUE); //glEnable(GL_TEXTURE_2D);
-					glUniform1i(glGetUniformLocation(sh_programID, "modulate"), GL_TRUE); //glEnable(GL_MODULATE);
-				}
-		else {	glUniform1i(glGetUniformLocation(sh_programID, "textur"), GL_FALSE); //glDisable(GL_TEXTURE_2D);
-				glUniform1i(glGetUniformLocation(sh_programID, "modulate"), GL_FALSE); //glDisable(GL_MODULATE);
-			}
+	// Parametrització i activació/desactivació de textures
+			/*if (texturID[0] != -1) {
+				SetTextureParameters(texturID[0], true, true, textur_map, false);
+			}*/
+	if (true) {
+		glUniform1i(glGetUniformLocation(sh_programID, "textur"), GL_TRUE); //glEnable(GL_TEXTURE_2D);
+		glUniform1i(glGetUniformLocation(sh_programID, "modulate"), GL_TRUE); //glEnable(GL_MODULATE);
+	}
+	/*else { glUniform1i(glGetUniformLocation(sh_programID, "textur"), GL_FALSE); //glDisable(GL_TEXTURE_2D);
+			glUniform1i(glGetUniformLocation(sh_programID, "modulate"), GL_FALSE); //glDisable(GL_MODULATE);
+		}*/
 	glUniform1i(glGetUniformLocation(sh_programID, "flag_invert_y"), flagInvertY);
 
-// Attribute Locations must be setup before calling glLinkProgram()
+	// Attribute Locations must be setup before calling glLinkProgram()
 	glBindAttribLocation(sh_programID, 0, "in_Vertex");		// Vèrtexs
-	glBindAttribLocation(sh_programID, 1, "in_Color");		// Color
-	glBindAttribLocation(sh_programID, 2, "in_Normal");		// Normals
-	glBindAttribLocation(sh_programID, 3, "in_TexCoord");	// Textura
+	glBindAttribLocation(sh_programID, 1, "in_Normal");		// Normals
+	glBindAttribLocation(sh_programID, 2, "in_TexCoord");		// Textura
+	glBindAttribLocation(sh_programID, 3, "in_Color");	// Color
 
-// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material.
+	// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material.
 	SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
-
+	GLint uni_id = glGetUniformLocation(sh_programID, "texture_CelestialBody");
 	switch (objecte)
 	{
 
-// Arc
+	// Arc
 	case ARC:
 		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
@@ -154,6 +157,13 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 // Dibuix de l'objecte TIE (Nau enemiga Star Wars)
 	case TIE:
 		tie(sh_programID, MatriuVista, MatriuTG, sw_mat);
+		break;
+//SISTEMA SOLAR
+	case SIS:
+		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
+		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
+		//carrgar texturas de planetas
+		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -1363,3 +1373,61 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 	glDisable(GL_BLEND);
 }
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
+//Objecte sis
+void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
+	GLint uni_id, GLuint* textures_planeta)
+{
+	float p_scale[10] = {
+		7.0,
+		0.1,
+		0.4,
+		0.3,
+		0.2,
+		0.3,
+		6.0,
+		5.0,
+		1.5,
+		1.5
+	};
+	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
+	CColor col_object;
+	col_object.r = 0.5;	col_object.g = 0.5;	col_object.b = 0.5;	 col_object.a = 1.0;
+	SeleccionaColorMaterial(shaderId, col_object, sw_mat);
+	float trans = 0.0;
+	for (int i = 0; i < 10; i++) {
+		glActiveTexture(GL_TEXTURE0);
+		SetTextureParameters(textures_planeta[i], true, true, false, false);
+		glUniform1i(uni_id, 0);
+		TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
+		//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
+		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
+		// Pas ModelView Matrix a shader
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+		// Pas NormalMatrix a shader
+		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+		draw_TriEBO_Object(GLU_SPHERE);
+		//Saturn's Ring: possible changes draw EVERY small ring that define the big ring.
+		if (i == 7) {
+			glColor4f(1.0f, 1.0f, 1.0f, 0.5f); // Blue color with alpha transparency
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[10], true, true, false, false);
+			glUniform1i(uni_id, 0);
+			TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
+			//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
+			ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+			draw_TriEBO_Object(GLU_DISK);
+		}
+		trans += 100.0f;
+	}
+	/*
+	// After drawing is complete, unbind the texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+	// Release the texture from VRAM
+	glDeleteTextures(9, textures_planeta);*/
+};

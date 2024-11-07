@@ -34,6 +34,7 @@
 #include "EntornVGIView.h"
 #include "visualitzacio.h"	// Include funcions de projeció i il.luminació
 #include "escena.h"			// Include funcions d'objectes OpenGL
+#include "textures.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -213,8 +214,8 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 		ON_COMMAND(ID_CORBES_CATMULLROM, &CEntornVGIView::OnObjecteCorbaCatmullRom)
 		ON_UPDATE_COMMAND_UI(ID_CORBES_CATMULLROM, &CEntornVGIView::OnUpdateObjecteCorbaCatmullRom)
 		// AÑADIDO PARA EL SISTEMA SOLAR:
-		//ON_COMMAND(ID_SISTEMASOLAR_START, &CEntornVGIView::OnSistemasolarStart)
-		//ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_START, &CEntornVGIView::OnUpdateSistemasolarStart)
+		ON_COMMAND(ID_SISTEMASOLAR_START, &CEntornVGIView::OnSistemasolarStart)
+		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_START, &CEntornVGIView::OnUpdateSistemasolarStart)
 		ON_COMMAND(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnSistemasolarTestTranslacio)
 		ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTRANSLACIO, &CEntornVGIView::OnUpdateSistemasolarTestTranslacio)
 		ON_COMMAND(ID_SISTEMASOLAR_TESTROTACIO, &CEntornVGIView::OnSistemasolarTestRotacio)
@@ -446,6 +447,8 @@ CEntornVGIView::CEntornVGIView()
 
 // Proyecto Skybox
 	skyb = false;
+// Proyecto Texturas planetas
+	load_textures = false;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -924,6 +927,13 @@ void CEntornVGIView::OnPaint()
                                     ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
                                     eixos, grid, hgrid);
     }
+	///////
+	if (load_textures == false) {
+		// Proyecto cargar textures de planetas.
+		texturesID_planets = loadIMA_SOIL_texture();
+		load_textures = true;
+	}
+	///////
 
     // Dibujo de la Escena
     configura_Escena();  // Aplica transformaciones geométricas y configura objetos
@@ -986,9 +996,9 @@ void CEntornVGIView::dibuixa_Escena()
 //	GTMatrix = glm::scale();
 
 //	Dibuix geometria de l'escena amb comandes GL.
-	dibuixa_EscenaGL(shader_programID, eixos, eixos_Id, grid, hgrid, objecte, col_obj, sw_material, 
-		textura, texturesID, textura_map, tFlag_invert_Y,
-		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet, 
+	dibuixa_EscenaGL(shader_programID, eixos, eixos_Id, grid, hgrid, objecte, col_obj, sw_material,
+		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
+		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
 		ViewMatrix, GTMatrix);
 }
@@ -5738,7 +5748,7 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 /* ------------------------------------------------------------------------- */
 /*					   FUNCIONES PARA EL SISTEMA SOLAR	     				 */
 /* ------------------------------------------------------------------------- */
-/*
+
 void CEntornVGIView::OnSistemasolarStart()
 {
 	// TODO: Agregue aquí su código de controlador de comandos
@@ -5767,15 +5777,12 @@ void CEntornVGIView::OnSistemasolarStart()
 	// Crida a OnPaint() per redibuixar l'escena
 	InvalidateRect(NULL, false);
 }
-*/
-/*
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
 	// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
 	if (objecte == SIS) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-*/
 
 /* ---------------------------ROTACIÓN-------------------------- */
 void CEntornVGIView::OnSistemasolarTestRotacio()

@@ -81,6 +81,9 @@
     <ClInclude Include="Astre.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+	<ClInclude Include="textures.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntornVGI.cpp">
@@ -135,6 +138,9 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="Astre.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+	<ClCompile Include="textures.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
