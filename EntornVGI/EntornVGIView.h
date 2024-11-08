@@ -174,8 +174,9 @@ public:
 	double t;		// Paràmetre t pel Timer.
 	bool anima;		// Booleana que controla si l'animació és activa (TRUE) o no (FALSE)
 					//    dins la funció de control del rellotge OnTimer.
-	bool translation;
 	bool rotation;
+	bool translation;
+	bool translation_orbit;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.
