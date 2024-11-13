@@ -5754,6 +5754,7 @@ void CEntornVGIView::OnSistemasolarStart()
 	// TODO: Agregue aquí su código de controlador de comandos
 	objecte = SIS;
 
+
 	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
 
 	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
@@ -5776,6 +5777,25 @@ void CEntornVGIView::OnSistemasolarStart()
 
 	// Crida a OnPaint() per redibuixar l'escena
 	InvalidateRect(NULL, false);
+
+	//Inicialitzar el sound engine amb parametres per defecte
+	ISoundEngine* engine = createIrrKlangDevice();
+	
+	if (!engine)
+	{
+		printf("Could not startup engine\n");
+	}
+
+	// To play a sound, we only to call play2D().
+
+	// play some sound stream, looped
+	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
+	//Modifiquem volum
+	snd->setVolume(0.3);
+
+	//Despausem després d'haver modificat el volum
+	snd->setIsPaused(false);
+
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
