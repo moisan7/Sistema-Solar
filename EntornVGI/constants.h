@@ -56,6 +56,10 @@
 #define OBJOBJ '4'		// Objecte format OBJ
 // SISTEMA SOLAR
 #define SIS 'L'
+#define ORBIT_RADIUS_TEST 75.0f
+#define ORBIT_SPEED_TEST 0.01f
+#define ROTATION_SPEED_TEST 0.5f
+// AÑADIR ORBIT_RADIUS_PLANET / ORBIT_SPEED_PLANET /ROTATION_SPEED_PLANET (PARA CADA PLANETA)
 
 //-------------- VGI: Tipus d'Iluminacio
 #define PUNTS 'P'

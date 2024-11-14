@@ -433,7 +433,7 @@ CEntornVGIView::CEntornVGIView()
 	VT = { 0.0, 0.0, 1.0 };		VNP = { 1.0, 0.0, 0.0 };	VBN = { 0.0, 1.0, 0.0 };
 
 // Entorn VGI: Variables del Timer
-	t = 0; anima = false; translation = false; rotation = false;
+	t = 0; anima = false; translation = false; rotation = false; translation_orbit = false;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	t_fractal = CAP;	soroll = 'C';
@@ -453,6 +453,10 @@ CEntornVGIView::CEntornVGIView()
 	skyb = false;
 // Proyecto Texturas planetas
 	load_textures = false;
+// Proyecto Traslacion
+	deg1 = 0;
+// Proyecto Rotacion
+	deg2 = 0;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -1004,7 +1008,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix);
+		ViewMatrix, GTMatrix, deg1, deg2);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5747,27 +5751,29 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	}
 	/* ELIPSE */
 	if (translation_orbit) {
-		// Definición de parámetros de Kepler para el cálculo de traslación
-		const float semiMajorAxis = 5.0f;  // semi-eje mayor de la órbita
-		const float eccentricity = 0.5f;   // excentricidad de la órbita, 0 < e < 1
-		const float orbitPeriod = 365.25f; // periodo orbital en días
+		//// Definición de parámetros de Kepler para el cálculo de traslación
+		//const float semiMajorAxis = 5.0f;  // semi-eje mayor de la órbita
+		//const float eccentricity = 0.5f;   // excentricidad de la órbita, 0 < e < 1
+		//const float orbitPeriod = 365.25f; // periodo orbital en días
 
-		// Calcular la Anomalía Media (Mean Anomaly)
-		orbitAngle += orbitSpeedElipse;
-		if (orbitAngle >= 360.0f)
-			orbitAngle -= 360.0f;
+		//// Calcular la Anomalía Media (Mean Anomaly)
+		//orbitAngle += orbitSpeedElipse;
+		//if (orbitAngle >= 360.0f)
+		//	orbitAngle -= 360.0f;
 
-		float M = orbitAngle * (M_PI / 180.0f); // convert orbitAngle to radians
-		float E = M; // Initial approximation for Eccentric Anomaly
+		//float M = orbitAngle * (M_PI / 180.0f); // convert orbitAngle to radians
+		//float E = M; // Initial approximation for Eccentric Anomaly
 
-		// Resolver la ecuación de Kepler para obtener la Anomalía Excéntrica
-		for (int i = 0; i < 5; ++i) {  // Realizar 5 iteraciones para una buena precisión
-			E = M + eccentricity * sin(E);
-		}
+		//// Resolver la ecuación de Kepler para obtener la Anomalía Excéntrica
+		//for (int i = 0; i < 5; ++i) {  // Realizar 5 iteraciones para una buena precisión
+		//	E = M + eccentricity * sin(E);
+		//}
 
-		// Calcular la posición en la órbita elíptica
-		TG.VTras.x = semiMajorAxis * (cos(E) - eccentricity);  // Coordenada X
-		TG.VTras.z = semiMajorAxis * sqrt(1 - eccentricity * eccentricity) * sin(E); // Coordenada Z
+		//// Calcular la posición en la órbita elíptica
+		//TG.VTras.x = semiMajorAxis * (cos(E) - eccentricity);  // Coordenada X
+		//TG.VTras.z = semiMajorAxis * sqrt(1 - eccentricity * eccentricity) * sin(E); // Coordenada Z
+		deg1 += ORBIT_SPEED_TEST;
+		deg2 += ROTATION_SPEED_TEST;
 	}
 
 	// Crida a OnPaint() per redibuixar l'escena
@@ -5884,13 +5890,16 @@ void CEntornVGIView::OnSistemasolarTestOrbita()
 {
 	// Alternar entre activar y desactivar la traslación
 	translation_orbit = !translation_orbit;
-	rotation = false; // Desactivar rotación si se activa traslación
-	translation = false;
 	if (translation_orbit) {
 		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
 	}
-	else {
-		KillTimer(1);  // Detener el temporizador
+	else {	
+		fact_Tras = 1;
+		TG.VTras.x = 0.0;
+		TG.VTras.y = 0.0;
+		TG.VTras.z = 0.0;
+		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
+		KillTimer(1);   // Detener el temporizador
 	}
 	transf = translation_orbit || rotation;
 
@@ -5899,15 +5908,8 @@ void CEntornVGIView::OnSistemasolarTestOrbita()
 }
 void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
 {
-	if (translation_orbit) {
-		fact_Tras = 1;
-		TG.VTras.x = 0.0;
-		TG.VTras.y = 0.0;
-		TG.VTras.z = 0.0;
-		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
-		translation_orbit = false;  // Desactivar la translación
-		KillTimer(1);   // Detener el temporizador
-	}
+	if (translation_orbit) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
 
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);

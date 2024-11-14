@@ -81,7 +81,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG)
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1, float deg2)
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -163,7 +163,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
-		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta);
+		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, deg1, deg2);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -1375,7 +1375,7 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
-	GLint uni_id, GLuint* textures_planeta)
+	GLint uni_id, GLuint* textures_planeta, float deg1, float deg2)
 {
 	float p_scale[10] = {
 		10.0,
@@ -1393,13 +1393,33 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	CColor col_object;
 	col_object.r = 0.5;	col_object.g = 0.5;	col_object.b = 0.5;	 col_object.a = 1.0;
 	SeleccionaColorMaterial(shaderId, col_object, sw_mat);
+
+	/*------------SOL------------*/
+	glActiveTexture(GL_TEXTURE0);
+	SetTextureParameters(textures_planeta[0], true, true, false, false);
+	glUniform1i(uni_id, 0);
+	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
+	TransMatrix = glm::rotate(TransMatrix, radians(deg2), vec3(0.0f, 0.0f, 1.0f));
+	ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
+	// Pas ModelView Matrix a shader
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+	// Pas NormalMatrix a shader
+	NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+	draw_TriEBO_Object(GLU_SPHERE);
+	/*------------SOL------------*/
+
 	float trans = 0.0;
-	for (int i = 0; i < 10; i++) {
+	for (int i = 3; i < 4; i++) { // De 1 a 10 para dibujar todos
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
-		TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
-		//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
+
+		// Calculos órbitas
+		float x = ORBIT_RADIUS_TEST * cos(deg1);
+		float y = ORBIT_RADIUS_TEST * sin(deg1);
+		TransMatrix = glm::translate(MatriuTG, vec3(x, y, 0.0f));
+		TransMatrix = glm::rotate(TransMatrix, -radians(deg2), vec3(0.0f, 0.0f, 1.0f));
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
 		// Pas ModelView Matrix a shader
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
