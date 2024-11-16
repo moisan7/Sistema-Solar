@@ -81,7 +81,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1, float deg2)
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1[], float deg2[])
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -1375,20 +1375,33 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
-	GLint uni_id, GLuint* textures_planeta, float deg1, float deg2)
+	GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[])
 {
 	float p_scale[10] = {
-		10.0,
-		1.0,
-		4.0,
-		3.0,
-		2.0,
-		3.0,
-		7.0,
-		6.0,
-		5.0,
-		5.0
+		5,		// Sun
+		2.24,	// Mercury
+		2.6,	// Venus
+		2.63,	// Earth
+		2.33,	// Mars
+		2.79,	// Jupiter
+		2.02,	// Saturn
+		2.13,	// Uranus
+		2.96,	// Neptune
+		2.17	// Moon
 	};
+	/*float p_scale[10] = {
+		5,		// Sun
+		0.24,	// Mercury
+		0.6,	// Venus
+		0.63,	// Earth
+		0.33,	// Mars
+		2.79,	// Jupiter
+		2.02,	// Saturn
+		1.13,	// Uranus
+		0.96,	// Neptune
+		0.17	// Moon
+	};*/
+
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
 	col_object.r = 0.5;	col_object.g = 0.5;	col_object.b = 0.5;	 col_object.a = 1.0;
@@ -1399,7 +1412,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	SetTextureParameters(textures_planeta[0], true, true, false, false);
 	glUniform1i(uni_id, 0);
 	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
-	TransMatrix = glm::rotate(TransMatrix, radians(deg2), vec3(0.0f, 0.0f, 1.0f));
+	TransMatrix = glm::rotate(TransMatrix, radians(deg2[0]), vec3(0.0f, 0.0f, 1.0f));
 	ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
 	// Pas ModelView Matrix a shader
 	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
@@ -1409,17 +1422,16 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	draw_TriEBO_Object(GLU_SPHERE);
 	/*------------SOL------------*/
 
-	float trans = 0.0;
-	for (int i = 3; i < 4; i++) { // De 1 a 10 para dibujar todos
+	for (int i = 1; i < 10; i++) { // De 1 a 10 para dibujar todos
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
 
 		// Calculos órbitas
-		float x = ORBIT_RADIUS_TEST * cos(deg1);
-		float y = ORBIT_RADIUS_TEST * sin(deg1);
+		float x = DISTANCE_FROM_SUN[i - 1] * cos(deg1[i - 1]);
+		float y = DISTANCE_FROM_SUN[i - 1] * sin(deg1[i - 1]);
 		TransMatrix = glm::translate(MatriuTG, vec3(x, y, 0.0f));
-		TransMatrix = glm::rotate(TransMatrix, -radians(deg2), vec3(0.0f, 0.0f, 1.0f));
+		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), vec3(0.0f, 0.0f, 1.0f));
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
 		// Pas ModelView Matrix a shader
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
@@ -1427,23 +1439,6 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 		draw_TriEBO_Object(GLU_SPHERE);
-		//Saturn's Ring: possible changes draw EVERY small ring that define the big ring.
-		if (i == 7) {
-			glColor4f(1.0f, 1.0f, 1.0f, 0.5f); // Blue color with alpha transparency
-			glActiveTexture(GL_TEXTURE0);
-			SetTextureParameters(textures_planeta[10], true, true, false, false);
-			glUniform1i(uni_id, 0);
-			TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
-			//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
-			ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
-			// Pas ModelView Matrix a shader
-			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
-			// Pas NormalMatrix a shader
-			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
-			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
-			draw_TriEBO_Object(GLU_DISK);
-		}
-		trans += 100.0f;
 	}
 	/*
 	// After drawing is complete, unbind the texture

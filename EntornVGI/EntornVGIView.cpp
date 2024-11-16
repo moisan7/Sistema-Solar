@@ -454,9 +454,13 @@ CEntornVGIView::CEntornVGIView()
 // Proyecto Texturas planetas
 	load_textures = false;
 // Proyecto Traslacion
-	deg1 = 0;
+	for (int i = 0; i < 9; i++) {
+		deg1[i] = 0.0f; // Asigna 0 a cada elemento
+	}
 // Proyecto Rotacion
-	deg2 = 0;
+	for (int i = 0; i < 10; i++) {
+		deg2[i] = 0.0f; // Asigna 0 a cada elemento
+	}
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -5752,28 +5756,32 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	/* ELIPSE */
 	if (translation_orbit) {
 		//// Definición de parámetros de Kepler para el cálculo de traslación
-		//const float semiMajorAxis = 5.0f;  // semi-eje mayor de la órbita
-		//const float eccentricity = 0.5f;   // excentricidad de la órbita, 0 < e < 1
-		//const float orbitPeriod = 365.25f; // periodo orbital en días
+		const float semiMajorAxis = 5.0f;  // semi-eje mayor de la órbita
+		const float eccentricity = 0.5f;   // excentricidad de la órbita, 0 < e < 1
+		const float orbitPeriod = 365.25f; // periodo orbital en días
 
-		//// Calcular la Anomalía Media (Mean Anomaly)
-		//orbitAngle += orbitSpeedElipse;
-		//if (orbitAngle >= 360.0f)
-		//	orbitAngle -= 360.0f;
+		// Calcular la Anomalía Media (Mean Anomaly)
+		orbitAngle += orbitSpeedElipse;
+		if (orbitAngle >= 360.0f)
+			orbitAngle -= 360.0f;
 
-		//float M = orbitAngle * (M_PI / 180.0f); // convert orbitAngle to radians
-		//float E = M; // Initial approximation for Eccentric Anomaly
+		float M = orbitAngle * (M_PI / 180.0f); // convert orbitAngle to radians
+		float E = M; // Initial approximation for Eccentric Anomaly
 
-		//// Resolver la ecuación de Kepler para obtener la Anomalía Excéntrica
-		//for (int i = 0; i < 5; ++i) {  // Realizar 5 iteraciones para una buena precisión
-		//	E = M + eccentricity * sin(E);
-		//}
+		// Resolver la ecuación de Kepler para obtener la Anomalía Excéntrica
+		for (int i = 0; i < 5; ++i) {  // Realizar 5 iteraciones para una buena precisión
+			E = M + eccentricity * sin(E);
+		}
 
-		//// Calcular la posición en la órbita elíptica
-		//TG.VTras.x = semiMajorAxis * (cos(E) - eccentricity);  // Coordenada X
-		//TG.VTras.z = semiMajorAxis * sqrt(1 - eccentricity * eccentricity) * sin(E); // Coordenada Z
-		deg1 += ORBIT_SPEED_TEST;
-		deg2 += ROTATION_SPEED_TEST;
+		// Calcular la posición en la órbita elíptica
+		TG.VTras.x = semiMajorAxis * (cos(E) - eccentricity);  // Coordenada X
+		TG.VTras.z = semiMajorAxis * sqrt(1 - eccentricity * eccentricity) * sin(E); // Coordenada Z
+		for (int i = 0; i < 9; i++) {
+			deg1[i] += ORBIT_SPEED[i];
+		}
+		for (int i = 0; i < 10; i++) {
+			deg2[i] += ROTATION_SPEED[i];
+		}
 	}
 
 	// Crida a OnPaint() per redibuixar l'escena
