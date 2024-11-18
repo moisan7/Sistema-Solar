@@ -1422,6 +1422,23 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	draw_TriEBO_Object(GLU_SPHERE);
 	/*------------SOL------------*/
 
+	// Dibujado de órbitas
+	glm::mat4 orbitMatrix = glm::mat4(1.0f); // Matriz órbitas
+	glDisable(GL_BLEND); // Quitar transparencia
+	for (int i = 1; i < 10; i++) {
+		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
+		float b = SEMIMINOR_AXIS[i - 1]; // Semieje menor del planeta
+
+		glColor3f(1.0f, 1.0f, 1.0f); // Color blanco
+		glLineWidth(2.0f);           // Grosor de línea
+
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
+
+		// Dibujar órbita
+		DrawOrbit(a, b, 100); // 100 segmentos (para suavizar la línea)
+	}
+
+	// Dibujado de planetas + movimiento
 	for (int i = 1; i < 10; i++) { // De 1 a 10 para dibujar todos
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
@@ -1456,3 +1473,14 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	// Release the texture from VRAM
 	glDeleteTextures(9, textures_planeta);*/
 };
+// Dibujar órbitas planetas
+void DrawOrbit(float a, float b, int numSegments) {
+	glBegin(GL_LINE_LOOP); // Dibujar como bucle cerrado
+	for (int i = 0; i < numSegments; i++) {
+		float angle = 2.0f * M_PI * i / numSegments; // Ángulo actual
+		float x = a * cos(angle); // Coordenada X elipse
+		float y = b * sin(angle); // Coordenada Y elipse
+		glVertex3f(x, y, 0.0f);   // Punto en la órbita XY
+	}
+	glEnd();
+}

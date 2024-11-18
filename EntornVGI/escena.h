@@ -42,7 +42,8 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 
 // Entorn VGI: Sis.
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5], GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[]);
-
+// Dibujar órbitas planetas
+void DrawOrbit(float a, float b, int numSegments);
 
 // Entorn VGI: Funcions locals a escena.cpp
 // CString2char: Funció de conversió de variable CString a char * per a noms de fitxers 

@@ -5823,7 +5823,6 @@ float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
 float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
 // ELIPSE
 float orbitSpeedElipse = 0.05f;   // Velocidad angular de la órbita
-double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
 
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
