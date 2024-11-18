@@ -57,7 +57,6 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-const float DISTANCE_FROM_SUN[9] = { 47.5f, 67.5f, 87.5f, 107.5f, 157.5f, 217.5f, 257.5f, 287.5f, 295.0f };
 //const float ORBIT_SPEED[9] = { 0.001f, -0.002f, 0.003f, -0.004f, 0.005f, -0.006f, 0.007f, -0.008f, 0.009f };
 const float ORBIT_SPEED[9] = { 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f };
 //const float ROTATION_SPEED[10] = { 1.0f, -1.0f, 5.0f, -5.0f, 10.0f, -10.0f, 20.0f, -20.0f, 50.0f, -50.0f };

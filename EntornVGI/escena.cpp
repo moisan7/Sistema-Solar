@@ -1435,7 +1435,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
 
 		// Dibujar órbita
-		DrawOrbit(a, b, 100); // 100 segmentos (para suavizar la línea)
+		DrawOrbit(a, b, 10000); // 10000 segmentos (para suavizar la línea)
 	}
 
 	// Dibujado de planetas + movimiento
@@ -1473,6 +1473,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	// Release the texture from VRAM
 	glDeleteTextures(9, textures_planeta);*/
 };
+
 // Dibujar órbitas planetas
 void DrawOrbit(float a, float b, int numSegments) {
 	glBegin(GL_LINE_LOOP); // Dibujar como bucle cerrado
