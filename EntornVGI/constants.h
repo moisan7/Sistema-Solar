@@ -57,8 +57,37 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const float DISTANCE_FROM_SUN[9] = { 47.5f, 67.5f, 87.5f, 107.5f, 157.5f, 217.5f, 257.5f, 287.5f, 295.0f };
-const float ORBIT_SPEED[9] = { 0.001f, -0.002f, 0.003f, -0.004f, 0.005f, -0.006f, 0.007f, -0.008f, 0.009f };
-const float ROTATION_SPEED[10] = { 1.0f, -1.0f, 5.0f, -5.0f, 10.0f, -10.0f, 20.0f, -20.0f, 50.0f, -50.0f };
+//const float ORBIT_SPEED[9] = { 0.001f, -0.002f, 0.003f, -0.004f, 0.005f, -0.006f, 0.007f, -0.008f, 0.009f };
+const float ORBIT_SPEED[9] = { 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f };
+//const float ROTATION_SPEED[10] = { 1.0f, -1.0f, 5.0f, -5.0f, 10.0f, -10.0f, 20.0f, -20.0f, 50.0f, -50.0f };
+const float ROTATION_SPEED[10] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+const float SEMIMAJOR_AXIS[9] = { 47.5f, 67.5f, 87.5f, 107.5f, 157.5f, 217.5f, 257.5f, 287.5f, 295.0f };
+const float SEMIMINOR_AXIS[9] = {
+	47.5f * 0.7f,  // Mercurio - 33.25
+	67.5f * 0.75f, // Venus - 50.625
+	87.5f * 0.75f, // Tierra - 65.625
+	107.5f * 0.7f, // Marte - 75.25
+	157.5f * 0.65f, // Júpiter - 102.375
+	217.5f * 0.6f, // Saturno - 130.5
+	257.5f * 0.65f, // Urano - 167.375
+	287.5f * 0.6f,  // Neptuno - 172.5
+	295.0f * 0.55f  // Plutón - 162.25
+};
+/*
+const float SEMIMINOR_AXIS[9] = {
+	47.5f * 0.5f,  // Mercurio - 23.75
+	67.5f * 0.5f,  // Venus - 33.75
+	87.5f * 0.45f, // Tierra - 39.375
+	107.5f * 0.45f, // Marte - 48.375
+	157.5f * 0.4f, // Júpiter - 63.0
+	217.5f * 0.4f, // Saturno - 87.0
+	257.5f * 0.45f, // Urano - 115.875
+	287.5f * 0.4f,  // Neptuno - 115.0
+	295.0f * 0.4f   // Plutón - 118.0
+};
+*/
+
+
 
 //-------------- VGI: Tipus d'Iluminacio
 #define PUNTS 'P'

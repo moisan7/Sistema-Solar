@@ -177,8 +177,8 @@ public:
 	bool rotation;
 	bool translation;
 	bool translation_orbit;
-	float deg1[9]; // ANGULO ORBITA (CAMBIAR A VECTOR)
-	float deg2[10]; // ANGULO ROTACION (CAMBIAR A VECTOR)
+	float orbit_angle[9];		// ANGULO TRASLACION
+	float rotation_angle[10];	// ANGULO ROTACION
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.

@@ -1377,19 +1377,19 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
 	GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[])
 {
+	//float p_scale[10] = {
+	//	5,		// Sun
+	//	2.24,	// Mercury
+	//	2.6,	// Venus
+	//	2.63,	// Earth
+	//	2.33,	// Mars
+	//	2.79,	// Jupiter
+	//	2.02,	// Saturn
+	//	2.13,	// Uranus
+	//	2.96,	// Neptune
+	//	2.17	// Moon
+	//};
 	float p_scale[10] = {
-		5,		// Sun
-		2.24,	// Mercury
-		2.6,	// Venus
-		2.63,	// Earth
-		2.33,	// Mars
-		2.79,	// Jupiter
-		2.02,	// Saturn
-		2.13,	// Uranus
-		2.96,	// Neptune
-		2.17	// Moon
-	};
-	/*float p_scale[10] = {
 		5,		// Sun
 		0.24,	// Mercury
 		0.6,	// Venus
@@ -1400,7 +1400,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		1.13,	// Uranus
 		0.96,	// Neptune
 		0.17	// Moon
-	};*/
+	};
 
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
@@ -1428,16 +1428,26 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glUniform1i(uni_id, 0);
 
 		// Calculos órbitas
-		float x = DISTANCE_FROM_SUN[i - 1] * cos(deg1[i - 1]);
-		float y = DISTANCE_FROM_SUN[i - 1] * sin(deg1[i - 1]);
+		//float x = DISTANCE_FROM_SUN[i - 1] * cos(deg1[i - 1]);
+		//float y = DISTANCE_FROM_SUN[i - 1] * sin(deg1[i - 1]);
+
+		// Calculos órbitas elípticas
+		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
+		float b = SEMIMINOR_AXIS[i - 1]; // Semieje menor para cada planeta
+		float x = a * cos(deg1[i - 1]);  // Coordenada X en la elipse
+		float y = b * sin(deg1[i - 1]);  // Coordenada Y en la elipse
+
 		TransMatrix = glm::translate(MatriuTG, vec3(x, y, 0.0f));
 		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), vec3(0.0f, 0.0f, 1.0f));
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
+
 		// Pas ModelView Matrix a shader
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+
 		// Pas NormalMatrix a shader
 		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+
 		draw_TriEBO_Object(GLU_SPHERE);
 	}
 	/*
