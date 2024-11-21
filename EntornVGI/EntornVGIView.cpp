@@ -283,7 +283,7 @@ CEntornVGIView::CEntornVGIView()
 	front_faces = true;	test_vis = false;	oculta = true;	
 
 // Entorn VGI: Variables de control del menú Iluminació		
-	ilumina = PLANA;			ifixe = false;					ilum2sides = false;
+	ilumina = PLANA;			ifixe = true;					ilum2sides = false;
 // Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
 	sw_material[0] = false;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
@@ -5778,6 +5778,9 @@ void CEntornVGIView::OnSistemasolarStart()
 	// Crida a OnPaint() per redibuixar l'escena
 	InvalidateRect(NULL, false);
 
+	//Música de fons
+	
+	
 	//Inicialitzar el sound engine amb parametres per defecte
 	ISoundEngine* engine = createIrrKlangDevice();
 	
@@ -5791,11 +5794,11 @@ void CEntornVGIView::OnSistemasolarStart()
 	// play some sound stream, looped
 	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
 	//Modifiquem volum
-	snd->setVolume(0.3);
+	snd->setVolume(1);
 
 	//Despausem després d'haver modificat el volum
 	snd->setIsPaused(false);
-
+	
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
