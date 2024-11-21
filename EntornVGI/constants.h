@@ -57,37 +57,32 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-//const float ORBIT_SPEED[9] = { 0.001f, -0.002f, 0.003f, -0.004f, 0.005f, -0.006f, 0.007f, -0.008f, 0.009f };
-const float ORBIT_SPEED[9] = { 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f };
-//const float ROTATION_SPEED[10] = { 1.0f, -1.0f, 5.0f, -5.0f, 10.0f, -10.0f, 20.0f, -20.0f, 50.0f, -50.0f };
-const float ROTATION_SPEED[10] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-const float SEMIMAJOR_AXIS[9] = { 47.5f, 67.5f, 87.5f, 107.5f, 157.5f, 217.5f, 257.5f, 287.5f, 295.0f };
+const float ORBIT_SPEED[9] = { 0.047f, 0.035f, 0.029f, 0.024f, 0.013f, 0.00969f, 0.00681f, 0.00543f, 0.000f };
+const float INCLINATION[9] = { 7.00487f, 3.39471f, 0.00005f, 1.85061f, 1.30463f, 2.48524f, 0.76986f, 1.76917f, 0.0f };
+const float ROTATION_SPEED[10] = { 1.997f, 0.01083f, -0.00652f, 1.670f, 0.868f, 45.3f, 36.840f, -9.320f, 9.660f, 0.0f };
+const float SEMIMAJOR_AXIS[9] = { 38.7f, 72.3f, 100.0f, 152.4f, 520.4f, 958.2f, 1921.8f, 3000.7f, 0.0f };
 const float SEMIMINOR_AXIS[9] = {
-	47.5f * 0.7f,  // Mercurio - 33.25
-	67.5f * 0.75f, // Venus - 50.625
-	87.5f * 0.75f, // Tierra - 65.625
-	107.5f * 0.7f, // Marte - 75.25
-	157.5f * 0.65f, // Júpiter - 102.375
-	217.5f * 0.6f, // Saturno - 130.5
-	257.5f * 0.65f, // Urano - 167.375
-	287.5f * 0.6f,  // Neptuno - 172.5
-	295.0f * 0.55f  // Plutón - 162.25
+	37.8f,		// Mercury
+	72.3f,		// Venus 
+	99.9f,		// Earth
+	151.7f,		// Mars 
+	516.6f,		// Jupiter 
+	955.6f,		// Saturn 
+	1917.8f,	// Uranus
+	3000.0f,	// Neptune 
+	0.0f		// Moon
 };
-/*
-const float SEMIMINOR_AXIS[9] = {
-	47.5f * 0.5f,  // Mercurio - 23.75
-	67.5f * 0.5f,  // Venus - 33.75
-	87.5f * 0.45f, // Tierra - 39.375
-	107.5f * 0.45f, // Marte - 48.375
-	157.5f * 0.4f, // Júpiter - 63.0
-	217.5f * 0.4f, // Saturno - 87.0
-	257.5f * 0.45f, // Urano - 115.875
-	287.5f * 0.4f,  // Neptuno - 115.0
-	295.0f * 0.4f   // Plutón - 118.0
+const glm::vec3 ROTATION_ANGLE[9] = {
+		glm::vec3(0.0f, -0.1261f, 0.9920f),     // Sol: (0, -0.1261, 0.9920)
+		glm::vec3(0.0f, -0.00052f, 1.0f),        // Mercurio: (0, -0.00052, 1.0)
+		glm::vec3(0.0f, -0.99998f, -0.0061f),   // Venus: (0, -0.99998, -0.0061)
+		glm::vec3(0.0f, -0.3987f, 0.9171f),     // Tierra: (0, -0.3987, 0.9171)
+		glm::vec3(0.0f, -0.4253f, 0.9051f),     // Marte: (0, -0.4253, 0.9051)
+		glm::vec3(0.0f, -0.0546f, 0.9985f),     // Júpiter: (0, -0.0546, 0.9985)
+		glm::vec3(0.0f, -0.4507f, 0.8927f),     // Saturno: (0, -0.4507, 0.8927)
+		glm::vec3(0.0f, -0.9911f, -0.1330f),    // Urano: (0, -0.9911, -0.1330)
+		glm::vec3(0.0f, -0.4744f, 0.8803f)     // Neptuno: (0, -0.4744, 0.8803)
 };
-*/
-
-
 
 //-------------- VGI: Tipus d'Iluminacio
 #define PUNTS 'P'

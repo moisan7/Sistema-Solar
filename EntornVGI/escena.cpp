@@ -58,7 +58,7 @@ void dibuixa_Skybox(GLuint sk_programID, GLuint cmTexture, char eix_Polar, glm::
 	else if (eix_Polar == POLARX) ModelMatrix = glm::rotate(ModelMatrix, radians(-90.0f), vec3(0.0f, 0.0f, 1.0f));
 
 // Escalar Cub Skybox a 5000 per encabir objectes escena a l'interior
-	ModelMatrix = glm::scale(ModelMatrix, vec3(5000.0f, 5000.0f, 5000.0f));		//glScaled(5000.0, 5000.0, 5000.0);
+	ModelMatrix = glm::scale(ModelMatrix, vec3(8000.0f, 8000.0f, 8000.0f));		//glScaled(5000.0, 5000.0, 5000.0);
 	glUniformMatrix4fv(glGetUniformLocation(sk_programID, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
 
 // Activar textura cubemaps del Skybox per encabir objectes escena
@@ -1412,7 +1412,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	SetTextureParameters(textures_planeta[0], true, true, false, false);
 	glUniform1i(uni_id, 0);
 	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
-	TransMatrix = glm::rotate(TransMatrix, radians(deg2[0]), vec3(0.0f, 0.0f, 1.0f));
+	TransMatrix = glm::rotate(TransMatrix, radians(deg2[0]), ROTATION_ANGLE[0]);
 	ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
 	// Pas ModelView Matrix a shader
 	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
@@ -1454,8 +1454,12 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		float x = a * cos(deg1[i - 1]);  // Coordenada X en la elipse
 		float y = b * sin(deg1[i - 1]);  // Coordenada Y en la elipse
 
+		//float ORBIT_ANGLE_Y = y * cos(INCLINATION[i-1]); // Efecto de inclinación en Y
+		//float ORBIT_ANGLE_Z = y * sin(INCLINATION[i-1]); // Efecto de inclinación en Z
+		//TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
+		
 		TransMatrix = glm::translate(MatriuTG, vec3(x, y, 0.0f));
-		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), vec3(0.0f, 0.0f, 1.0f));
+		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), ROTATION_ANGLE[i-1]);
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
 
 		// Pas ModelView Matrix a shader
