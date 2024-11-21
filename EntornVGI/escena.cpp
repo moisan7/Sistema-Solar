@@ -1385,7 +1385,7 @@ void IluminacioSol(GLint shaderId)
 	llumSol.difusa[0] = 1.0; llumSol.difusa[1] = 1.0; llumSol.difusa[2] = 1.0; llumSol.difusa[3] = 1.0;
 	llumSol.especular[0] = 1.0; llumSol.especular[1] = 1.0; llumSol.especular[2] = 1.0; llumSol.especular[3] = 0.0;
 	llumSol.atenuacio.a = 0.0;
-	llumSol.atenuacio.b = 0.0025;
+	llumSol.atenuacio.b = 0.0015;
 	llumSol.atenuacio.c = 0.0;
 
 	//// Conversió angles graus -> radians
@@ -1409,11 +1409,10 @@ void IluminacioSol(GLint shaderId)
 	glUniform1i(glGetUniformLocation(shaderId, "LightSource[0].restricted"), false);
 
 	glUniform3f(glGetUniformLocation(shaderId, "LightSource[0].attenuation"), llumSol.atenuacio.a, llumSol.atenuacio.b, llumSol.atenuacio.c);
-	//	glEnable(GL_LIGHT0);	//	glDisable(GL_LIGHT0);
+
 	glUniform1i(glGetUniformLocation(shaderId, "LightSource[0].sw_light"), llumSol.encesa);
 
-	//Pas de paràmetres material a shader
-	glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 1.0, 1.0, 1.0, 1.0);
+	
 }
 
 //Objecte sis
@@ -1434,19 +1433,39 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	};
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
-	col_object.r = 1;	col_object.g = 1;	col_object.b = 1;	 col_object.a = 1.0;
+	col_object.r = 0.5;	col_object.g = 0.5;	col_object.b = 0.5;	 col_object.a = 1.0;
 	SeleccionaColorMaterial(shaderId, col_object, sw_mat); 
 	float trans = 0.0;
-	for (int i = 0; i < 10; i++) {
-		//Il·luminació Sol
-		if (i == 0)
-		{
-			IluminacioSol(shaderId);
-		}
 
+	/*------------SOL------------*/
+	
+	glm::mat4 sunMatrix = glm::mat4(1.0f);
+	//Pas de paràmetres material a shader
+	glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 1.0, 1.0, 1.0, 1.0);
+	glActiveTexture(GL_TEXTURE0);
+	SetTextureParameters(textures_planeta[0], true, true, false, false);
+	glUniform1i(uni_id, 0);
+	TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
+	//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
+	sunMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
+	// Pas ModelView Matrix a shader
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
+	// Pas NormalMatrix a shader
+	NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
+	draw_TriEBO_Object(GLU_SPHERE);
+	IluminacioSol(shaderId);
+	/*------------SOL------------*/
+
+	trans += 100.0f;
+	for (int i = 1; i < 10; i++) {
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
+
+		//Desactivar reflectivitat de llum d'emissió
+		glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+
 		TransMatrix = glm::translate(MatriuTG, vec3(trans, 0.0f, 0.0f));
 		//ModelMatrix = glm::rotate(TransMatrix, radians(180.0f), vec3(1.0f, 0.0f, 0.0f));
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
@@ -1456,6 +1475,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 		draw_TriEBO_Object(GLU_SPHERE);
+			
 		//Saturn's Ring: possible changes draw EVERY small ring that define the big ring.
 		if (i == 7) {
 			glColor4f(1.0f, 1.0f, 1.0f, 0.5f); // Blue color with alpha transparency
@@ -1473,9 +1493,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			draw_TriEBO_Object(GLU_DISK);
 		}
 
-		
 		trans += 100.0f;
-
 	}
 	/*
 	// After drawing is complete, unbind the texture
