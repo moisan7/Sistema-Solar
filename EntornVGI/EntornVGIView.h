@@ -195,6 +195,7 @@ public:
 	GLuint* texturesID_planets;
 	bool load_textures;
 	bool skyb;
+	bool draw_planets[9];
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones

@@ -462,6 +462,7 @@ CEntornVGIView::CEntornVGIView()
 	for (int i = 0; i < 10; i++) {
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
 	}
+	bool draw_planets[9] = { true, true, false, true, false, true, true, true, true};
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -1020,7 +1021,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els

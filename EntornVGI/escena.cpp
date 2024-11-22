@@ -81,7 +81,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1[], float deg2[])
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1[], float deg2[], bool draw_planets[9])
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -163,7 +163,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
-		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, deg1, deg2);
+		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, deg1, deg2, draw_planets);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -1375,7 +1375,7 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
-	GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[])
+	GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[], bool draw_planets[9])
 {
 	//float p_scale[10] = {
 	//	5,		// Sun
@@ -1440,6 +1440,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 
 	// Dibujado de planetas + movimiento
 	for (int i = 1; i < 10; i++) { // De 1 a 10 para dibujar todos
+		// Verificar si el planeta debe dibujarse
+		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
+
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
