@@ -462,7 +462,9 @@ CEntornVGIView::CEntornVGIView()
 	for (int i = 0; i < 10; i++) {
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
 	}
-	bool draw_planets[9] = { true, true, false, true, false, true, true, true, true};
+	for (int i = 0; i < 10; i++) {
+		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
+	}
 }
 
 CEntornVGIView::~CEntornVGIView()
