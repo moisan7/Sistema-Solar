@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+Debug/
+Release/
+x64/
+EntornVGI/Debug/
+EntornVGI/Release/
+EntornVGI/x64/
 # Force include 'lib' folder
 !lib/
 # Optional: Force include subfolders inside 'lib' if needed
