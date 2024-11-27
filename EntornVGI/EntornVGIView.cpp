@@ -5824,11 +5824,13 @@ float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
 
 float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
 float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
-// ELIPSE
-float orbitSpeedElipse = 0.05f;   // Velocidad angular de la órbita
 
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
+	static DWORD lastTime = 0;								// Variable estática para almacenar el tiempo de la última actualización
+	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
+	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
+
 	if (rotation) {
 		// Movimiento de rotación
 		rotationAngle += newAngle;
@@ -5850,12 +5852,15 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	/* ELIPSE */
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
-			orbit_angle[i] += ORBIT_SPEED[i];
+			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime;
 		}
 		for (int i = 0; i < 10; i++) {
-			rotation_angle[i] += ROTATION_SPEED[i];
+			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime;
 		}
 	}
+
+	// Actualizar la última vez que se llamó al timer
+	lastTime = currentTime;
 
 	// Crida a OnPaint() per redibuixar l'escena
 	InvalidateRect(NULL, false);

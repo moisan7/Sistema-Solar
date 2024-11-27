@@ -80,7 +80,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float deg1[], float deg2[], bool draw_planets[9])
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9])
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -162,7 +162,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
-		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, deg1, deg2, draw_planets);
+		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, orbit_angle, rotation_angle, draw_planets);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -1372,22 +1372,24 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 	glDisable(GL_BLEND);
 }
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
+
+//float calculateOrbitPerimeter(float a, float eccentricity) {
+//	float b = a * sqrt(1.0f - eccentricity * eccentricity); // Semieje menor
+//	return M_PI * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
+//}
+//
+//float calculateOrbitSpeeds(const float semimajor, const float eccent, const float ORBITAL_PERIODS) {
+//	float perimeter = calculateOrbitPerimeter(SEMIMAJOR_AXIS[0], ECCENTRICITIES[0]);
+//	float orbSpeed = perimeter / ORBITAL_PERIODS; // Velocidad angular (radianes/segundo)
+//	return orbSpeed;
+//}
+//float speed = calculateOrbitSpeeds(SEMIMAJOR_AXIS[0], ECCENTRICITIES[0], 87.97);
+//float angular_speed = speed / ((SEMIMAJOR_AXIS[0] + (SEMIMAJOR_AXIS[0] * sqrt(1.0f - ECCENTRICITIES[0] * ECCENTRICITIES[0]))) / 2);
+
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
-	GLint uni_id, GLuint* textures_planeta, float deg1[], float deg2[], bool draw_planets[9])
-{
-	//float p_scale[10] = {
-	//	5,		// Sun
-	//	0.24,	// Mercury
-	//	0.6,	// Venus
-	//	0.63,	// Earth
-	//	0.33,	// Mars
-	//	2.79,	// Jupiter
-	//	2.02,	// Saturn
-	//	1.13,	// Uranus
-	//	0.96,	// Neptune
-	//	0.17	// Moon
-	//};
+	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], bool draw_planets[9])
+{	
 	float p_scale[10] = {
 		2,		// Sun
 		0.302,	// Mercury
@@ -1411,7 +1413,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	SetTextureParameters(textures_planeta[0], true, true, false, false);
 	glUniform1i(uni_id, 0);
 	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
-	TransMatrix = glm::rotate(TransMatrix, radians(deg2[0]), ROTATION_ANGLE[0]);
+	TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[0]), ROTATION_ANGLE[0]);
 	ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
 	// Pas ModelView Matrix a shader
 	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
@@ -1424,7 +1426,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	// Dibujado de órbitas
 	glm::mat4 orbitMatrix = glm::mat4(1.0f); // Matriz órbitas
 	glDisable(GL_BLEND); // Quitar transparencia
-	for (int i = 1; i <= 1; i++) { // De 1 a 9 para dibujar todas
+	for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todas
 		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
 		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]);
 
@@ -1438,7 +1440,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	}
 
 	// Dibujado de planetas + movimiento
-	for (int i = 1; i <= 1; i++) { // De 1 a 9 para dibujar todos
+	for (int i = 3; i <= 3; i++) { // De 1 a 9 para dibujar todos
 		// Verificar si el planeta debe dibujarse
 		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
 
@@ -1449,14 +1451,14 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		// Calculos órbitas elípticas
 		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
 		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
-		float x = a * cos(deg1[i - 1] - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
-		float y = b * sin(deg1[i - 1]);  // Coordenada Y en la elipse
+		float x = a * (cos(orbit_angle[i - 1]) - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
+		float y = b * sin(orbit_angle[i - 1]);  // Coordenada Y en la elipse
 
 		float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i-1])); // Efecto de inclinación en Y
 		float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i-1])); // Efecto de inclinación en Z
 
 		TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
-		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), ROTATION_ANGLE[i]);
+		TransMatrix = glm::rotate(TransMatrix, -radians(rotation_angle[i]), ROTATION_ANGLE[i]);
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
 
 		// Pas ModelView Matrix a shader

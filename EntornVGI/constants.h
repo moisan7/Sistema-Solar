@@ -57,18 +57,18 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-const float ORBIT_SPEED[9] = { 
-	0.047f,		// Mercury
-	0.035f,		// Venus
-	0.029f, 	// Earth
-	0.024f, 	// Mars
-	0.013f, 	// Jupiter 
-	0.00969f, 	// Saturn
-	0.00681f,	// Uranus
-	0.00543f, 	// Neptune 
-	0.000f 		// Moon
+const float ORBIT_SPEED[9] = { // REAL (CAMBIAR)
+	0.00002117f,	// Mercury
+	0.00001548f,	// Venus
+	2 * glm::pi<float>() / 365.0f,	// Earth
+	0.00001080f,	// Mars
+	0.00000586f, 	// Jupiter 
+	0.00000435f, 	// Saturn
+	0.00000306f,	// Uranus
+	0.00000244f, 	// Neptune  
+	0.00000045f 	// Moon
 };
-const float ECCENTRICITIES[9]= {
+const float ECCENTRICITIES[9]= { // REAL
 	0.2056,		// Mercury
 	0.0067,		// Venus
 	0.0167,		// Earth
@@ -79,7 +79,7 @@ const float ECCENTRICITIES[9]= {
 	0.0097,		// Neptune
 	0.0f		// Moon
 };
-const float INCLINATION[9] = { 
+const float INCLINATION[9] = { // REAL (GRADOS)
 	7.00487f,	// Mercury
 	3.39471f, 	// Venus
 	0.00005f,	// Earth
@@ -102,27 +102,16 @@ const float ROTATION_SPEED[10] = {
 	9.660f, 	// Neptune 
 	0.0f 		// Moon
 };
-const float SEMIMAJOR_AXIS[9] = { 
+const float SEMIMAJOR_AXIS[9] = { // REAL * 100
 	38.7f,		// Mercury
 	72.3f, 		// Venus
 	100.0f, 	// Earth
-	152.4f, 	// Mars
-	520.4f, 	// Jupiter 
-	958.2f, 	// Saturn
-	1921.8f, 	// Uranus
-	3000.7f,	// Neptune 
+	152.0f, 	// Mars
+	520.0f, 	// Jupiter 
+	956.0f, 	// Saturn
+	1930.0f, 	// Uranus
+	3040.0f,	// Neptune 
 	0.0f 		// Moon
-};
-const float SEMIMINOR_AXIS[9] = {
-	37.8f,		// Mercury
-	72.3f,		// Venus 
-	99.9f,		// Earth
-	151.7f,		// Mars 
-	516.6f,		// Jupiter 
-	955.6f,		// Saturn 
-	1917.8f,	// Uranus
-	3000.0f,	// Neptune 
-	0.0f		// Moon
 };
 const glm::vec3 ROTATION_ANGLE[9] = {
 		glm::vec3(0.0f, -0.1261f, 0.9920f),     // Sun
