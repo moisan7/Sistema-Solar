@@ -235,7 +235,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Astre.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="constants.h" />
@@ -254,12 +253,11 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-	<ClInclude Include="textures.h" />
+    <ClInclude Include="textures.h" />
     <ClInclude Include="ViewTree.h" />
     <ClInclude Include="visualitzacio.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Astre.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="EntornVGI.cpp" />
@@ -280,7 +278,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-	<ClCompile Include="textures.cpp" />
+    <ClCompile Include="textures.cpp" />
     <ClCompile Include="ViewTree.cpp" />
     <ClCompile Include="visualitzacio.cpp" />
   </ItemGroup>

@@ -78,10 +78,7 @@
     <ClInclude Include="shader.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Astre.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-	<ClInclude Include="textures.h">
+    <ClInclude Include="textures.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,10 +134,7 @@
     <ClCompile Include="shader.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Astre.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-	<ClCompile Include="textures.cpp">
+    <ClCompile Include="textures.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>

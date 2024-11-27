@@ -15,7 +15,6 @@
 #include "material.h"
 #include "visualitzacio.h"
 #include "escena.h"
-#include "Astre.h"
 
 // Dibuixa Eixos Coordenades Món i Reixes, activant un shader propi.
 void dibuixa_Eixos(GLuint ax_programID, bool eix, GLuint axis_Id, CMask3D reixa, CPunt3D hreixa, 
@@ -1379,19 +1378,19 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 {
 	//float p_scale[10] = {
 	//	5,		// Sun
-	//	2.24,	// Mercury
-	//	2.6,	// Venus
-	//	2.63,	// Earth
-	//	2.33,	// Mars
+	//	0.24,	// Mercury
+	//	0.6,	// Venus
+	//	0.63,	// Earth
+	//	0.33,	// Mars
 	//	2.79,	// Jupiter
 	//	2.02,	// Saturn
-	//	2.13,	// Uranus
-	//	2.96,	// Neptune
-	//	2.17	// Moon
+	//	1.13,	// Uranus
+	//	0.96,	// Neptune
+	//	0.17	// Moon
 	//};
 	float p_scale[10] = {
-		5,		// Sun
-		0.24,	// Mercury
+		2,		// Sun
+		0.302,	// Mercury
 		0.6,	// Venus
 		0.63,	// Earth
 		0.33,	// Mars
@@ -1425,9 +1424,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	// Dibujado de órbitas
 	glm::mat4 orbitMatrix = glm::mat4(1.0f); // Matriz órbitas
 	glDisable(GL_BLEND); // Quitar transparencia
-	for (int i = 1; i < 10; i++) {
+	for (int i = 1; i <= 1; i++) { // De 1 a 9 para dibujar todas
 		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
-		float b = SEMIMINOR_AXIS[i - 1]; // Semieje menor del planeta
+		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]);
 
 		glColor3f(1.0f, 1.0f, 1.0f); // Color blanco
 		glLineWidth(2.0f);           // Grosor de línea
@@ -1435,11 +1434,11 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
 
 		// Dibujar órbita
-		DrawOrbit(a, b, 10000); // 10000 segmentos (para suavizar la línea)
+		DrawOrbit(a, b, (i - 1), 10000); // 10000 segmentos (para suavizar la línea)
 	}
 
 	// Dibujado de planetas + movimiento
-	for (int i = 1; i < 10; i++) { // De 1 a 10 para dibujar todos
+	for (int i = 1; i <= 1; i++) { // De 1 a 9 para dibujar todos
 		// Verificar si el planeta debe dibujarse
 		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
 
@@ -1447,22 +1446,17 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
 
-		// Calculos órbitas
-		//float x = DISTANCE_FROM_SUN[i - 1] * cos(deg1[i - 1]);
-		//float y = DISTANCE_FROM_SUN[i - 1] * sin(deg1[i - 1]);
-
 		// Calculos órbitas elípticas
 		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
-		float b = SEMIMINOR_AXIS[i - 1]; // Semieje menor para cada planeta
-		float x = a * cos(deg1[i - 1]);  // Coordenada X en la elipse
+		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
+		float x = a * cos(deg1[i - 1] - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
 		float y = b * sin(deg1[i - 1]);  // Coordenada Y en la elipse
 
-		//float ORBIT_ANGLE_Y = y * cos(INCLINATION[i-1]); // Efecto de inclinación en Y
-		//float ORBIT_ANGLE_Z = y * sin(INCLINATION[i-1]); // Efecto de inclinación en Z
-		//TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
-		
-		TransMatrix = glm::translate(MatriuTG, vec3(x, y, 0.0f));
-		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), ROTATION_ANGLE[i-1]);
+		float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i-1])); // Efecto de inclinación en Y
+		float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i-1])); // Efecto de inclinación en Z
+
+		TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
+		TransMatrix = glm::rotate(TransMatrix, -radians(deg2[i]), ROTATION_ANGLE[i]);
 		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
 
 		// Pas ModelView Matrix a shader
@@ -1474,19 +1468,14 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 
 		draw_TriEBO_Object(GLU_SPHERE);
 	}
-	/*
-	// After drawing is complete, unbind the texture
-	glBindTexture(GL_TEXTURE_2D, 0);
-	// Release the texture from VRAM
-	glDeleteTextures(9, textures_planeta);*/
 };
 
 // Dibujar órbitas planetas
-void DrawOrbit(float a, float b, int numSegments) {
+void DrawOrbit(float a, float b, int planet, int numSegments) {
 	glBegin(GL_LINE_LOOP); // Dibujar como bucle cerrado
 	for (int i = 0; i < numSegments; i++) {
 		float angle = 2.0f * M_PI * i / numSegments; // Ángulo actual
-		float x = a * cos(angle); // Coordenada X elipse
+		float x = a * (cos(angle) - ECCENTRICITIES[planet]); // Coordenada X elipse
 		float y = b * sin(angle); // Coordenada Y elipse
 		glVertex3f(x, y, 0.0f);   // Punto en la órbita XY
 	}

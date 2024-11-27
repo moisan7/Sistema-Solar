@@ -57,10 +57,62 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-const float ORBIT_SPEED[9] = { 0.047f, 0.035f, 0.029f, 0.024f, 0.013f, 0.00969f, 0.00681f, 0.00543f, 0.000f };
-const float INCLINATION[9] = { 7.00487f, 3.39471f, 0.00005f, 1.85061f, 1.30463f, 2.48524f, 0.76986f, 1.76917f, 0.0f };
-const float ROTATION_SPEED[10] = { 1.997f, 0.01083f, -0.00652f, 1.670f, 0.868f, 45.3f, 36.840f, -9.320f, 9.660f, 0.0f };
-const float SEMIMAJOR_AXIS[9] = { 38.7f, 72.3f, 100.0f, 152.4f, 520.4f, 958.2f, 1921.8f, 3000.7f, 0.0f };
+const float ORBIT_SPEED[9] = { 
+	0.047f,		// Mercury
+	0.035f,		// Venus
+	0.029f, 	// Earth
+	0.024f, 	// Mars
+	0.013f, 	// Jupiter 
+	0.00969f, 	// Saturn
+	0.00681f,	// Uranus
+	0.00543f, 	// Neptune 
+	0.000f 		// Moon
+};
+const float ECCENTRICITIES[9]= {
+	0.2056,		// Mercury
+	0.0067,		// Venus
+	0.0167,		// Earth
+	0.0934,		// Mars
+	0.0489,		// Jupiter
+	0.0565,		// Saturn
+	0.0463,		// Uranus
+	0.0097,		// Neptune
+	0.0f		// Moon
+};
+const float INCLINATION[9] = { 
+	7.00487f,	// Mercury
+	3.39471f, 	// Venus
+	0.00005f,	// Earth
+	1.85061f, 	// Mars
+	1.30463f, 	// Jupiter 
+	2.48524f, 	// Saturn
+	0.76986f, 	// Uranus
+	1.76917f, 	// Neptune 
+	0.0f 		// Moon
+};
+const float ROTATION_SPEED[10] = { 
+	1.997f,		// Sun
+	0.01083f,	// Mercury
+	-0.00652f,	// Venus
+	1.670f, 	// Earth
+	0.868f,		// Mars
+	45.3f, 		// Jupiter 
+	36.840f,	// Saturn
+	-9.320f, 	// Uranus
+	9.660f, 	// Neptune 
+	0.0f 		// Moon
+};
+const float SEMIMAJOR_AXIS[9] = { 
+	38.7f,		// Mercury
+	72.3f, 		// Venus
+	100.0f, 	// Earth
+	152.4f, 	// Mars
+	520.4f, 	// Jupiter 
+	958.2f, 	// Saturn
+	1921.8f, 	// Uranus
+	3000.7f,	// Neptune 
+	0.0f 		// Moon
+};
 const float SEMIMINOR_AXIS[9] = {
 	37.8f,		// Mercury
 	72.3f,		// Venus 
@@ -73,15 +125,15 @@ const float SEMIMINOR_AXIS[9] = {
 	0.0f		// Moon
 };
 const glm::vec3 ROTATION_ANGLE[9] = {
-		glm::vec3(0.0f, -0.1261f, 0.9920f),     // Sol: (0, -0.1261, 0.9920)
-		glm::vec3(0.0f, -0.00052f, 1.0f),        // Mercurio: (0, -0.00052, 1.0)
-		glm::vec3(0.0f, -0.99998f, -0.0061f),   // Venus: (0, -0.99998, -0.0061)
-		glm::vec3(0.0f, -0.3987f, 0.9171f),     // Tierra: (0, -0.3987, 0.9171)
-		glm::vec3(0.0f, -0.4253f, 0.9051f),     // Marte: (0, -0.4253, 0.9051)
-		glm::vec3(0.0f, -0.0546f, 0.9985f),     // Júpiter: (0, -0.0546, 0.9985)
-		glm::vec3(0.0f, -0.4507f, 0.8927f),     // Saturno: (0, -0.4507, 0.8927)
-		glm::vec3(0.0f, -0.9911f, -0.1330f),    // Urano: (0, -0.9911, -0.1330)
-		glm::vec3(0.0f, -0.4744f, 0.8803f)     // Neptuno: (0, -0.4744, 0.8803)
+		glm::vec3(0.0f, -0.1261f, 0.9920f),     // Sun
+		glm::vec3(0.0f, -0.00052f, 1.0f),       // Mercury
+		glm::vec3(0.0f, -0.99998f, -0.0061f),   // Venus
+		glm::vec3(0.0f, -0.3987f, 0.9171f),     // Earth
+		glm::vec3(0.0f, -0.4253f, 0.9051f),     // Mars
+		glm::vec3(0.0f, -0.0546f, 0.9985f),     // Jupiter
+		glm::vec3(0.0f, -0.4507f, 0.8927f),     // Saturn
+		glm::vec3(0.0f, -0.9911f, -0.1330f),    // Uranus
+		glm::vec3(0.0f, -0.4744f, 0.8803f)		// Neptune
 };
 
 //-------------- VGI: Tipus d'Iluminacio
