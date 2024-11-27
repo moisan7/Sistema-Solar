@@ -5831,31 +5831,30 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
 	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
 
-	if (rotation) {
-		// Movimiento de rotación
-		rotationAngle += newAngle;
-		if (rotationAngle >= 360.0f)
-			rotationAngle -= 360.0f;
-		//// Calcular la nueva orientación de rotación del planeta
-		// Calcular la nueva posición de traslación del planeta en la órbita
-		TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
-	}
-	if (translation) {
-		// Movimiento de traslación
-		orbitAngle += orbitSpeed;
-		if (orbitAngle >= 360.0f)
-			orbitAngle -= 360.0f;
-		// Calcular la nueva posición de traslación del planeta en la órbita
-		TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
-		TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
-	}
-	/* ELIPSE */
+	//if (rotation) {
+	//	// Movimiento de rotación
+	//	rotationAngle += newAngle;
+	//	if (rotationAngle >= 360.0f)
+	//		rotationAngle -= 360.0f;
+	//	//// Calcular la nueva orientación de rotación del planeta
+	//	// Calcular la nueva posición de traslación del planeta en la órbita
+	//	TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
+	//}
+	//if (translation) {
+	//	// Movimiento de traslación
+	//	orbitAngle += orbitSpeed;
+	//	if (orbitAngle >= 360.0f)
+	//		orbitAngle -= 360.0f;
+	//	// Calcular la nueva posición de traslación del planeta en la órbita
+	//	TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
+	//	TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
+	//}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
-			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime;
+			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * INCREMENTADOR[3];
 		}
 		for (int i = 0; i < 10; i++) {
-			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime;
+			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * INCREMENTADOR[3];
 		}
 	}
 
@@ -5947,7 +5946,16 @@ void CEntornVGIView::OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI)
 /* ---------------------------TEXTURAS-------------------------- */
 void CEntornVGIView::OnSistemasolarTestTextures()
 {
+	KillTimer(1); // Detén el temporizador por si estaba activo
 	objecte = SIS;
+
+	// Reinicia los ángulos orbitales y de rotación
+	for (int i = 0; i <= 8; i++) {
+		orbit_angle[i] = 0.0f; // Posición inicial de las órbitas
+	}
+	for (int i = 0; i <= 9; i++) {
+		rotation_angle[i] = 0.0f; // Posición inicial de rotación
+	}
 
 	// Entorn VGI: Activació el contexte OpenGL
 	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
@@ -5975,19 +5983,14 @@ void CEntornVGIView::OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI)
 }
 /* ---------------------------ÓRBITAS-------------------------- */
 void CEntornVGIView::OnSistemasolarTestOrbita()
-{
+{	
 	// Alternar entre activar y desactivar la traslación
 	translation_orbit = !translation_orbit;
 	if (translation_orbit) {
 		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
 	}
 	else {
-		fact_Tras = 1;
-		TG.VTras.x = 0.0;
-		TG.VTras.y = 0.0;
-		TG.VTras.z = 0.0;
-		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
-		KillTimer(1);   // Detener el temporizador
+		KillTimer(1);// Detener el temporizador
 	}
 	transf = translation_orbit || rotation;
 

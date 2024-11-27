@@ -1440,7 +1440,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	}
 
 	// Dibujado de planetas + movimiento
-	for (int i = 3; i <= 3; i++) { // De 1 a 9 para dibujar todos
+	for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todos
 		// Verificar si el planeta debe dibujarse
 		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
 

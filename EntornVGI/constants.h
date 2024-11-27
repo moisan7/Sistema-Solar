@@ -56,18 +56,20 @@
 #define OBJOBJ '4'		// Objecte format OBJ
 // SISTEMA SOLAR
 #define SIS 'L'
-const double M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-const float ORBIT_SPEED[9] = { // REAL (CAMBIAR)
-	0.00002117f,	// Mercury
-	0.00001548f,	// Venus
-	2 * glm::pi<float>() / 365.0f,	// Earth
-	0.00001080f,	// Mars
-	0.00000586f, 	// Jupiter 
-	0.00000435f, 	// Saturn
-	0.00000306f,	// Uranus
-	0.00000244f, 	// Neptune  
-	0.00000045f 	// Moon
+const double M_PI = glm::pi<double>();
+const float INCREMENTADOR[7] = { 2, 5, 10, 100, 200, 500, 1000}; // FALTA ASIGNARLO A UN BOTON
+const float ORBIT_SPEED[9] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
+    2 * glm::pi<float>() / 88.0f,		// Mercury (88d)
+    2 * glm::pi<float>() / 225.0f,		// Venus (225d)
+    2 * glm::pi<float>() / 365.0f,		// Earth (365d)
+    2 * glm::pi<float>() / 687.0f,		// Mars (687d)
+    2 * glm::pi<float>() / 4333.0f,		// Jupiter (4333d)
+    2 * glm::pi<float>() / 10759.0f,	// Saturn (10759d)
+    2 * glm::pi<float>() / 30689.0f,	// Uranus (30689d)
+    2 * glm::pi<float>() / 60182.0f,	// Neptune (60182d)
+    2 * glm::pi<float>() / 0.0f			// Moon (27.32d, periodo sinódico)
 };
+
 const float ECCENTRICITIES[9]= { // REAL
 	0.2056,		// Mercury
 	0.0067,		// Venus
@@ -94,7 +96,7 @@ const float ROTATION_SPEED[10] = {
 	1.997f,		// Sun
 	0.01083f,	// Mercury
 	-0.00652f,	// Venus
-	1.670f, 	// Earth
+	100.0f, 	// Earth (1 rotation/s)
 	0.868f,		// Mars
 	45.3f, 		// Jupiter 
 	36.840f,	// Saturn
