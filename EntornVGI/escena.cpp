@@ -1532,4 +1532,3 @@ void DrawOrbit(float a, float b, int planet, int numSegments) {
 	}
 	glEnd();
 }
-}

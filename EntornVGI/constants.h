@@ -57,7 +57,7 @@
 // SISTEMA SOLAR
 #define SIS 'L'
 const double M_PI = glm::pi<double>();
-const float INCREMENTADOR[7] = { 2, 5, 10, 100, 200, 500, 1000}; // FALTA ASIGNARLO A UN BOTON
+const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 }; // FALTA ASIGNARLO A UN BOTON
 const float ORBIT_SPEED[9] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 88.0f,		// Mercury (88d)
     2 * glm::pi<float>() / 225.0f,		// Venus (225d)
@@ -92,17 +92,17 @@ const float INCLINATION[9] = { // REAL (GRADOS)
 	1.76917f, 	// Neptune 
 	0.0f 		// Moon
 };
-const float ROTATION_SPEED[10] = { 
-	1.997f,		// Sun
-	0.01083f,	// Mercury
-	-0.00652f,	// Venus
-	100.0f, 	// Earth (1 rotation/s)
-	0.868f,		// Mars
-	45.3f, 		// Jupiter 
-	36.840f,	// Saturn
-	-9.320f, 	// Uranus
-	9.660f, 	// Neptune 
-	0.0f 		// Moon
+const float ROTATION_SPEED[10] = {
+	0.0f,						// Sun (estático en este modelo)
+	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento (2pi/1406.4)
+	-365.0f * (1.0f / 243.0f),  // Venus: 243 veces más lento (2pi/5832)
+	365.0f,						// Earth: (2pi/24)
+	365.0f * 1.025f,            // Mars: 1.025 veces más rápido (2pi/24.6)
+	365.0f * 2.4f,				// Jupiter: 2.4 veces más rápido (2pi/9.9)
+	365.0f * 2.24f,				// Saturn: 2.24 veces más rápido (2pi/10.7)
+	-365.0f * 1.4f,				// Uranus: 1.4 veces más rápido (2pi/17.2)
+	365.0f * 1.49f ,            // Neptune: 1.49 veces más rápido (2pi/16.1)
+	0.0f						// Moon
 };
 const float SEMIMAJOR_AXIS[9] = { // REAL * 100
 	38.7f,		// Mercury
