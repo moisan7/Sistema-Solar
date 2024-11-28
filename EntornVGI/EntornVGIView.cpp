@@ -5921,6 +5921,7 @@ void CEntornVGIView::OnSistemasolarStart()
 	//Despausem després d'haver modificat el volum
 	snd->setIsPaused(false);
 	
+	snd->drop();
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
