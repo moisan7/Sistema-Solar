@@ -1373,6 +1373,48 @@ void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 }
 // FI OBJECTE TIE: FETS PER ALUMNES -----------------------------------------------------------------
 
+void IluminacioSol(GLint shaderId)
+{
+	//Inicialització Llum Sol
+	LLUM llumSol;
+	llumSol.posicio.R = 0;
+	llumSol.posicio.alfa = 0;
+	llumSol.posicio.beta = 0;
+	llumSol.encesa = true;
+	llumSol.difusa[0] = 1.0; llumSol.difusa[1] = 1.0; llumSol.difusa[2] = 1.0; llumSol.difusa[3] = 1.0;
+	llumSol.especular[0] = 1.0; llumSol.especular[1] = 1.0; llumSol.especular[2] = 1.0; llumSol.especular[3] = 0.0;
+	llumSol.atenuacio.a = 0.0;
+	llumSol.atenuacio.b = 0.0015;
+	llumSol.atenuacio.c = 0.0;
+
+	//// Conversió angles graus -> radians
+	GLdouble angv = llumSol.posicio.alfa * PI / 180;
+	GLdouble angh = llumSol.posicio.beta * PI / 180;
+
+	// Conversió Coord. esfèriques -> Coord. cartesianes per a la posició de la llum
+	GLfloat position[] = { llumSol.posicio.R * cos(angh) * cos(angv),
+						llumSol.posicio.R * sin(angh) * cos(angv),
+						llumSol.posicio.R * sin(angv), 1.0f };
+
+	//Pas de paràmetres de llum a shader
+	glUniform4f(glGetUniformLocation(shaderId, "LightSource[0].position"), position[0], position[1], position[2], position[3]);
+
+	glUniform4f(glGetUniformLocation(shaderId, "LightSource[0].diffuse"), llumSol.difusa[0], llumSol.difusa[1],
+		llumSol.difusa[2], llumSol.difusa[3]);
+
+	glUniform4f(glGetUniformLocation(shaderId, "LightSource[0].specular"), llumSol.especular[0], llumSol.especular[1],
+		llumSol.especular[2], llumSol.especular[3]);
+
+	glUniform1i(glGetUniformLocation(shaderId, "LightSource[0].restricted"), false);
+
+	glUniform3f(glGetUniformLocation(shaderId, "LightSource[0].attenuation"), llumSol.atenuacio.a, llumSol.atenuacio.b, llumSol.atenuacio.c);
+
+	glUniform1i(glGetUniformLocation(shaderId, "LightSource[0].sw_light"), llumSol.encesa);
+
+	
+}
+
+
 //float calculateOrbitPerimeter(float a, float eccentricity) {
 //	float b = a * sqrt(1.0f - eccentricity * eccentricity); // Semieje menor
 //	return M_PI * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
@@ -1409,18 +1451,22 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	SeleccionaColorMaterial(shaderId, col_object, sw_mat);
 
 	/*------------SOL------------*/
+	glm::mat4 sunMatrix = glm::mat4(1.0f);
+	//Pas de paràmetres material a shader
+	glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 1.0, 1.0, 1.0, 1.0);
 	glActiveTexture(GL_TEXTURE0);
 	SetTextureParameters(textures_planeta[0], true, true, false, false);
 	glUniform1i(uni_id, 0);
 	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
 	TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[0]), ROTATION_ANGLE[0]);
-	ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
+	sunMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
 	// Pas ModelView Matrix a shader
-	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
 	// Pas NormalMatrix a shader
 	NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
-	glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
 	draw_TriEBO_Object(GLU_SPHERE);
+	IluminacioSol(shaderId);
 	/*------------SOL------------*/
 
 	// Dibujado de órbitas
@@ -1447,6 +1493,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
+
+		//Desactivar reflectivitat de llum d'emissió
+		glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
 
 		// Calculos órbitas elípticas
 		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
@@ -1482,4 +1531,5 @@ void DrawOrbit(float a, float b, int planet, int numSegments) {
 		glVertex3f(x, y, 0.0f);   // Punto en la órbita XY
 	}
 	glEnd();
+}
 }

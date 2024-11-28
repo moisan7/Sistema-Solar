@@ -286,10 +286,10 @@ CEntornVGIView::CEntornVGIView()
 	// Entorn VGI: Variables de control per les opcions de menú Ocultacions
 	front_faces = true;	test_vis = false;	oculta = true;
 
-	// Entorn VGI: Variables de control del menú Iluminació		
-	ilumina = PLANA;			ifixe = false;					ilum2sides = false;
-	// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
-	sw_material[0] = false;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
+// Entorn VGI: Variables de control del menú Iluminació		
+	ilumina = PLANA;			ifixe = true;					ilum2sides = false;
+// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
+	sw_material[0] = true;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
 	textura = false;				t_textura = CAP;				textura_map = true;
 	for (i = 0; i < NUM_MAX_TEXTURES; i++) texturesID[i] = -1;
@@ -305,8 +305,8 @@ CEntornVGIView::CEntornVGIView()
 		llumGL[i].especular[0] = 1.0f; llumGL[i].especular[1] = 1.0f; llumGL[i].especular[2] = 1.0f; llumGL[i].especular[3] = 1.0f;
 	}
 
-	// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
-	llumGL[0].encesa = true;
+// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
+	llumGL[0].encesa = false;
 	llumGL[0].difusa[0] = 1.0f;			llumGL[0].difusa[1] = 1.0f;			llumGL[0].difusa[2] = 1.0f;		llumGL[0].difusa[3] = 1.0f;
 	llumGL[0].especular[0] = 1.0f;		llumGL[0].especular[1] = 1.0f;		llumGL[0].especular[2] = 1.0f;	llumGL[0].especular[3] = 1.0f;
 
@@ -314,7 +314,7 @@ CEntornVGIView::CEntornVGIView()
 	llumGL[0].atenuacio.a = 0.0;		llumGL[0].atenuacio.b = 0.0;		llumGL[0].atenuacio.c = 1.0;		// Llum sense atenuació per distància (a,b,c)=(0,0,1)
 	llumGL[0].restringida = false;
 	llumGL[0].spotdirection[0] = 0.0;	llumGL[0].spotdirection[1] = 0.0;	llumGL[0].spotdirection[2] = -1.0;
-	llumGL[0].spotcoscutoff = cos(25.0 * PI / 180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)
+	llumGL[0].spotcoscutoff = cos(25.0*PI/180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)	
 
 	// LLum 1: Atenuació constant (c=1), sobre l'eix X, no restringida.
 	llumGL[1].encesa = false;
@@ -5873,7 +5873,54 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 
 void CEntornVGIView::OnSistemasolarStart()
 {
-	// TODO
+	// TODO: Agregue aquí su código de controlador de comandos
+	objecte = SIS;
+
+
+	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
+
+	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
+
+	// Entorn VGI: Activació el contexte OpenGL
+	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+
+	// Càrrega dels VAO's per a construir objecte OCT
+	netejaVAOList();                        // Neteja Llista VAO.
+
+	// Posar color objecte (col_obj) al vector de colors del VAO.
+	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
+
+	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
+	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
+	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
+
+	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
+	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
+
+	// Crida a OnPaint() per redibuixar l'escena
+	InvalidateRect(NULL, false);
+
+	//Música de fons
+	
+	
+	//Inicialitzar el sound engine amb parametres per defecte
+	ISoundEngine* engine = createIrrKlangDevice();
+	
+	if (!engine)
+	{
+		printf("Could not startup engine\n");
+	}
+
+	// To play a sound, we only to call play2D().
+
+	// play some sound stream, looped
+	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
+	//Modifiquem volum
+	snd->setVolume(1);
+
+	//Despausem després d'haver modificat el volum
+	snd->setIsPaused(false);
+	
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
