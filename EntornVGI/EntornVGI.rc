@@ -439,6 +439,18 @@ BEGIN
         MENUITEM "Test Translacio",             ID_SISTEMASOLAR_TESTTRANSLACIO
         MENUITEM "Test Textures",               ID_SISTEMASOLAR_TESTTEXTURES
         MENUITEM "Test Orbita",                 ID_SISTEMASOLAR_TESTORBITA
+        POPUP "Increment Speed"
+        BEGIN
+            MENUITEM "x0",                          ID_INCREMENTSPEED_X0
+            MENUITEM "x1",                          ID_INCREMENTSPEED_X1
+            MENUITEM "x2",                          ID_INCREMENTSPEED_X2
+            MENUITEM "x5",                          ID_INCREMENTSPEED_X5
+            MENUITEM "x10",                         ID_INCREMENTSPEED_X10
+            MENUITEM "x100",                        ID_INCREMENTSPEED_X100
+            MENUITEM "x200",                        ID_INCREMENTSPEED_X200
+            MENUITEM "x500",                        ID_INCREMENTSPEED_X500
+            MENUITEM "x1000",                       ID_INCREMENTSPEED_X1000
+        END
     END
 END
 

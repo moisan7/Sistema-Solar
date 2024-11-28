@@ -179,6 +179,7 @@ public:
 	bool translation_orbit;
 	float orbit_angle[9];		// ANGULO TRASLACION
 	float rotation_angle[10];	// ANGULO ROTACION
+	float speed_inc;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.
@@ -464,7 +465,24 @@ public:
 	afx_msg void OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarTestOrbita();
 	afx_msg void OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI);
-	//float rotationAngle = 0.0f;
+	afx_msg void OnSistemasolarIncrementx0();
+	afx_msg void OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx1();
+	afx_msg void OnUpdateSistemasolarIncrementx1(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx2();
+	afx_msg void OnUpdateSistemasolarIncrementx2(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx5();
+	afx_msg void OnUpdateSistemasolarIncrementx5(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx10();
+	afx_msg void OnUpdateSistemasolarIncrementx10(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx100();
+	afx_msg void OnUpdateSistemasolarIncrementx100(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx200();
+	afx_msg void OnUpdateSistemasolarIncrementx200(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx500();
+	afx_msg void OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx1000();
+	afx_msg void OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI);
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 };
 

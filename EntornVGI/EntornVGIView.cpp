@@ -224,6 +224,25 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTTEXTURES, &CEntornVGIView::OnUpdateSistemasolarTestTextures)
 	ON_COMMAND(ID_SISTEMASOLAR_TESTORBITA, &CEntornVGIView::OnSistemasolarTestOrbita)
 	ON_UPDATE_COMMAND_UI(ID_SISTEMASOLAR_TESTORBITA, &CEntornVGIView::OnUpdateSistemasolarTestOrbita)
+	// INCREMENT SPEED
+	ON_COMMAND(ID_INCREMENTSPEED_X0, &CEntornVGIView::OnSistemasolarIncrementx0)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X0, &CEntornVGIView::OnUpdateSistemasolarIncrementx0)
+	ON_COMMAND(ID_INCREMENTSPEED_X1, &CEntornVGIView::OnSistemasolarIncrementx1)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X1, &CEntornVGIView::OnUpdateSistemasolarIncrementx1)
+	ON_COMMAND(ID_INCREMENTSPEED_X2, &CEntornVGIView::OnSistemasolarIncrementx2)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X2, &CEntornVGIView::OnUpdateSistemasolarIncrementx2)
+	ON_COMMAND(ID_INCREMENTSPEED_X5, &CEntornVGIView::OnSistemasolarIncrementx5)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X5, &CEntornVGIView::OnUpdateSistemasolarIncrementx5)
+	ON_COMMAND(ID_INCREMENTSPEED_X10, &CEntornVGIView::OnSistemasolarIncrementx10)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X10, &CEntornVGIView::OnUpdateSistemasolarIncrementx10)
+	ON_COMMAND(ID_INCREMENTSPEED_X100, &CEntornVGIView::OnSistemasolarIncrementx100)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X100, &CEntornVGIView::OnUpdateSistemasolarIncrementx100)
+	ON_COMMAND(ID_INCREMENTSPEED_X200, &CEntornVGIView::OnSistemasolarIncrementx200)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X200, &CEntornVGIView::OnUpdateSistemasolarIncrementx200)
+	ON_COMMAND(ID_INCREMENTSPEED_X500, &CEntornVGIView::OnSistemasolarIncrementx500)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X500, &CEntornVGIView::OnUpdateSistemasolarIncrementx500)
+	ON_COMMAND(ID_INCREMENTSPEED_X1000, &CEntornVGIView::OnSistemasolarIncrementx1000)
+	ON_UPDATE_COMMAND_UI(ID_INCREMENTSPEED_X1000, &CEntornVGIView::OnUpdateSistemasolarIncrementx1000)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -462,6 +481,9 @@ CEntornVGIView::CEntornVGIView()
 	for (int i = 0; i < 10; i++) {
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
 	}
+	// Velocidades
+	speed_inc = INCREMENTADOR[1];
+	// Planetas a dibujar
 	for (int i = 1; i < 10; i++) {
 		draw_planets[i-1] = true;	  // Inicialmente dibujar todos los planetas
 	}
@@ -5851,10 +5873,10 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	//}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
-			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * INCREMENTADOR[0];
+			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
 		}
 		for (int i = 0; i < 10; i++) {
-			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * INCREMENTADOR[1];
+			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
 		}
 	}
 
@@ -6053,3 +6075,86 @@ void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
 }
+
+void CEntornVGIView::OnSistemasolarIncrementx0()
+{
+	speed_inc = INCREMENTADOR[0];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx1()
+{
+	speed_inc = INCREMENTADOR[1];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx1(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx2()
+{
+	speed_inc = INCREMENTADOR[2];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx2(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx5()
+{
+	speed_inc = INCREMENTADOR[3];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx5(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx10()
+{
+	speed_inc = INCREMENTADOR[4];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx10(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx100()
+{
+	speed_inc = INCREMENTADOR[5];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx100(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx200()
+{
+	speed_inc = INCREMENTADOR[6];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx200(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx500()
+{
+	speed_inc = INCREMENTADOR[7];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI)
+{
+}
+
+void CEntornVGIView::OnSistemasolarIncrementx1000()
+{
+	speed_inc = INCREMENTADOR[8];
+}
+
+void CEntornVGIView::OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI)
+{
+}
+
+
