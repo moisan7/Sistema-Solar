@@ -5851,10 +5851,10 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	//}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
-			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * INCREMENTADOR[3];
+			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * INCREMENTADOR[0];
 		}
 		for (int i = 0; i < 10; i++) {
-			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * INCREMENTADOR[3];
+			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * INCREMENTADOR[1];
 		}
 	}
 
