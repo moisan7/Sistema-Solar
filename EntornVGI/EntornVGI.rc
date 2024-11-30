@@ -441,7 +441,7 @@ BEGIN
         MENUITEM "Test Orbita",                 ID_SISTEMASOLAR_TESTORBITA
         POPUP "Increment Speed"
         BEGIN
-            MENUITEM "x0",                          ID_INCREMENTSPEED_X0
+            MENUITEM "Pause",                       ID_INCREMENTSPEED_X0
             MENUITEM "x1",                          ID_INCREMENTSPEED_X1
             MENUITEM "x2",                          ID_INCREMENTSPEED_X2
             MENUITEM "x5",                          ID_INCREMENTSPEED_X5
@@ -450,6 +450,17 @@ BEGIN
             MENUITEM "x200",                        ID_INCREMENTSPEED_X200
             MENUITEM "x500",                        ID_INCREMENTSPEED_X500
             MENUITEM "x1000",                       ID_INCREMENTSPEED_X1000
+        END
+        POPUP "Show Planets"
+        BEGIN
+            MENUITEM "Mercury",                     ID_SHOWPLANETS_MERCURY
+            MENUITEM "Venus",                       ID_SHOWPLANETS_VENUS
+            MENUITEM "Earth",                       ID_SHOWPLANETS_EARTH
+            MENUITEM "Mars",                        ID_SHOWPLANETS_MARS
+            MENUITEM "Jupiter",                     ID_SHOWPLANETS_JUPITER
+            MENUITEM "Saturn",                      ID_SHOWPLANETS_SATURN
+            MENUITEM "Uranus",                      ID_SHOWPLANETS_URANUS
+            MENUITEM "Neptune",                     ID_SHOWPLANETS_NEPTUNE
         END
     END
 END

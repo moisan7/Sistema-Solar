@@ -233,13 +233,22 @@
 #define ID_INCREMENTSPEED_X1000         32913
 #define ID_INCREMENTSPEED_X1001         32914
 #define ID_INCREMENTSPEED_X200          32915
+#define ID_SISTEMASOLAR_SHOWPLANETS     32916
+#define ID_SHOWPLANETS_MERCURY          32917
+#define ID_SHOWPLANETS_VENUS            32918
+#define ID_SHOWPLANETS_EARTH            32919
+#define ID_SHOWPLANETS_MARS             32920
+#define ID_SHOWPLANETS_JUPITER          32921
+#define ID_SHOWPLANETS_SATURN           32922
+#define ID_SHOWPLANETS_URANUS           32923
+#define ID_SHOWPLANETS_NEPTUNE          32924
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32916
+#define _APS_NEXT_COMMAND_VALUE         32925
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

@@ -179,7 +179,7 @@ public:
 	bool translation_orbit;
 	float orbit_angle[9];		// ANGULO TRASLACION
 	float rotation_angle[10];	// ANGULO ROTACION
-	float speed_inc;
+	float speed_inc, speed_index;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.
@@ -196,7 +196,7 @@ public:
 	GLuint* texturesID_planets;
 	bool load_textures;
 	bool skyb;
-	bool draw_planets[9];
+	bool draw_planets[8];
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -465,6 +465,7 @@ public:
 	afx_msg void OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarTestOrbita();
 	afx_msg void OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI);
+	// Increment Speed
 	afx_msg void OnSistemasolarIncrementx0();
 	afx_msg void OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarIncrementx1();
@@ -483,6 +484,23 @@ public:
 	afx_msg void OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarIncrementx1000();
 	afx_msg void OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI);
+	// Show Planets
+	afx_msg void OnSistemasolarShowMercury();
+	afx_msg void OnUpdateSistemasolarShowMercury(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowVenus();
+	afx_msg void OnUpdateSistemasolarShowVenus(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowEarth();
+	afx_msg void OnUpdateSistemasolarShowEarth(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowMars();
+	afx_msg void OnUpdateSistemasolarShowMars(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowJupiter();
+	afx_msg void OnUpdateSistemasolarShowJupiter(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowSaturn();
+	afx_msg void OnUpdateSistemasolarShowSaturn(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowUranus();
+	afx_msg void OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowNeptune();
+	afx_msg void OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI);
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 };
 

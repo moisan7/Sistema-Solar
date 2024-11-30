@@ -69,7 +69,6 @@ const float ORBIT_SPEED[9] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 60182.0f,	// Neptune (60182d)
     2 * glm::pi<float>() / 0.0f			// Moon (27.32d, periodo sinódico)
 };
-
 const float ECCENTRICITIES[9]= { // REAL
 	0.2056,		// Mercury
 	0.0067,		// Venus
@@ -92,8 +91,8 @@ const float INCLINATION[9] = { // REAL (GRADOS)
 	1.76917f, 	// Neptune 
 	0.0f 		// Moon
 };
-const float ROTATION_SPEED[10] = {
-	0.0f,						// Sun (estático en este modelo)
+const float ROTATION_SPEED[10] = { // CORRECTO
+	365.0f * (1.0f / 25.0f),	// Sun: 25.0 veces más lento
 	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento (2pi/1406.4)
 	-365.0f * (1.0f / 243.0f),  // Venus: 243 veces más lento (2pi/5832)
 	365.0f,						// Earth: (2pi/24)
@@ -115,16 +114,27 @@ const float SEMIMAJOR_AXIS[9] = { // REAL * 100
 	3040.0f,	// Neptune 
 	0.0f 		// Moon
 };
-const glm::vec3 ROTATION_ANGLE[9] = {
-		glm::vec3(0.0f, -0.1261f, 0.9920f),     // Sun
-		glm::vec3(0.0f, -0.00052f, 1.0f),       // Mercury
-		glm::vec3(0.0f, -0.99998f, -0.0061f),   // Venus
-		glm::vec3(0.0f, -0.3987f, 0.9171f),     // Earth
-		glm::vec3(0.0f, -0.4253f, 0.9051f),     // Mars
-		glm::vec3(0.0f, -0.0546f, 0.9985f),     // Jupiter
-		glm::vec3(0.0f, -0.4507f, 0.8927f),     // Saturn
-		glm::vec3(0.0f, -0.9911f, -0.1330f),    // Uranus
-		glm::vec3(0.0f, -0.4744f, 0.8803f)		// Neptune
+const float ROTATION_ANGLE[9] = { // INCLINACION DEL EJE (ROTATION_AXIS)
+		glm::radians(7.25f),     // Sun
+		glm::radians(0.034f),   // Mercury
+		glm::radians(177.4f),	// Venus
+		glm::radians(23.44f),	// Earth
+		glm::radians(25.2f),    // Mars
+		glm::radians(3.1f),     // Jupiter
+		glm::radians(26.7f),    // Saturn
+		glm::radians(97.8f),	// Uranus
+		glm::radians(28.3f)		// Neptune
+};
+const glm::vec3 ROTATION_AXIS[9] = { // EJE SOBRE EL QUE SE APLICA LA INCLINACION
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Mercury
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Venus
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Earth
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Mars
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Jupiter
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Saturn
+		glm::vec3(0.0f, 1.0f, 0.0f),	// Uranus
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Neptune
+		glm::vec3(1.0f, 0.0f, 0.0f)		// Moon
 };
 
 //-------------- VGI: Tipus d'Iluminacio
