@@ -197,6 +197,9 @@ public:
 	bool load_textures;
 	bool skyb;
 	bool draw_planets[8];
+	//Prueba de camara
+	vec3 targetPos;
+	int target_planet = 5;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones

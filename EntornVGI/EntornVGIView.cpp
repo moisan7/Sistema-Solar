@@ -979,7 +979,7 @@ void CEntornVGIView::OnPaint()
 		ViewMatrix = Vista_Esferica(shader_programID, OPV, Vis_Polar, pan, tr_cpv, tr_cpvF, c_fons, col_obj, objecte, mida, pas,
 			front_faces, oculta, test_vis,
 			ilumina, llum_ambient, llumGL, ifixe, ilum2sides,
-			eixos, grid, hgrid);
+			eixos, grid, hgrid, targetPos);
 	}
 	///////
 	if (load_textures == false) {
@@ -1054,7 +1054,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5882,7 +5882,7 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	//}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
-			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc * 0;
+			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
 		}
 		for (int i = 0; i < 10; i++) {
 			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
@@ -5953,6 +5953,10 @@ void CEntornVGIView::OnSistemasolarStart()
 	snd->setIsPaused(false);
 	
 	snd->drop();
+
+	//Orbita
+	OnSistemasolarTestOrbita();
+
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {

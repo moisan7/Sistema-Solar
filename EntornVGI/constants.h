@@ -94,7 +94,7 @@ const float INCLINATION[9] = { // REAL (GRADOS)
 const float ROTATION_SPEED[10] = { // CORRECTO
 	365.0f * (1.0f / 25.0f),	// Sun: 25.0 veces más lento
 	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento (2pi/1406.4)
-	-365.0f * (1.0f / 243.0f),  // Venus: 243 veces más lento (2pi/5832)
+	365.0f * (1.0f / 243.0f),  // Venus: 243 veces más lento (2pi/5832)
 	365.0f,						// Earth: (2pi/24)
 	365.0f * 1.025f,            // Mars: 1.025 veces más rápido (2pi/24.6)
 	365.0f * 2.4f,				// Jupiter: 2.4 veces más rápido (2pi/9.9)

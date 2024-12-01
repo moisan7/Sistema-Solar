@@ -441,11 +441,10 @@ glm::mat4 Vista_Esferica(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant,
 	CColor col_fons, CColor col_object, char objecte, double mida, int step,
 	bool frnt_fcs, bool oculta, bool testv,
 	char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
-	bool eix, CMask3D reixa, CPunt3D hreixa)
+	bool eix, CMask3D reixa, CPunt3D hreixa, glm::vec3 targetPos) // Añadimos targetPos
 {
 	GLdouble cam[3], up[3];
 	glm::mat4 MatriuVista(1.0);
-	// Matrius Traslació
 	glm::mat4 TransMatrix(1.0);
 
 	// Conversió angles radians -> graus
@@ -459,43 +458,42 @@ glm::mat4 Vista_Esferica(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant,
 
 	// Posició càmera i vector cap amunt
 	if (VPol == POLARZ) {
-		cam[0] = opv.R * cos(opv.beta) * cos(opv.alfa);
-		cam[1] = opv.R * sin(opv.beta) * cos(opv.alfa);
-		cam[2] = opv.R * sin(opv.alfa);
+		cam[0] = targetPos.x + opv.R * cos(opv.beta) * cos(opv.alfa);
+		cam[1] = targetPos.y + opv.R * sin(opv.beta) * cos(opv.alfa);
+		cam[2] = targetPos.z + opv.R * sin(opv.alfa);
 		up[0] = -cos(opv.beta) * sin(opv.alfa);
 		up[1] = -sin(opv.beta) * sin(opv.alfa);
 		up[2] = cos(opv.alfa);
 	}
 	else if (VPol == POLARY) {
-		cam[0] = opv.R * sin(opv.beta) * cos(opv.alfa);
-		cam[1] = opv.R * sin(opv.alfa);
-		cam[2] = opv.R * cos(opv.beta) * cos(opv.alfa);
+		cam[0] = targetPos.x + opv.R * sin(opv.beta) * cos(opv.alfa);
+		cam[1] = targetPos.y + opv.R * sin(opv.alfa);
+		cam[2] = targetPos.z + opv.R * cos(opv.beta) * cos(opv.alfa);
 		up[0] = -sin(opv.beta) * sin(opv.alfa);
 		up[1] = cos(opv.alfa);
 		up[2] = -cos(opv.beta) * sin(opv.alfa);
 	}
 	else {
-		cam[0] = opv.R * sin(opv.alfa);
-		cam[1] = opv.R * cos(opv.beta) * cos(opv.alfa);
-		cam[2] = opv.R * sin(opv.beta) * cos(opv.alfa);
+		cam[0] = targetPos.x + opv.R * sin(opv.alfa);
+		cam[1] = targetPos.y + opv.R * cos(opv.beta) * cos(opv.alfa);
+		cam[2] = targetPos.z + opv.R * sin(opv.beta) * cos(opv.alfa);
 		up[0] = cos(opv.alfa);
 		up[1] = -cos(opv.beta) * sin(opv.alfa);
 		up[2] = -sin(opv.beta) * sin(opv.alfa);
 	}
 
-	// Iluminacio movent-se amb la camara (abans glm::lookAt() )
+	// Iluminacio movent-se amb la camara (abans glm::lookAt())
 	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
 	// Opció pan: desplaçament del Centre de l'esfera (pant=1)
-	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));	//glTranslatef(tr.x, tr.y, tr.z);
-	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z));	// Traslació fixada amb la INSERT dins l'opció pan
+	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));
+	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z));
 
 	// Especificació del punt de vista
-	   //gluLookAt(cam[0],cam[1],cam[2],0.,0.,0.,up[0],up[1],up[2]);
 	MatriuVista = glm::lookAt(
-		glm::vec3(cam[0], cam[1], cam[2]), // Camera is here
-		glm::vec3(0, 0, 0), // and looks here
-		glm::vec3(up[0], up[1], up[2])  // Head is up (set to 0,-1,0 to look upside-down)
+		glm::vec3(cam[0], cam[1], cam[2]), // Camera position
+		targetPos, // Focus on target
+		glm::vec3(up[0], up[1], up[2])  // Up vector
 	);
 
 	// Concatenar matrius Traslació amb la de càmera per al pan
@@ -504,7 +502,7 @@ glm::mat4 Vista_Esferica(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant,
 	// Pas Matriu Vista a shader
 	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
 
-	// Iluminacio fixe respecte la camara (després gllookAt() )
+	// Iluminacio fixe respecte la camara (després gllookAt())
 	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
 	// Test de Visibilitat
