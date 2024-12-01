@@ -115,7 +115,7 @@ const float SEMIMAJOR_AXIS[9] = { // REAL * 100
 	0.0f 		// Moon
 };
 const float ROTATION_ANGLE[9] = { // INCLINACION DEL EJE (ROTATION_AXIS)
-		glm::radians(7.25f),     // Sun
+		glm::radians(7.25f),    // Sun
 		glm::radians(0.034f),   // Mercury
 		glm::radians(177.4f),	// Venus
 		glm::radians(23.44f),	// Earth

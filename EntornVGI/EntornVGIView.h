@@ -504,16 +504,28 @@ public:
 	afx_msg void OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarShowNeptune();
 	afx_msg void OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI);
-	// FIN AÑADIDO PARA EL SISTEMA SOLAR
-	afx_msg void OnLockonplanetEarth();
+	// Camera Lock
 	afx_msg void OnLockonplanetSun();
 	afx_msg void OnLockonplanetMercury();
 	afx_msg void OnLockonplanetVenus();
+	afx_msg void OnLockonplanetEarth();
 	afx_msg void OnLockonplanetMars();
 	afx_msg void OnLockonplanetJupiter();
 	afx_msg void OnLockonplanetSaturn();
 	afx_msg void OnLockonplanetUranus();
 	afx_msg void OnLockonplanetNeptune();
+	afx_msg void OnUpdateLockonplanetSun(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetMercury(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetVenus(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetEarth(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetMars(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetUranus(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
+
+	// FIN AÑADIDO PARA EL SISTEMA SOLAR
+	
 };
 
 #ifndef _DEBUG  // Versión de depuración en EntornVGIView.cpp

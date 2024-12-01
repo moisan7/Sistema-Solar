@@ -252,6 +252,7 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_URANUS, &CEntornVGIView::OnUpdateSistemasolarShowUranus)
 	ON_COMMAND(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnSistemasolarShowNeptune)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnUpdateSistemasolarShowNeptune)
+	// CAMERA LOCK
 	ON_COMMAND(ID_LOCKONPLANET_SUN, &CEntornVGIView::OnLockonplanetSun)
 	ON_COMMAND(ID_LOCKONPLANET_MERCURY, &CEntornVGIView::OnLockonplanetMercury)
 	ON_COMMAND(ID_LOCKONPLANET_VENUS, &CEntornVGIView::OnLockonplanetVenus)
@@ -261,6 +262,15 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_COMMAND(ID_LOCKONPLANET_SATURN, &CEntornVGIView::OnLockonplanetSaturn)
 	ON_COMMAND(ID_LOCKONPLANET_URANUS, &CEntornVGIView::OnLockonplanetUranus)
 	ON_COMMAND(ID_LOCKONPLANET_NEPTUNE, &CEntornVGIView::OnLockonplanetNeptune)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_SUN, &CEntornVGIView::OnUpdateLockonplanetSun)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_MERCURY, &CEntornVGIView::OnUpdateLockonplanetMercury)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_VENUS, &CEntornVGIView::OnUpdateLockonplanetVenus)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_EARTH, &CEntornVGIView::OnUpdateLockonplanetEarth)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_MARS, &CEntornVGIView::OnUpdateLockonplanetMars)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_JUPITER, &CEntornVGIView::OnUpdateLockonplanetJupiter)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_SATURN, &CEntornVGIView::OnUpdateLockonplanetSaturn)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_URANUS, &CEntornVGIView::OnUpdateLockonplanetUranus)
+	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_NEPTUNE, &CEntornVGIView::OnUpdateLockonplanetNeptune)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -291,7 +301,7 @@ CEntornVGIView::CEntornVGIView()
 	// Entorn VGI: Variables de control per Menú Vista: Pantalla Completa, Pan, dibuixar eixos i grids
 	fullscreen = false;
 	pan = false;
-	eixos = true;	eixos_programID = 0;  eixos_Id = 0;
+	eixos = false;	eixos_programID = 0;  eixos_Id = 0;
 	sw_grid = false;
 	grid.x = false;	grid.y = false;		grid.z = false;		grid.w = false;
 	hgrid.x = 0.0;	hgrid.y = 0.0;		hgrid.z = 0.0;		hgrid.w = 0.0;
@@ -5871,24 +5881,24 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
 	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
 
-	//if (rotation) {
-	//	// Movimiento de rotación
-	//	rotationAngle += newAngle;
-	//	if (rotationAngle >= 360.0f)
-	//		rotationAngle -= 360.0f;
-	//	//// Calcular la nueva orientación de rotación del planeta
-	//	// Calcular la nueva posición de traslación del planeta en la órbita
-	//	TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
-	//}
-	//if (translation) {
-	//	// Movimiento de traslación
-	//	orbitAngle += orbitSpeed;
-	//	if (orbitAngle >= 360.0f)
-	//		orbitAngle -= 360.0f;
-	//	// Calcular la nueva posición de traslación del planeta en la órbita
-	//	TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
-	//	TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
-	//}
+	if (rotation) {
+		// Movimiento de rotación
+		rotationAngle += newAngle;
+		if (rotationAngle >= 360.0f)
+			rotationAngle -= 360.0f;
+		//// Calcular la nueva orientación de rotación del planeta
+		// Calcular la nueva posición de traslación del planeta en la órbita
+		TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
+	}
+	if (translation) {
+		// Movimiento de traslación
+		orbitAngle += orbitSpeed;
+		if (orbitAngle >= 360.0f)
+			orbitAngle -= 360.0f;
+		// Calcular la nueva posición de traslación del planeta en la órbita
+		TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
+		TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
+	}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
 			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
@@ -5913,19 +5923,13 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 
 void CEntornVGIView::OnSistemasolarStart()
 {
-	// TODO: Agregue aquí su código de controlador de comandos
 	objecte = SIS;
-
-
-	//    ---- Entorn VGI: ATENCIÓ!!. Canviar l'escala per a centrar la vista (Ortogràfica)
-
-	//  ---- Entorn VGI: ATENCIÓ!!. Modificar R per centrar la Vista a la mida de l'objecte (Perspectiva)
 
 	// Entorn VGI: Activació el contexte OpenGL
 	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
 	// Càrrega dels VAO's per a construir objecte OCT
-	netejaVAOList();                        // Neteja Llista VAO.
+	netejaVAOList();	// Neteja Llista VAO.
 
 	// Posar color objecte (col_obj) al vector de colors del VAO.
 	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
@@ -5940,30 +5944,22 @@ void CEntornVGIView::OnSistemasolarStart()
 	// Crida a OnPaint() per redibuixar l'escena
 	InvalidateRect(NULL, false);
 
-	//Música de fons
-	
-	
+	//Música de fons	
 	//Inicialitzar el sound engine amb parametres per defecte
 	ISoundEngine* engine = createIrrKlangDevice();
-	
 	if (!engine)
 	{
 		printf("Could not startup engine\n");
 	}
-
-	// To play a sound, we only to call play2D().
-
-	// play some sound stream, looped
-	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
-	//Modifiquem volum
-	snd->setVolume(1);
-
-	//Despausem després d'haver modificat el volum
-	snd->setIsPaused(false);
 	
+	// Play some sound stream, looped
+	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
+	// Set volum and unpause
+	snd->setVolume(0.1);
+	snd->setIsPaused(false);
 	snd->drop();
 
-	//Orbita
+	// Movement
 	OnSistemasolarTestOrbita();
 
 }
@@ -6097,7 +6093,9 @@ void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
 }
-/* ---------------------------INCREMENTO VELOCIDAD-------------------------- */
+/* ----------------------------------------------------------------------- */
+/* ---------------------------INCREMENTO VELOCIDAD------------------------ */
+/* ----------------------------------------------------------------------- */
 void CEntornVGIView::OnSistemasolarIncrementx0()
 {
 	speed_index = 0;
@@ -6188,8 +6186,9 @@ void CEntornVGIView::OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI)
 	if (speed_index == 8) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
-/* ---------------------------MOSTRAR / OCULTAR-------------------------- */
+/* ----------------------------------------------------------------------- */
+/* ---------------------------MOSTRAR / OCULTAR--------------------------- */
+/* ----------------------------------------------------------------------- */
 void CEntornVGIView::OnSistemasolarShowMercury() {
 	draw_planets[0] = !draw_planets[0];
 }
@@ -6258,48 +6257,90 @@ void CEntornVGIView::OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI)
 	if (draw_planets[7]) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
+/* ----------------------------------------------------------------------- */
+/* ------------------------------CAMERA LOCK------------------------------ */
+/* ----------------------------------------------------------------------- */
 void CEntornVGIView::OnLockonplanetSun()
 {
 	target_planet = 0;
 }
-
 void CEntornVGIView::OnLockonplanetMercury()
 {
 	target_planet = 1;
 }
-
 void CEntornVGIView::OnLockonplanetVenus()
 {
 	target_planet = 2;
 }
-
 void CEntornVGIView::OnLockonplanetEarth()
 {
 	target_planet = 3;
 }
-
 void CEntornVGIView::OnLockonplanetMars()
 {
 	target_planet = 4;
 }
-
 void CEntornVGIView::OnLockonplanetJupiter()
 {
 	target_planet = 5;
 }
-
 void CEntornVGIView::OnLockonplanetSaturn()
 {
 	target_planet = 6;
 }
-
 void CEntornVGIView::OnLockonplanetUranus()
 {
 	target_planet = 7;
 }
-
 void CEntornVGIView::OnLockonplanetNeptune()
 {
 	target_planet = 8;
+}
+void CEntornVGIView::OnUpdateLockonplanetSun(CCmdUI* pCmdUI)
+{
+	if (target_planet == 0) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnUpdateLockonplanetMercury(CCmdUI* pCmdUI)
+{
+	if (target_planet == 1) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnUpdateLockonplanetVenus(CCmdUI* pCmdUI)
+{
+	if (target_planet == 2) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnUpdateLockonplanetEarth(CCmdUI* pCmdUI)
+{
+	if (target_planet == 3) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnUpdateLockonplanetMars(CCmdUI* pCmdUI)
+{
+	if (target_planet == 4) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI)
+{
+	if (target_planet == 5) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+
+void CEntornVGIView::OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI)
+{
+	if (target_planet == 6) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+
+void CEntornVGIView::OnUpdateLockonplanetUranus(CCmdUI* pCmdUI)
+{
+	if (target_planet == 7) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+
+void CEntornVGIView::OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI)
+{
+	if (target_planet == 8) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
 }
