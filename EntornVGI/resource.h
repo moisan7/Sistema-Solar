@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Archivo de inclusión generado de Microsoft Visual C++.
-// Usado por EntornVGI.rc
+// Microsoft Visual C++ generated include file.
+// Used by EntornVGI.rc
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
@@ -242,13 +242,22 @@
 #define ID_SHOWPLANETS_SATURN           32922
 #define ID_SHOWPLANETS_URANUS           32923
 #define ID_SHOWPLANETS_NEPTUNE          32924
+#define ID_LOCKONPLANET_SUN             32925
+#define ID_LOCKONPLANET_EARTH           32926
+#define ID_LOCKONPLANET_MERCURY         32927
+#define ID_LOCKONPLANET_VENUS           32928
+#define ID_LOCKONPLANET_MARS            32929
+#define ID_LOCKONPLANET_JUPITER         32930
+#define ID_LOCKONPLANET_SATURN          32931
+#define ID_LOCKONPLANET_URANUS          32932
+#define ID_LOCKONPLANET_NEPTUNE         32933
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32925
+#define _APS_NEXT_COMMAND_VALUE         32934
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

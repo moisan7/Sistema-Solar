@@ -252,6 +252,15 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_URANUS, &CEntornVGIView::OnUpdateSistemasolarShowUranus)
 	ON_COMMAND(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnSistemasolarShowNeptune)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnUpdateSistemasolarShowNeptune)
+	ON_COMMAND(ID_LOCKONPLANET_SUN, &CEntornVGIView::OnLockonplanetSun)
+	ON_COMMAND(ID_LOCKONPLANET_MERCURY, &CEntornVGIView::OnLockonplanetMercury)
+	ON_COMMAND(ID_LOCKONPLANET_VENUS, &CEntornVGIView::OnLockonplanetVenus)
+	ON_COMMAND(ID_LOCKONPLANET_EARTH, &CEntornVGIView::OnLockonplanetEarth)
+	ON_COMMAND(ID_LOCKONPLANET_MARS, &CEntornVGIView::OnLockonplanetMars)
+	ON_COMMAND(ID_LOCKONPLANET_JUPITER, &CEntornVGIView::OnLockonplanetJupiter)
+	ON_COMMAND(ID_LOCKONPLANET_SATURN, &CEntornVGIView::OnLockonplanetSaturn)
+	ON_COMMAND(ID_LOCKONPLANET_URANUS, &CEntornVGIView::OnLockonplanetUranus)
+	ON_COMMAND(ID_LOCKONPLANET_NEPTUNE, &CEntornVGIView::OnLockonplanetNeptune)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -6248,4 +6257,49 @@ void CEntornVGIView::OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI)
 {
 	if (draw_planets[7]) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
+}
+
+void CEntornVGIView::OnLockonplanetSun()
+{
+	target_planet = 0;
+}
+
+void CEntornVGIView::OnLockonplanetMercury()
+{
+	target_planet = 1;
+}
+
+void CEntornVGIView::OnLockonplanetVenus()
+{
+	target_planet = 2;
+}
+
+void CEntornVGIView::OnLockonplanetEarth()
+{
+	target_planet = 3;
+}
+
+void CEntornVGIView::OnLockonplanetMars()
+{
+	target_planet = 4;
+}
+
+void CEntornVGIView::OnLockonplanetJupiter()
+{
+	target_planet = 5;
+}
+
+void CEntornVGIView::OnLockonplanetSaturn()
+{
+	target_planet = 6;
+}
+
+void CEntornVGIView::OnLockonplanetUranus()
+{
+	target_planet = 7;
+}
+
+void CEntornVGIView::OnLockonplanetNeptune()
+{
+	target_planet = 8;
 }

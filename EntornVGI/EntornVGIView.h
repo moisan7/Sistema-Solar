@@ -198,8 +198,8 @@ public:
 	bool skyb;
 	bool draw_planets[8];
 	//Prueba de camara
-	vec3 targetPos;
-	int target_planet = 5;
+	vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	int target_planet = 0; 
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -505,6 +505,15 @@ public:
 	afx_msg void OnSistemasolarShowNeptune();
 	afx_msg void OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI);
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
+	afx_msg void OnLockonplanetEarth();
+	afx_msg void OnLockonplanetSun();
+	afx_msg void OnLockonplanetMercury();
+	afx_msg void OnLockonplanetVenus();
+	afx_msg void OnLockonplanetMars();
+	afx_msg void OnLockonplanetJupiter();
+	afx_msg void OnLockonplanetSaturn();
+	afx_msg void OnLockonplanetUranus();
+	afx_msg void OnLockonplanetNeptune();
 };
 
 #ifndef _DEBUG  // Versión de depuración en EntornVGIView.cpp

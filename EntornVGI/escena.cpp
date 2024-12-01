@@ -1454,6 +1454,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
 	draw_TriEBO_Object(GLU_SPHERE);
 	IluminacioSol(shaderId);
+	//if (target_planet == 0) {
+	//	targetPos = vec3(0.0f);
+	//}
 	/*------------SOL------------*/
 
 	// Dibujado de órbitas
@@ -1511,10 +1514,12 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
 		draw_TriEBO_Object(GLU_SPHERE);
-
 		// Si el planeta es el objetivo, actualiza la posición de la cámara
 		if (i == target_planet) {
 			targetPos = glm::vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z);
+		}
+		else if (target_planet == 0) {
+			targetPos = vec3(0.0f);
 		}
 	}
 };
