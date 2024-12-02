@@ -252,6 +252,8 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_URANUS, &CEntornVGIView::OnUpdateSistemasolarShowUranus)
 	ON_COMMAND(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnSistemasolarShowNeptune)
 	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_NEPTUNE, &CEntornVGIView::OnUpdateSistemasolarShowNeptune)
+	ON_COMMAND(ID_SHOWPLANETS_ORBITS, &CEntornVGIView::OnSistemasolarShowOrbits)
+	ON_UPDATE_COMMAND_UI(ID_SHOWPLANETS_ORBITS, &CEntornVGIView::OnUpdateSistemasolarShowOrbits)
 	// CAMERA LOCK
 	ON_COMMAND(ID_LOCKONPLANET_SUN, &CEntornVGIView::OnLockonplanetSun)
 	ON_COMMAND(ID_LOCKONPLANET_MERCURY, &CEntornVGIView::OnLockonplanetMercury)
@@ -512,7 +514,7 @@ CEntornVGIView::CEntornVGIView()
 	// Velocidades
 	speed_inc = INCREMENTADOR[1];
 	// Planetas a dibujar
-	for (int i = 0; i <= 7; i++) {
+	for (int i = 0; i <= 8; i++) {
 		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
 	}
 	moon_rotation_angle = 0;
@@ -6259,6 +6261,15 @@ void CEntornVGIView::OnSistemasolarShowNeptune()
 void CEntornVGIView::OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI)
 {
 	if (draw_planets[7]) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
+}
+void CEntornVGIView::OnSistemasolarShowOrbits()
+{
+	draw_planets[8] = !draw_planets[8];
+}
+void CEntornVGIView::OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI)
+{
+	if (draw_planets[8]) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
 /* ----------------------------------------------------------------------- */

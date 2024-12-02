@@ -1458,22 +1458,24 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	/*------------SUN------------*/
 
 	// Dibujado de órbitas
-	glm::mat4 orbitMatrix(1.0f); // Matriz órbitas
-	glEnable(GL_BLEND);                                 // Habilitar transparencia
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Configuración de transparencia
+	if (draw_planets[8]) {
+		glm::mat4 orbitMatrix(1.0f); // Matriz órbitas
+		glEnable(GL_BLEND);                                 // Habilitar transparencia
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Configuración de transparencia
 
-	for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todas
-		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
-		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]);
+		for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todas
+			float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
+			float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 0.2f); // Blanco con transparencia 50%
-		glLineWidth(0.5f);                 // Grosor de línea
+			glColor4f(1.0f, 1.0f, 1.0f, 0.2f); // Blanco con transparencia 50%
+			glLineWidth(0.5f);                 // Grosor de línea
 
-		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
-		// Desactivar reflectivitat de llum d'emissió
-		glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
-		// Dibujar órbita
-		DrawOrbit(a, b, (i - 1), 10000); // 10000 segmentos (para suavizar la línea)
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
+			// Desactivar reflectivitat de llum d'emissió
+			//glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+			// Dibujar órbita
+			DrawOrbit(a, b, (i - 1), 10000); // 10000 segmentos (para suavizar la línea)
+		}
 	}
 
 	// Dibujado de planetas + movimiento

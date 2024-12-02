@@ -197,7 +197,7 @@ public:
 	GLuint* texturesID_planets;
 	bool load_textures;
 	bool skyb;
-	bool draw_planets[8];
+	bool draw_planets[9];
 	// Camera
 	vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	int target_planet = 0; 
@@ -508,6 +508,8 @@ public:
 	afx_msg void OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI);
 	afx_msg void OnSistemasolarShowNeptune();
 	afx_msg void OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowOrbits();
+	afx_msg void OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI);
 	// Camera Lock
 	afx_msg void OnLockonplanetSun();
 	afx_msg void OnLockonplanetMercury();

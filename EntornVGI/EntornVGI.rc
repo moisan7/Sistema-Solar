@@ -17,7 +17,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Spanish (Spain, International Sort) resources
+// Español (España, alfabetización internacional) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ESN)
 LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MODERN
@@ -451,7 +451,7 @@ BEGIN
             MENUITEM "x500",                        ID_INCREMENTSPEED_X500
             MENUITEM "x1000",                       ID_INCREMENTSPEED_X1000
         END
-        POPUP "Show Planets"
+        POPUP "Show"
         BEGIN
             MENUITEM "Mercury",                     ID_SHOWPLANETS_MERCURY
             MENUITEM "Venus",                       ID_SHOWPLANETS_VENUS
@@ -461,6 +461,7 @@ BEGIN
             MENUITEM "Saturn",                      ID_SHOWPLANETS_SATURN
             MENUITEM "Uranus",                      ID_SHOWPLANETS_URANUS
             MENUITEM "Neptune",                     ID_SHOWPLANETS_NEPTUNE
+            MENUITEM "Orbits",                      ID_SHOWPLANETS_ORBITS
         END
     END
     POPUP "Lock On Planet"
@@ -832,7 +833,7 @@ BEGIN
     IDS_FIND_TAB            "Buscar"
 END
 
-#endif    // Spanish (Spain, International Sort) resources
+#endif    // Español (España, alfabetización internacional) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
