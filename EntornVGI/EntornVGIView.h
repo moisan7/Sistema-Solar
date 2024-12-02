@@ -177,6 +177,7 @@ public:
 	bool rotation;
 	bool translation;
 	bool translation_orbit;
+	bool sis_start;
 	float orbit_angle[9];		// ANGULO TRASLACION
 	float rotation_angle[10];	// ANGULO ROTACION
 	float speed_inc, speed_index;
@@ -192,14 +193,17 @@ public:
 	GLdouble mida;	// Factor d'escala per calcular Volum de Visualització de l'objecte que encaixi.
 	CString nom;	// Nom de fitxer.
 	CString buffer; // Buffer que magatzema string caracters corresponent a variables double a printar en Status Bar (funció Barra_Estat).
-
+	// SISTEMA SOLAR
 	GLuint* texturesID_planets;
 	bool load_textures;
 	bool skyb;
 	bool draw_planets[8];
-	//Prueba de camara
+	// Camera
 	vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	int target_planet = 0; 
+	// Moon
+	float moon_rotation_angle;
+	float moon_orbit_angle;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones

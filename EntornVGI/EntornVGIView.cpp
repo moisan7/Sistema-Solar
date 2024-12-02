@@ -481,7 +481,7 @@ CEntornVGIView::CEntornVGIView()
 	VT = { 0.0, 0.0, 1.0 };		VNP = { 1.0, 0.0, 0.0 };	VBN = { 0.0, 1.0, 0.0 };
 
 	// Entorn VGI: Variables del Timer
-	t = 0; anima = false; translation = false; rotation = false; translation_orbit = false; speed_index = 1;
+	t = 0; anima = false; translation = false; rotation = false; translation_orbit = false; sis_start = false; speed_index = 1;
 
 	// Entorn VGI: Variables de l'objecte FRACTAL
 	t_fractal = CAP;	soroll = 'C';
@@ -515,6 +515,8 @@ CEntornVGIView::CEntornVGIView()
 	for (int i = 0; i <= 7; i++) {
 		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
 	}
+	moon_rotation_angle = 0;
+	moon_orbit_angle = 0;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -1073,7 +1075,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5906,6 +5908,8 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		for (int i = 0; i < 10; i++) {
 			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
 		}
+		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
+		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
 	}
 
 	// Actualizar la última vez que se llamó al timer
@@ -5923,49 +5927,52 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 
 void CEntornVGIView::OnSistemasolarStart()
 {
-	objecte = SIS;
+	if (!sis_start) {
+		sis_start = true;
+		objecte = SIS;
 
-	// Entorn VGI: Activació el contexte OpenGL
-	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
+		// Entorn VGI: Activació el contexte OpenGL
+		wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
-	// Càrrega dels VAO's per a construir objecte OCT
-	netejaVAOList();	// Neteja Llista VAO.
+		// Càrrega dels VAO's per a construir objecte OCT
+		netejaVAOList();	// Neteja Llista VAO.
 
-	// Posar color objecte (col_obj) al vector de colors del VAO.
-	SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
+		// Posar color objecte (col_obj) al vector de colors del VAO.
+		SetColor4d(col_obj.r, col_obj.g, col_obj.b, col_obj.a);
 
-	//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
-	Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
-	Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
+		//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
+		Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
+		Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
 
-	// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
+		// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
+		wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
 
-	// Crida a OnPaint() per redibuixar l'escena
-	InvalidateRect(NULL, false);
+		// Crida a OnPaint() per redibuixar l'escena
+		InvalidateRect(NULL, false);
 
-	//Música de fons	
-	//Inicialitzar el sound engine amb parametres per defecte
-	ISoundEngine* engine = createIrrKlangDevice();
-	if (!engine)
-	{
-		printf("Could not startup engine\n");
+		//Música de fons	
+		//Inicialitzar el sound engine amb parametres per defecte
+		ISoundEngine* engine = createIrrKlangDevice();
+		if (!engine)
+		{
+			printf("Could not startup engine\n");
+		}
+
+		// Play some sound stream, looped
+		ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
+		// Set volum and unpause
+		snd->setVolume(0.1);
+		snd->setIsPaused(false);
+		snd->drop();
+
+		// Movement
+		OnSistemasolarTestOrbita();
 	}
-	
-	// Play some sound stream, looped
-	ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
-	// Set volum and unpause
-	snd->setVolume(0.1);
-	snd->setIsPaused(false);
-	snd->drop();
-
-	// Movement
-	OnSistemasolarTestOrbita();
-
 }
 void CEntornVGIView::OnUpdateSistemasolarStart(CCmdUI* pCmdUI)
 {
-	// TODO
+	if (sis_start) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
 }
 
 /* ---------------------------ROTACIÓN-------------------------- */
@@ -5976,7 +5983,7 @@ void CEntornVGIView::OnSistemasolarTestRotacio()
 	translation = false; // Desactivar traslación si se activa rotación
 	translation_orbit = false;
 	if (rotation) {
-		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
+		SetTimer(1, 4.17, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
 	}
 	else {
 		KillTimer(1);  // Detener el temporizador
@@ -5989,7 +5996,6 @@ void CEntornVGIView::OnSistemasolarTestRotacio()
 void CEntornVGIView::OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI)
 {
 	if (rotation) {
-		rotationAngle = 0.0f;   // Reiniciar el ángulo de rotación
 		rotation = false;  // Desactivar la rotación
 		KillTimer(1);   // Detener el temporizador
 	}
@@ -6006,7 +6012,7 @@ void CEntornVGIView::OnSistemasolarTestTranslacio()
 	rotation = false; // Desactivar rotación si se activa traslación
 	translation_orbit = false;
 	if (translation) {
-		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
+		SetTimer(1, 4.17, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
 	}
 	else {
 		KillTimer(1);  // Detener el temporizador
@@ -6019,11 +6025,6 @@ void CEntornVGIView::OnSistemasolarTestTranslacio()
 void CEntornVGIView::OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI)
 {
 	if (translation) {
-		fact_Tras = 1;
-		TG.VTras.x = 0.0;
-		TG.VTras.y = 0.0;
-		TG.VTras.z = 0.0;
-		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
 		translation = false;  // Desactivar la translación
 		KillTimer(1);   // Detener el temporizador
 	}
@@ -6075,7 +6076,7 @@ void CEntornVGIView::OnSistemasolarTestOrbita()
 	// Alternar entre activar y desactivar la traslación
 	translation_orbit = !translation_orbit;
 	if (translation_orbit) {
-		SetTimer(1, 16, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
+		SetTimer(1, 4.17, NULL); // Iniciar temporizador con intervalo de ~16ms (60 FPS)
 	}
 	else {
 		KillTimer(1);// Detener el temporizador
@@ -6093,6 +6094,9 @@ void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
 }
+
+
+
 /* ----------------------------------------------------------------------- */
 /* ---------------------------INCREMENTO VELOCIDAD------------------------ */
 /* ----------------------------------------------------------------------- */
