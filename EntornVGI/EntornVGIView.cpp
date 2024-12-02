@@ -5979,11 +5979,8 @@ void CEntornVGIView::OnSistemasolarTestRotacio()
 }
 void CEntornVGIView::OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI)
 {
-	if (rotation) {
-		rotationAngle = 0.0f;   // Reiniciar el ángulo de rotación
-		rotation = false;  // Desactivar la rotación
-		KillTimer(1);   // Detener el temporizador
-	}
+	if (rotation) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
 
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
@@ -6009,15 +6006,8 @@ void CEntornVGIView::OnSistemasolarTestTranslacio()
 }
 void CEntornVGIView::OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI)
 {
-	if (translation) {
-		fact_Tras = 1;
-		TG.VTras.x = 0.0;
-		TG.VTras.y = 0.0;
-		TG.VTras.z = 0.0;
-		orbitAngle = 0.0f;   // Reiniciar el ángulo de la órbita
-		translation = false;  // Desactivar la translación
-		KillTimer(1);   // Detener el temporizador
-	}
+	if (translation) pCmdUI->SetCheck(1);
+	else pCmdUI->SetCheck(0);
 
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
