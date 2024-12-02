@@ -496,6 +496,17 @@ CEntornVGIView::CEntornVGIView()
 	for (int i = 0; i <= 7; i++) {
 		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
 	}
+
+	//Inicializacion de angulo orbita
+	static DWORD lastTime = 0;								// Variable estática para almacenar el tiempo de la última actualización
+	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
+	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
+	for (int i = 0; i < 9; i++) {
+		orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc * 1;
+	}
+	for (int i = 0; i < 10; i++) {
+		rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
+	}
 }
 
 CEntornVGIView::~CEntornVGIView()
