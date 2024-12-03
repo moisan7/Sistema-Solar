@@ -432,19 +432,6 @@ void IluminacioSol(GLint shaderId)
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
 	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle)
 {	
-	float p_scale[10] = { // Todo multiplicado * 10000
-	  93.058f / 30.0f,    // Sun
-	  0.326f,             // Mercury
-	  0.809f,             // Venus
-	  0.851f,             // Earth
-	  0.453f,             // Mars
-	  9.34f / 5.0f,       // Jupiter
-	  7.78f / 5.0f,       // Saturn
-	  3.39f / 2.5f,       // Uranus
-	  3.29f / 2.5f,       // Neptune
-	  0.232f              // Moon
-	};
-
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
 	col_object.r = 0.5; col_object.g = 0.5; col_object.b = 0.5; col_object.a = 1.0;
@@ -460,7 +447,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	TransMatrix = glm::translate(MatriuTG, vec3(0.0f, 0.0f, 0.0f));
 	TransMatrix = glm::rotate(TransMatrix, -ROTATION_ANGLE[0], glm::vec3(1.0f, 0.0f, 0.0f));
 	TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[0]), glm::vec3(0.0f, 0.0f, 1.0f));
-	sunMatrix = glm::scale(TransMatrix, vec3(p_scale[0], p_scale[0], p_scale[0]));
+	sunMatrix = glm::scale(TransMatrix, vec3(P_SCALE[0], P_SCALE[0], P_SCALE[0]));
 	// Pas ModelView Matrix a shader
 	glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &sunMatrix[0][0]);
 	// Pas NormalMatrix a shader
@@ -511,7 +498,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			y = SEMIMAJOR_AXIS[8] * sin(moon_rotation_angle); // Y position based on orbit angle
 			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(moon_orbit_angle), vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(p_scale[9], p_scale[9], p_scale[9]));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[9], P_SCALE[9], P_SCALE[9]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -544,7 +531,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		TransMatrix = glm::rotate(TransMatrix, -ROTATION_ANGLE[i], ROTATION_AXIS[i - 1]);
 		// Rotacion
 		TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
-		ModelMatrix = glm::scale(TransMatrix, vec3(p_scale[i], p_scale[i], p_scale[i]));
+		ModelMatrix = glm::scale(TransMatrix, vec3(P_SCALE[i], P_SCALE[i], P_SCALE[i]));
 
 		// Pas ModelView Matrix a shader
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);

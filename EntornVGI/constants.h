@@ -137,6 +137,18 @@ const glm::vec3 ROTATION_AXIS[9] = { // EJE SOBRE EL QUE SE APLICA LA INCLINACIO
 		glm::vec3(1.0f, 0.0f, 0.0f),	// Neptune
 		glm::vec3(1.0f, 0.0f, 0.0f)		// Moon
 };
+const float P_SCALE[10] = { // Todo multiplicado * 10000
+	  93.058f / 30.0f,    // Sun
+	  0.326f,             // Mercury
+	  0.809f,             // Venus
+	  0.851f,             // Earth
+	  0.453f,             // Mars
+	  9.34f / 5.0f,       // Jupiter
+	  7.78f / 5.0f,       // Saturn
+	  3.39f / 2.5f,       // Uranus
+	  3.29f / 2.5f,       // Neptune
+	  0.232f              // Moon
+};
 
 //-------------- VGI: Tipus d'Iluminacio
 #define PUNTS 'P'
