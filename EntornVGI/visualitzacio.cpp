@@ -384,7 +384,27 @@ glm::mat4 Vista_Ortografica(GLuint sh_programID, int prj, GLdouble Raux, CColor 
 
 // Projeccio_Perspectiva: Definició Viewport i glm::perspective
 glm::mat4 Projeccio_Perspectiva(GLuint sh_programID, int minx, int miny, GLsizei w, GLsizei h, double zoom)
-{return glm::mat4(1.0);}
+{
+	glm::mat4 MatriuProjeccio(1.0);
+
+	// Definició Viewport
+	glViewport(minx, miny, w, h);
+	if (h == 0) h = 1;
+
+	// PROJECCIO PERSPECTIVA.Definim volum de visualització adaptant-lo 
+	//	 a les mides actuals de la finestra windows. Amb glm::perspective()
+	if (w >= h) MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
+	else MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
+
+	// Pas Matriu a shader
+	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "projectionMatrix"), 1, GL_FALSE, &MatriuProjeccio[0][0]);
+
+	// Activació matriu MODELVIEW (tancar matriu PROJECTION)
+		//glMatrixMode(GL_MODELVIEW);
+		//glLoadIdentity();
+
+	return MatriuProjeccio;
+}
 
 // Vista_Esferica: Definició gluLookAt amb possibilitat de moure el punt de vista interactivament amb el ratolí, 
 //					ilumina i dibuixa l'escena
