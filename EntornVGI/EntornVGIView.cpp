@@ -662,16 +662,6 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return FALSE;
 	}
 
-	//InitAPI();
-
-	//	if (glewIsExtensionSupported("GLEW_ARB_vertex_shader"))
-	//	AfxMessageBox(_T("INFO: GLEW_ARB_vertex_shader supported, proceeding\n"));
-	//	else AfxMessageBox(_T("INFO: GLEW_ARB_vertex_shader NOT supported, proceeding\n"));
-	//
-	//	if (glewIsExtensionSupported("GLEW_ARB_fragment_shader"))
-	//	AfxMessageBox(_T("INFO: GLEW_ARB_fragment_shader supported, proceeding\n"));
-	//	else AfxMessageBox(_T("INFO: GLEW_ARB_fragment_shader NOT supported, proceeding\n"));
-	//
 	if (glewIsSupported("GL_VERSION_2_0")) //(GLEW_VERSION_2_0)
 	{
 	} //AfxMessageBox(_T("INFO: OpenGL 2.0 supported!. Proceed\n"));
@@ -766,25 +756,6 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CEntornVGIView::InitAPI()
 {
-	/*	Vendor, Renderer, Version, Shading Laguage Version i Extensions suportades per la placa gràfica gravades en fitxer extensions.txt
-		CString nomf;
-		nomf = "extensions.txt";
-		char *nomfitxer = CString2Char(nomf);
-		char* str = (char*)glGetString(GL_VENDOR);
-		FILE* f = fopen(nomfitxer, "w");
-		if(f)	{	fprintf(f,"VENDOR: %s\n",str);
-					str = (char*)glGetString(GL_RENDERER);
-					fprintf(f, "RENDERER: %s\n", str);
-					str = (char*)glGetString(GL_VERSION);
-					fprintf(f, "VERSION: %s\n", str);
-					str = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-					fprintf(f, "SHADING_LANGUAGE_VERSION: %s\n", str);
-					str = (char*)glGetString(GL_EXTENSIONS);
-					fprintf(f, "EXTENSIONS: %s\n", str);
-					fclose(f);
-				}
-		*/
-
 		// Program
 	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
 	glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
@@ -3701,131 +3672,6 @@ void CEntornVGIView::OnUpdateVistaSkyBox(CCmdUI* pCmdUI)
 	if (SkyBoxCube) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
-
-// VISTA: Visualitzar Grid XY (opció booleana)
-//void CEntornVGIView::OnVistaGridXY()
-//{
-// TODO: Agregue aquí su código de controlador de comandos
-//	grid.x = !grid.x;	hgrid.x = 0.0;
-//	if (grid.x) grid.w = false;
-//
-// Entorn VGI: Activació el contexte OpenGL
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-//
-	// Esborra VAO 
-	// deleteVAOList(GRID_XY);
-
-//	if (!Get_VAOId(GRID_XY)) Set_VAOList(GRID_XY, loadGridXY_VAO(GRID_SIZE,hgrid.z));		// Genera VAO de grid XY per a Z=0 en GRID_XY.
-//
-// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-//
-// Crida a OnPaint() per redibuixar l'escena
-//	InvalidateRect(NULL, false);
-//}
-
-
-//void CEntornVGIView::OnUpdateVistaGridXY(CCmdUI *pCmdUI)
-//{
-// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-//	if (grid.x) pCmdUI->SetCheck(1);
-//		else pCmdUI->SetCheck(0);
-//}
-
-// VISTA: Visualitzar Grid XZ (opció booleana)
-//void CEntornVGIView::OnVistaGridXZ()
-//{
-// TODO: Agregue aquí su código de controlador de comandos
-//	grid.y = !grid.y;	hgrid.y = 0.0;
-//	if (grid.y) grid.w = false;
-//
-// Entorn VGI: Activació el contexte OpenGL
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-//
-	// Esborra VAO 
-	// deleteVAOList(GRID_XY);
-
-//	if (!Get_VAOId(GRID_XZ)) Set_VAOList(GRID_XZ, loadGridXZ_VAO(GRID_SIZE, hgrid.y));		// Genera VAO de grid XZ per a Z=0 en GRID_XY.
-//
-// Entorn VGI: Activació el contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-//
-// Crida a OnPaint() per redibuixar l'escena
-//	InvalidateRect(NULL, false);
-//}
-
-
-//void CEntornVGIView::OnUpdateVistaGridXZ(CCmdUI *pCmdUI)
-//{
-// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-//	if (grid.y) pCmdUI->SetCheck(1);
-//		else pCmdUI->SetCheck(0);
-//}
-
-
-// VISTA: Visualitzar Grid YZ (opció booleana)
-//void CEntornVGIView::OnVistaGridYZ()
-//{
-// TODO: Agregue aquí su código de controlador de comandos
-//	grid.z = !grid.z;	hgrid.z = 0.0;
-//	if (grid.z) grid.w = false;
-//
-// Entorn VGI: Activació el contexte OpenGL
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-//
-	// Esborra VAO 
-	// deleteVAOList(GRID_XY);
-
-//	if (!Get_VAOId(GRID_YZ)) Set_VAOList(GRID_YZ, loadGridYZ_VAO(GRID_SIZE, hgrid.x));		// Genera VAO de grid YZ per a Z=0 en GRID_XY.
-//
-// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-//
-//
-// Crida a OnPaint() per redibuixar l'escena
-//	InvalidateRect(NULL, false);
-//}
-
-//void CEntornVGIView::OnUpdateVistaGridYZ(CCmdUI *pCmdUI)
-//{
-// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-//	if (grid.z) pCmdUI->SetCheck(1);
-//		else pCmdUI->SetCheck(0);
-//}
-
-
-// VISTA: Visualitzar Grid XYZ (opció booleana)
-//void CEntornVGIView::OnVistaGridXYZ()
-//{
-// TODO: Agregue aquí su código de controlador de comandos
-//	grid.w = !grid.w;	hgrid.w = 0.0;
-//	if (grid.w)
-//		{	grid.x = false;	grid.y = false;		grid.z = false;
-//		}
-//
-// Entorn VGI: Activació el contexte OpenGL
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
-//
-	// Esborra VAO 
-	// deleteVAOList(GRID_XY);
-
-//	if (!Get_VAOId(GRID_XYZ)) Set_VAOList(GRID_XYZ, loadGridXYZ_VAO(GRID_SIZE));		// Genera VAO de grid XYZ per a Z=0 en GRID_XY.
-//
-// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
-//	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
-//
-// Crida a OnPaint() per redibuixar l'escena
-//	InvalidateRect(NULL, false);
-//}
-
-//void CEntornVGIView::OnUpdateVistaGridXYZ(CCmdUI *pCmdUI)
-//{
-// TODO: Agregue aquí su código de controlador de IU para actualización de comandos
-//	if (grid.w) pCmdUI->SetCheck(1);
-//		else pCmdUI->SetCheck(0);
-//
-//}
 
 
 /* ------------------------------------------------------------------------- */

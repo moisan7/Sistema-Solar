@@ -378,62 +378,13 @@ glm::mat4 Vista_Ortografica(GLuint sh_programID, int prj, GLdouble Raux, CColor 
 	bool frnt_fcs, bool oculta, bool testv,
 	char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
 	bool eix, CMask3D reixa, CPunt3D hreixa)
-{
-	glm::mat4 MatriuVista(1.0);
-
-	// Iluminacio movent-se amb la camara (abans glm::lookAt() )
-	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
-
-	// Implementació de planta,alçat,perfil i isomètrica 
-	// ---- Entorn VGI: ATENCIÓ!!. ESPECIFICACIO DEL PUNT DE VISTA
-	//								Cal definir el punt de vista (glm::lookAt() ) en funció del
-	//								tipus de projecció definit a la variable prj.
-
-	// Pas Matriu a shader
-	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
-
-	// Neteja dels buffers de color i profunditat
-	Fons(col_fons);
-
-	// Iluminacio fixe respecte la camara (després glm::LookAt() )
-	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
-
-	// Test de Visibilitat
-	if (testv) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	// Ocultacions (Z-buffer)
-	if (oculta) glEnable(GL_DEPTH_TEST);
-	else glDisable(GL_DEPTH_TEST);
-
-	return MatriuVista;
-}
+{return glm::mat4(1.0);}
 
 // -------- Entorn VGI: PERSPECTIVA (Funcions Projeccio_Perspectiva i Vista_Esferica)
 
 // Projeccio_Perspectiva: Definició Viewport i glm::perspective
 glm::mat4 Projeccio_Perspectiva(GLuint sh_programID, int minx, int miny, GLsizei w, GLsizei h, double zoom)
-{
-	glm::mat4 MatriuProjeccio(1.0);
-
-	// Definició Viewport
-	glViewport(minx, miny, w, h);
-	if (h == 0) h = 1;
-
-	// PROJECCIO PERSPECTIVA.Definim volum de visualització adaptant-lo 
-	//	 a les mides actuals de la finestra windows. Amb glm::perspective()
-	if (w >= h) MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
-	else MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
-
-	// Pas Matriu a shader
-	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "projectionMatrix"), 1, GL_FALSE, &MatriuProjeccio[0][0]);
-
-	// Activació matriu MODELVIEW (tancar matriu PROJECTION)
-		//glMatrixMode(GL_MODELVIEW);
-		//glLoadIdentity();
-
-	return MatriuProjeccio;
-}
+{return glm::mat4(1.0);}
 
 // Vista_Esferica: Definició gluLookAt amb possibilitat de moure el punt de vista interactivament amb el ratolí, 
 //					ilumina i dibuixa l'escena
