@@ -275,6 +275,17 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_NEPTUNE, &CEntornVGIView::OnUpdateLockonplanetNeptune)
 	// ====== Buttons GUI ============
 	ON_BN_CLICKED(101, &CEntornVGIView::OnBtnStartClicked)
+	// SHOW/HIDE
+	ON_BN_CLICKED(102, &CEntornVGIView::OnBtnShowMercury)
+	ON_BN_CLICKED(103, &CEntornVGIView::OnBtnShowVenus)
+	ON_BN_CLICKED(104, &CEntornVGIView::OnBtnShowEarth)
+	ON_BN_CLICKED(105, &CEntornVGIView::OnBtnShowMars)
+	ON_BN_CLICKED(106, &CEntornVGIView::OnBtnShowJupiter)
+	ON_BN_CLICKED(107, &CEntornVGIView::OnBtnShowSaturn)
+	ON_BN_CLICKED(108, &CEntornVGIView::OnBtnShowUranus)
+	ON_BN_CLICKED(109, &CEntornVGIView::OnBtnShowNeptune)
+	ON_BN_CLICKED(110, &CEntornVGIView::OnBtnShowOrbits)
+
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -902,7 +913,35 @@ void CEntornVGIView::OnInitialUpdate()
 
 	// ====== Buttons GUI ============
 	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		CRect(w/2+100, h+150, w/2+240, h+200), this, 101);
+		CRect(w / 2 + 100, h + 150, w / 2 + 240, h + 200), this, 101);
+
+	m_btnShowMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 10, 1890, 40), this, 102);
+	m_btnShowMercury.ShowWindow(SW_HIDE);
+	m_btnShowVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 45, 1890, 75), this, 103);
+	m_btnShowVenus.ShowWindow(SW_HIDE);
+	m_btnShowEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 80, 1890, 110), this, 104);
+	m_btnShowEarth.ShowWindow(SW_HIDE);
+	m_btnShowMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 115, 1890, 145), this, 105);
+	m_btnShowMars.ShowWindow(SW_HIDE);
+	m_btnShowJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 150, 1890, 180), this, 106);
+	m_btnShowJupiter.ShowWindow(SW_HIDE);
+	m_btnShowSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 185, 1890, 215), this, 107);
+	m_btnShowSaturn.ShowWindow(SW_HIDE);
+	m_btnShowUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 220, 1890, 250), this, 108);
+	m_btnShowUranus.ShowWindow(SW_HIDE);
+	m_btnShowNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 255, 1890, 285), this, 109);
+	m_btnShowNeptune.ShowWindow(SW_HIDE);
+	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1820, 290, 1890, 320), this, 110);
+	m_btnShowOrbits.ShowWindow(SW_HIDE);
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
@@ -6019,4 +6058,59 @@ void CEntornVGIView::OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI)
 void CEntornVGIView::OnBtnStartClicked()
 {
 	OnSistemasolarStart();
+	m_btnStart.ShowWindow(SW_HIDE);
+	// ====== Button Menu ==================
+	// BOTON DESPLEGABLE PARA CAMARAS
+	
+
+	// ====== Buttons Speed ================
+	// BOTONES VELOCIDADES
+	
+
+	// ====== Buttons Show/Hide ============
+	m_btnShowMercury.ShowWindow(SW_SHOW);
+	m_btnShowVenus.ShowWindow(SW_SHOW);
+	m_btnShowEarth.ShowWindow(SW_SHOW);
+	m_btnShowMars.ShowWindow(SW_SHOW);
+	m_btnShowJupiter.ShowWindow(SW_SHOW);
+	m_btnShowSaturn.ShowWindow(SW_SHOW);
+	m_btnShowUranus.ShowWindow(SW_SHOW);
+	m_btnShowNeptune.ShowWindow(SW_SHOW);
+	m_btnShowOrbits.ShowWindow(SW_SHOW);
+}
+void CEntornVGIView::OnBtnShowMercury()
+{
+	OnSistemasolarShowMercury();
+}
+void CEntornVGIView::OnBtnShowVenus()
+{
+	OnSistemasolarShowVenus();
+}
+void CEntornVGIView::OnBtnShowEarth()
+{
+	OnSistemasolarShowEarth();
+}
+void CEntornVGIView::OnBtnShowMars()
+{
+	OnSistemasolarShowMars();
+}
+void CEntornVGIView::OnBtnShowJupiter()
+{
+	OnSistemasolarShowJupiter();
+}
+void CEntornVGIView::OnBtnShowSaturn()
+{
+	OnSistemasolarShowSaturn();
+}
+void CEntornVGIView::OnBtnShowUranus()
+{
+	OnSistemasolarShowUranus();
+}
+void CEntornVGIView::OnBtnShowNeptune()
+{
+	OnSistemasolarShowNeptune();
+}
+void CEntornVGIView::OnBtnShowOrbits()
+{
+	OnSistemasolarShowOrbits();
 }

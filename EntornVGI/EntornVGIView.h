@@ -206,6 +206,16 @@ public:
 	float moon_orbit_angle;
 	// ====== Buttons GUI ============
 	CButton m_btnStart;
+	// Show/Hide
+	CButton m_btnShowMercury;
+	CButton m_btnShowVenus;
+	CButton m_btnShowEarth;
+	CButton m_btnShowMars;
+	CButton m_btnShowJupiter;
+	CButton m_btnShowSaturn;
+	CButton m_btnShowUranus;
+	CButton m_btnShowNeptune;
+	CButton m_btnShowOrbits;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -521,6 +531,15 @@ public:
 	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
 	// ====== Buttons GUI ============
 	afx_msg void OnBtnStartClicked();
+	afx_msg void OnBtnShowMercury();
+	afx_msg void OnBtnShowVenus();
+	afx_msg void OnBtnShowEarth();
+	afx_msg void OnBtnShowMars();
+	afx_msg void OnBtnShowJupiter();
+	afx_msg void OnBtnShowSaturn();
+	afx_msg void OnBtnShowUranus();
+	afx_msg void OnBtnShowNeptune();
+	afx_msg void OnBtnShowOrbits();
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 	
 };
