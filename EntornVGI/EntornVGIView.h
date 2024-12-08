@@ -218,6 +218,23 @@ public:
 	CButton m_btnShowUranus;
 	CButton m_btnShowNeptune;
 	CButton m_btnShowOrbits;
+	// Camera
+	bool cameraMenu;
+	CButton m_btnCameraMenu;
+	CButton m_btnCameraSun;
+	CButton m_btnCameraMercury;
+	CButton m_btnCameraVenus;
+	CButton m_btnCameraEarth;
+	CButton m_btnCameraMars;
+	CButton m_btnCameraJupiter;
+	CButton m_btnCameraSaturn;
+	CButton m_btnCameraUranus;
+	CButton m_btnCameraNeptune;
+	// Slider Speeds
+	bool speedMenu;
+	CButton m_btnSpeedMenu;
+	CSliderCtrl m_sliderSpeed;
+	int m_speedIndex;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -227,6 +244,7 @@ public:
 public:
 	virtual void OnDraw(CDC* pDC);  // Reemplazado para dibujar esta vista
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	void UpdateSpeedFromSlider();
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -533,6 +551,7 @@ public:
 	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
 	// ====== Buttons GUI ============
 	afx_msg void OnBtnStartClicked();
+	// Show / Hide
 	afx_msg void OnBtnShowMenu();
 	afx_msg void OnBtnShowMercury();
 	afx_msg void OnBtnShowVenus();
@@ -543,6 +562,20 @@ public:
 	afx_msg void OnBtnShowUranus();
 	afx_msg void OnBtnShowNeptune();
 	afx_msg void OnBtnShowOrbits();
+	// Camera
+	afx_msg void OnBtnCameraMenu();
+	afx_msg void OnBtnCameraSun();
+	afx_msg void OnBtnCameraMercury();
+	afx_msg void OnBtnCameraVenus();
+	afx_msg void OnBtnCameraEarth();
+	afx_msg void OnBtnCameraMars();
+	afx_msg void OnBtnCameraJupiter();
+	afx_msg void OnBtnCameraSaturn();
+	afx_msg void OnBtnCameraUranus();
+	afx_msg void OnBtnCameraNeptune();
+	// Slider Speeds
+	afx_msg void OnBtnSpeedMenu();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 	
 };

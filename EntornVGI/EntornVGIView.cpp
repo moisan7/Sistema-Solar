@@ -286,6 +286,20 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_BN_CLICKED(108, &CEntornVGIView::OnBtnShowUranus)
 	ON_BN_CLICKED(109, &CEntornVGIView::OnBtnShowNeptune)
 	ON_BN_CLICKED(110, &CEntornVGIView::OnBtnShowOrbits)
+	// CAMERAS
+	ON_BN_CLICKED(112, &CEntornVGIView::OnBtnCameraMenu)
+	ON_BN_CLICKED(113, &CEntornVGIView::OnBtnCameraSun)
+	ON_BN_CLICKED(114, &CEntornVGIView::OnBtnCameraMercury)
+	ON_BN_CLICKED(115, &CEntornVGIView::OnBtnCameraVenus)
+	ON_BN_CLICKED(116, &CEntornVGIView::OnBtnCameraEarth)
+	ON_BN_CLICKED(117, &CEntornVGIView::OnBtnCameraMars)
+	ON_BN_CLICKED(118, &CEntornVGIView::OnBtnCameraJupiter)
+	ON_BN_CLICKED(119, &CEntornVGIView::OnBtnCameraSaturn)
+	ON_BN_CLICKED(120, &CEntornVGIView::OnBtnCameraUranus)
+	ON_BN_CLICKED(121, &CEntornVGIView::OnBtnCameraNeptune)
+	// SLIDER SPEEDS
+	ON_WM_HSCROLL(122, &CEntornVGIView::OnHSCroll)
+	ON_BN_CLICKED(123, &CEntornVGIView::OnBtnSpeedMenu)
 
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
@@ -534,6 +548,8 @@ CEntornVGIView::CEntornVGIView()
 	moon_rotation_angle = 0;
 	moon_orbit_angle = 0;
 	showMenu = false;
+	cameraMenu = false;
+	speedMenu = false;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -892,7 +908,6 @@ void CEntornVGIView::OnDestroy()
 	ReleaseDC(pDC);
 }
 
-
 void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 {
 	CView::OnSize(nType, cx, cy);
@@ -907,7 +922,6 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 	h = cy;
 
 }
-
 
 void CEntornVGIView::OnInitialUpdate()
 {
@@ -947,6 +961,46 @@ void CEntornVGIView::OnInitialUpdate()
 	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 325, 1890, 355), this, 110);
 	m_btnShowOrbits.ShowWindow(SW_HIDE);
+	// Camera
+	m_btnCameraMenu.Create(_T("Camera"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 10, 85, 40), this, 112);
+	m_btnCameraMenu.ShowWindow(SW_HIDE);
+	m_btnCameraSun.Create(_T("Sun"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 45, 85, 75), this, 113);
+	m_btnCameraSun.ShowWindow(SW_HIDE);
+	m_btnCameraMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 80, 85, 110), this, 114);
+	m_btnCameraMercury.ShowWindow(SW_HIDE);
+	m_btnCameraVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 115, 85, 145), this, 115);
+	m_btnCameraVenus.ShowWindow(SW_HIDE);
+	m_btnCameraEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 150, 85, 180), this, 116);
+	m_btnCameraEarth.ShowWindow(SW_HIDE);
+	m_btnCameraMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 185, 85, 215), this, 117);
+	m_btnCameraMars.ShowWindow(SW_HIDE);
+	m_btnCameraJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 220, 85, 250), this, 118);
+	m_btnCameraJupiter.ShowWindow(SW_HIDE);
+	m_btnCameraSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 255, 85, 285), this, 119);
+	m_btnCameraSaturn.ShowWindow(SW_HIDE);
+	m_btnCameraUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 290, 85, 320), this, 120);
+	m_btnCameraUranus.ShowWindow(SW_HIDE);
+	m_btnCameraNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 325, 85, 355), this, 121);
+	m_btnCameraNeptune.ShowWindow(SW_HIDE);
+	// Slider Speeds
+	m_btnSpeedMenu.Create(_T("Speed"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(10, 870, 85, 890), this, 123);
+	m_btnSpeedMenu.ShowWindow(SW_HIDE);
+	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(90, 870, 280, 890), this, 122);
+	m_sliderSpeed.ShowWindow(SW_HIDE);
+	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
+	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
+
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
@@ -1000,19 +1054,16 @@ void CEntornVGIView::OnPaint()
 	// Activa el contexto OpenGL
 	wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
-	// Cargar los ejes si aún no están cargados
-	if (!eixos_Id) eixos_Id = deixos();  // Define los Ejes Coordenadas Món como un VAO
-
 	// PROYECCIÓN PERSPECTIVA
 	glDisable(GL_SCISSOR_TEST);  // Desactiva el recorte de pantalla
 
-	///
-	// Càrrega Shader de Gouraud
-	if (!shader_programID) {
-		shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
-		shader = GOURAUD_SHADER;
-	}
-	///
+	/////
+	//// Càrrega Shader de Gouraud
+	//if (!shader_programID) {
+	//	shader_programID = shaderLighting.loadFileShaders(".\\shaders\\gouraud_shdrML.vert", ".\\shaders\\gouraud_shdrML.frag");
+	//	shader = GOURAUD_SHADER;
+	//}
+	/////
 
 	// Definición del Viewport, Proyección y Cámara
 	ProjectionMatrix = Projeccio_Perspectiva(shader_programID, 0, 0, w, h, OPV.R);
@@ -5867,14 +5918,10 @@ void CEntornVGIView::OnBtnStartClicked()
 {
 	OnSistemasolarStart();
 	m_btnStart.ShowWindow(SW_HIDE);
-	// ====== Button Menu ==================
-	// BOTON DESPLEGABLE PARA CAMARAS
-	
-
+	// ====== Buttons Camera ===============
+	m_btnCameraMenu.ShowWindow(SW_SHOW);
 	// ====== Buttons Speed ================
-	// BOTONES VELOCIDADES
-	
-
+	m_btnSpeedMenu.ShowWindow(SW_SHOW);
 	// ====== Buttons Show/Hide ============
 	m_btnShowMenu.ShowWindow(SW_SHOW);
 }
@@ -5915,3 +5962,66 @@ void CEntornVGIView::OnBtnShowSaturn() { OnSistemasolarShowSaturn(); }
 void CEntornVGIView::OnBtnShowUranus() { OnSistemasolarShowUranus(); }
 void CEntornVGIView::OnBtnShowNeptune() { OnSistemasolarShowNeptune(); }
 void CEntornVGIView::OnBtnShowOrbits() { OnSistemasolarShowOrbits(); }
+
+void CEntornVGIView::OnBtnCameraMenu()
+{
+	if (!cameraMenu) {
+		cameraMenu = true;
+		m_btnCameraSun.ShowWindow(SW_SHOW);
+		m_btnCameraMercury.ShowWindow(SW_SHOW);
+		m_btnCameraVenus.ShowWindow(SW_SHOW);
+		m_btnCameraEarth.ShowWindow(SW_SHOW);
+		m_btnCameraMars.ShowWindow(SW_SHOW);
+		m_btnCameraJupiter.ShowWindow(SW_SHOW);
+		m_btnCameraSaturn.ShowWindow(SW_SHOW);
+		m_btnCameraUranus.ShowWindow(SW_SHOW);
+		m_btnCameraNeptune.ShowWindow(SW_SHOW);
+	}
+	else {
+		cameraMenu = false;
+		m_btnCameraSun.ShowWindow(SW_HIDE);
+		m_btnCameraMercury.ShowWindow(SW_HIDE);
+		m_btnCameraVenus.ShowWindow(SW_HIDE);
+		m_btnCameraEarth.ShowWindow(SW_HIDE);
+		m_btnCameraMars.ShowWindow(SW_HIDE);
+		m_btnCameraJupiter.ShowWindow(SW_HIDE);
+		m_btnCameraSaturn.ShowWindow(SW_HIDE);
+		m_btnCameraUranus.ShowWindow(SW_HIDE);
+		m_btnCameraNeptune.ShowWindow(SW_HIDE);
+	}
+}
+void CEntornVGIView::OnBtnCameraSun() { OnLockonplanetSun(); }
+void CEntornVGIView::OnBtnCameraMercury() { OnLockonplanetMercury(); }
+void CEntornVGIView::OnBtnCameraVenus() { OnLockonplanetVenus(); }
+void CEntornVGIView::OnBtnCameraEarth() { OnLockonplanetEarth(); }
+void CEntornVGIView::OnBtnCameraMars() { OnLockonplanetMars(); }
+void CEntornVGIView::OnBtnCameraJupiter() { OnLockonplanetJupiter(); }
+void CEntornVGIView::OnBtnCameraSaturn() { OnLockonplanetSaturn(); }
+void CEntornVGIView::OnBtnCameraUranus() { OnLockonplanetUranus(); }
+void CEntornVGIView::OnBtnCameraNeptune() { OnLockonplanetNeptune(); }
+
+
+void CEntornVGIView::OnBtnSpeedMenu()
+{
+	if (!speedMenu) {
+		speedMenu = true;
+		m_sliderSpeed.ShowWindow(SW_SHOW);
+	}
+	else {
+		speedMenu = false;
+		m_sliderSpeed.ShowWindow(SW_HIDE);
+	}
+}
+
+void CEntornVGIView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+	if (pScrollBar && pScrollBar->GetDlgCtrlID() == 122) {
+		m_speedIndex = m_sliderSpeed.GetPos(); // Obtén la nueva posición del slider
+		speed_inc = INCREMENTADOR[m_speedIndex]; // Actualiza el incremento
+	}
+
+	CView::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+void CEntornVGIView::UpdateSpeedFromSlider() {
+	m_sliderSpeed.SetPos(m_speedIndex); // Ajusta el slider al nuevo índice
+}
