@@ -276,6 +276,7 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	// ====== Buttons GUI ============
 	ON_BN_CLICKED(101, &CEntornVGIView::OnBtnStartClicked)
 	// SHOW/HIDE
+	ON_BN_CLICKED(111, &CEntornVGIView::OnBtnShowMenu)
 	ON_BN_CLICKED(102, &CEntornVGIView::OnBtnShowMercury)
 	ON_BN_CLICKED(103, &CEntornVGIView::OnBtnShowVenus)
 	ON_BN_CLICKED(104, &CEntornVGIView::OnBtnShowEarth)
@@ -532,6 +533,7 @@ CEntornVGIView::CEntornVGIView()
 	}
 	moon_rotation_angle = 0;
 	moon_orbit_angle = 0;
+	showMenu = false;
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -914,33 +916,36 @@ void CEntornVGIView::OnInitialUpdate()
 	// ====== Buttons GUI ============
 	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 		CRect(w / 2 + 100, h + 150, w / 2 + 240, h + 200), this, 101);
-
+	// Show / Hide
+	m_btnShowMenu.Create(_T("Show/Hide"), WS_CHILD | BS_PUSHBUTTON,
+		CRect(1815, 10, 1890, 40), this, 111);
+	m_btnShowMenu.ShowWindow(SW_HIDE);
 	m_btnShowMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 10, 1890, 40), this, 102);
+		CRect(1815, 45, 1890, 75), this, 102);
 	m_btnShowMercury.ShowWindow(SW_HIDE);
 	m_btnShowVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 45, 1890, 75), this, 103);
+		CRect(1815, 80, 1890, 110), this, 103);
 	m_btnShowVenus.ShowWindow(SW_HIDE);
 	m_btnShowEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 80, 1890, 110), this, 104);
+		CRect(1815, 115, 1890, 145), this, 104);
 	m_btnShowEarth.ShowWindow(SW_HIDE);
 	m_btnShowMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 115, 1890, 145), this, 105);
+		CRect(1815, 150, 1890, 180), this, 105);
 	m_btnShowMars.ShowWindow(SW_HIDE);
 	m_btnShowJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 150, 1890, 180), this, 106);
+		CRect(1815, 185, 1890, 215), this, 106);
 	m_btnShowJupiter.ShowWindow(SW_HIDE);
 	m_btnShowSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 185, 1890, 215), this, 107);
+		CRect(1815, 220, 1890, 250), this, 107);
 	m_btnShowSaturn.ShowWindow(SW_HIDE);
 	m_btnShowUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 220, 1890, 250), this, 108);
+		CRect(1815, 255, 1890, 285), this, 108);
 	m_btnShowUranus.ShowWindow(SW_HIDE);
 	m_btnShowNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 255, 1890, 285), this, 109);
+		CRect(1815, 290, 1890, 320), this, 109);
 	m_btnShowNeptune.ShowWindow(SW_HIDE);
 	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1820, 290, 1890, 320), this, 110);
+		CRect(1815, 325, 1890, 355), this, 110);
 	m_btnShowOrbits.ShowWindow(SW_HIDE);
 
 	CDC* pDC = GetDC();
@@ -5792,266 +5797,69 @@ void CEntornVGIView::OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI)
 	// Llamada a OnPaint() para redibujar la escena
 	InvalidateRect(NULL, false);
 }
-
-
-
 /* ----------------------------------------------------------------------- */
 /* ---------------------------INCREMENTO VELOCIDAD------------------------ */
 /* ----------------------------------------------------------------------- */
-void CEntornVGIView::OnSistemasolarIncrementx0()
-{
-	speed_index = 0;
-	speed_inc = INCREMENTADOR[0];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI)
-{
-	if (speed_index == 0) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx1()
-{
-	speed_index = 1;
-	speed_inc = INCREMENTADOR[1];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx1(CCmdUI* pCmdUI)
-{
-	if (speed_index == 1) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx2()
-{
-	speed_index = 2;
-	speed_inc = INCREMENTADOR[2];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx2(CCmdUI* pCmdUI)
-{
-	if (speed_index == 2) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx5()
-{
-	speed_index = 3;
-	speed_inc = INCREMENTADOR[3];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx5(CCmdUI* pCmdUI)
-{
-	if (speed_index == 3) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx10()
-{
-	speed_index = 4;
-	speed_inc = INCREMENTADOR[4];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx10(CCmdUI* pCmdUI)
-{
-	if (speed_index == 4) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx100()
-{
-	speed_index = 5;
-	speed_inc = INCREMENTADOR[5];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx100(CCmdUI* pCmdUI)
-{
-	if (speed_index == 5) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx200()
-{
-	speed_index = 6;
-	speed_inc = INCREMENTADOR[6];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx200(CCmdUI* pCmdUI)
-{
-	if (speed_index == 6) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx500()
-{
-	speed_index = 7;
-	speed_inc = INCREMENTADOR[7];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI)
-{
-	if (speed_index == 7) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarIncrementx1000()
-{
-	speed_index = 8;
-	speed_inc = INCREMENTADOR[8];
-}
-void CEntornVGIView::OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI)
-{
-	if (speed_index == 8) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
+void CEntornVGIView::OnSistemasolarIncrementx0() { speed_index = 0; speed_inc = INCREMENTADOR[0]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 0 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx1() { speed_index = 1; speed_inc = INCREMENTADOR[1]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx1(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 1 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx2() { speed_index = 2; speed_inc = INCREMENTADOR[2]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx2(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 2 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx5() { speed_index = 3; speed_inc = INCREMENTADOR[3]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx5(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 3 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx10() { speed_index = 4; speed_inc = INCREMENTADOR[4]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx10(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 4 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx100() { speed_index = 5; speed_inc = INCREMENTADOR[5]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx100(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 5 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx200() { speed_index = 6; speed_inc = INCREMENTADOR[6]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx200(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 6 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx500() { speed_index = 7; speed_inc = INCREMENTADOR[7]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 7 ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarIncrementx1000() { speed_index = 8; speed_inc = INCREMENTADOR[8]; }
+void CEntornVGIView::OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI) { pCmdUI->SetCheck(speed_index == 8 ? 1 : 0); }
 /* ----------------------------------------------------------------------- */
 /* ---------------------------MOSTRAR / OCULTAR--------------------------- */
 /* ----------------------------------------------------------------------- */
-void CEntornVGIView::OnSistemasolarShowMercury() {
-	draw_planets[0] = !draw_planets[0];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowMercury(CCmdUI* pCmdUI)
-{
-	if (draw_planets[0]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowVenus() {
-	draw_planets[1] = !draw_planets[1];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowVenus(CCmdUI* pCmdUI)
-{
-	if (draw_planets[1]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowEarth() {
-	draw_planets[2] = !draw_planets[2];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowEarth(CCmdUI* pCmdUI)
-{
-	if (draw_planets[2]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowMars() {
-	draw_planets[3] = !draw_planets[3];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowMars(CCmdUI* pCmdUI)
-{
-	if (draw_planets[3]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowJupiter()
-{
-	draw_planets[4] = !draw_planets[4];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowJupiter(CCmdUI* pCmdUI)
-{
-	if (draw_planets[4]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowSaturn()
-{
-	draw_planets[5] = !draw_planets[5];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowSaturn(CCmdUI* pCmdUI)
-{
-	if (draw_planets[5]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowUranus()
-{
-	draw_planets[6] = !draw_planets[6];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI)
-{
-	if (draw_planets[6]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowNeptune()
-{
-	draw_planets[7] = !draw_planets[7];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI)
-{
-	if (draw_planets[7]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnSistemasolarShowOrbits()
-{
-	draw_planets[8] = !draw_planets[8];
-}
-void CEntornVGIView::OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI)
-{
-	if (draw_planets[8]) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
+void CEntornVGIView::OnSistemasolarShowMercury() { draw_planets[0] = !draw_planets[0]; }
+void CEntornVGIView::OnUpdateSistemasolarShowMercury(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[0] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowVenus() { draw_planets[1] = !draw_planets[1]; }
+void CEntornVGIView::OnUpdateSistemasolarShowVenus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[1] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowEarth() { draw_planets[2] = !draw_planets[2]; }
+void CEntornVGIView::OnUpdateSistemasolarShowEarth(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[2] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowMars() { draw_planets[3] = !draw_planets[3]; }
+void CEntornVGIView::OnUpdateSistemasolarShowMars(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[3] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowJupiter() { draw_planets[4] = !draw_planets[4]; }
+void CEntornVGIView::OnUpdateSistemasolarShowJupiter(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[4] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowSaturn() { draw_planets[5] = !draw_planets[5]; }
+void CEntornVGIView::OnUpdateSistemasolarShowSaturn(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[5] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowUranus() { draw_planets[6] = !draw_planets[6]; }
+void CEntornVGIView::OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[6] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowNeptune() { draw_planets[7] = !draw_planets[7]; }
+void CEntornVGIView::OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[7] ? 1 : 0); }
+void CEntornVGIView::OnSistemasolarShowOrbits() { draw_planets[8] = !draw_planets[8]; }
+void CEntornVGIView::OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI) { pCmdUI->SetCheck(draw_planets[8] ? 1 : 0); }
 /* ----------------------------------------------------------------------- */
 /* ------------------------------CAMERA LOCK------------------------------ */
 /* ----------------------------------------------------------------------- */
-void CEntornVGIView::OnLockonplanetSun()
-{
-	target_planet = 0;
-}
-void CEntornVGIView::OnLockonplanetMercury()
-{
-	target_planet = 1;
-}
-void CEntornVGIView::OnLockonplanetVenus()
-{
-	target_planet = 2;
-}
-void CEntornVGIView::OnLockonplanetEarth()
-{
-	target_planet = 3;
-}
-void CEntornVGIView::OnLockonplanetMars()
-{
-	target_planet = 4;
-}
-void CEntornVGIView::OnLockonplanetJupiter()
-{
-	target_planet = 5;
-}
-void CEntornVGIView::OnLockonplanetSaturn()
-{
-	target_planet = 6;
-}
-void CEntornVGIView::OnLockonplanetUranus()
-{
-	target_planet = 7;
-}
-void CEntornVGIView::OnLockonplanetNeptune()
-{
-	target_planet = 8;
-}
-void CEntornVGIView::OnUpdateLockonplanetSun(CCmdUI* pCmdUI)
-{
-	if (target_planet == 0) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetMercury(CCmdUI* pCmdUI)
-{
-	if (target_planet == 1) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetVenus(CCmdUI* pCmdUI)
-{
-	if (target_planet == 2) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetEarth(CCmdUI* pCmdUI)
-{
-	if (target_planet == 3) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetMars(CCmdUI* pCmdUI)
-{
-	if (target_planet == 4) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI)
-{
-	if (target_planet == 5) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI)
-{
-	if (target_planet == 6) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetUranus(CCmdUI* pCmdUI)
-{
-	if (target_planet == 7) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
-void CEntornVGIView::OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI)
-{
-	if (target_planet == 8) pCmdUI->SetCheck(1);
-	else pCmdUI->SetCheck(0);
-}
+void CEntornVGIView::OnLockonplanetSun() { target_planet = 0; }
+void CEntornVGIView::OnLockonplanetMercury() { target_planet = 1; }
+void CEntornVGIView::OnLockonplanetVenus() { target_planet = 2; }
+void CEntornVGIView::OnLockonplanetEarth() { target_planet = 3; }
+void CEntornVGIView::OnLockonplanetMars() { target_planet = 4; }
+void CEntornVGIView::OnLockonplanetJupiter() { target_planet = 5; }
+void CEntornVGIView::OnLockonplanetSaturn() { target_planet = 6; }
+void CEntornVGIView::OnLockonplanetUranus() { target_planet = 7; }
+void CEntornVGIView::OnLockonplanetNeptune() { target_planet = 8; }
+void CEntornVGIView::OnUpdateLockonplanetSun(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 0 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetMercury(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 1 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetVenus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 2 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetEarth(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 3 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetMars(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 4 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 5 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 6 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetUranus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 7 ? 1 : 0); }
+void CEntornVGIView::OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 8 ? 1 : 0); }
 /* ----------------------------------------------------------------------- */
 /* ------------------------------BUTTONS GUI------------------------------ */
 /* ----------------------------------------------------------------------- */
@@ -6068,49 +5876,42 @@ void CEntornVGIView::OnBtnStartClicked()
 	
 
 	// ====== Buttons Show/Hide ============
-	m_btnShowMercury.ShowWindow(SW_SHOW);
-	m_btnShowVenus.ShowWindow(SW_SHOW);
-	m_btnShowEarth.ShowWindow(SW_SHOW);
-	m_btnShowMars.ShowWindow(SW_SHOW);
-	m_btnShowJupiter.ShowWindow(SW_SHOW);
-	m_btnShowSaturn.ShowWindow(SW_SHOW);
-	m_btnShowUranus.ShowWindow(SW_SHOW);
-	m_btnShowNeptune.ShowWindow(SW_SHOW);
-	m_btnShowOrbits.ShowWindow(SW_SHOW);
+	m_btnShowMenu.ShowWindow(SW_SHOW);
 }
-void CEntornVGIView::OnBtnShowMercury()
+void CEntornVGIView::OnBtnShowMenu()
 {
-	OnSistemasolarShowMercury();
+	if (!showMenu) {
+		showMenu = true;
+		m_btnShowMercury.ShowWindow(SW_SHOW);
+		m_btnShowVenus.ShowWindow(SW_SHOW);
+		m_btnShowEarth.ShowWindow(SW_SHOW);
+		m_btnShowMars.ShowWindow(SW_SHOW);
+		m_btnShowJupiter.ShowWindow(SW_SHOW);
+		m_btnShowSaturn.ShowWindow(SW_SHOW);
+		m_btnShowUranus.ShowWindow(SW_SHOW);
+		m_btnShowNeptune.ShowWindow(SW_SHOW);
+		m_btnShowOrbits.ShowWindow(SW_SHOW);
+	}
+	else {
+		showMenu = false;
+		m_btnShowMercury.ShowWindow(SW_HIDE);
+		m_btnShowVenus.ShowWindow(SW_HIDE);
+		m_btnShowEarth.ShowWindow(SW_HIDE);
+		m_btnShowMars.ShowWindow(SW_HIDE);
+		m_btnShowJupiter.ShowWindow(SW_HIDE);
+		m_btnShowSaturn.ShowWindow(SW_HIDE);
+		m_btnShowUranus.ShowWindow(SW_HIDE);
+		m_btnShowNeptune.ShowWindow(SW_HIDE);
+		m_btnShowOrbits.ShowWindow(SW_HIDE);
+	}
+	
 }
-void CEntornVGIView::OnBtnShowVenus()
-{
-	OnSistemasolarShowVenus();
-}
-void CEntornVGIView::OnBtnShowEarth()
-{
-	OnSistemasolarShowEarth();
-}
-void CEntornVGIView::OnBtnShowMars()
-{
-	OnSistemasolarShowMars();
-}
-void CEntornVGIView::OnBtnShowJupiter()
-{
-	OnSistemasolarShowJupiter();
-}
-void CEntornVGIView::OnBtnShowSaturn()
-{
-	OnSistemasolarShowSaturn();
-}
-void CEntornVGIView::OnBtnShowUranus()
-{
-	OnSistemasolarShowUranus();
-}
-void CEntornVGIView::OnBtnShowNeptune()
-{
-	OnSistemasolarShowNeptune();
-}
-void CEntornVGIView::OnBtnShowOrbits()
-{
-	OnSistemasolarShowOrbits();
-}
+void CEntornVGIView::OnBtnShowMercury() { OnSistemasolarShowMercury(); }
+void CEntornVGIView::OnBtnShowVenus() { OnSistemasolarShowVenus(); }
+void CEntornVGIView::OnBtnShowEarth() { OnSistemasolarShowEarth(); }
+void CEntornVGIView::OnBtnShowMars() { OnSistemasolarShowMars(); }
+void CEntornVGIView::OnBtnShowJupiter() { OnSistemasolarShowJupiter(); }
+void CEntornVGIView::OnBtnShowSaturn() { OnSistemasolarShowSaturn(); }
+void CEntornVGIView::OnBtnShowUranus() { OnSistemasolarShowUranus(); }
+void CEntornVGIView::OnBtnShowNeptune() { OnSistemasolarShowNeptune(); }
+void CEntornVGIView::OnBtnShowOrbits() { OnSistemasolarShowOrbits(); }

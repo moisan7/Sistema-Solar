@@ -207,6 +207,8 @@ public:
 	// ====== Buttons GUI ============
 	CButton m_btnStart;
 	// Show/Hide
+	bool showMenu;
+	CButton m_btnShowMenu;
 	CButton m_btnShowMercury;
 	CButton m_btnShowVenus;
 	CButton m_btnShowEarth;
@@ -531,6 +533,7 @@ public:
 	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
 	// ====== Buttons GUI ============
 	afx_msg void OnBtnStartClicked();
+	afx_msg void OnBtnShowMenu();
 	afx_msg void OnBtnShowMercury();
 	afx_msg void OnBtnShowVenus();
 	afx_msg void OnBtnShowEarth();
