@@ -204,6 +204,8 @@ public:
 	// Moon
 	float moon_rotation_angle;
 	float moon_orbit_angle;
+	// ====== Buttons GUI ============
+	CButton m_btnStart;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -517,7 +519,8 @@ public:
 	afx_msg void OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLockonplanetUranus(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
-
+	// ====== Buttons GUI ============
+	afx_msg void OnBtnStartClicked();
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 	
 };

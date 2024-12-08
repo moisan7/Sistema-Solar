@@ -273,6 +273,8 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_SATURN, &CEntornVGIView::OnUpdateLockonplanetSaturn)
 	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_URANUS, &CEntornVGIView::OnUpdateLockonplanetUranus)
 	ON_UPDATE_COMMAND_UI(ID_LOCKONPLANET_NEPTUNE, &CEntornVGIView::OnUpdateLockonplanetNeptune)
+	// ====== Buttons GUI ============
+	ON_BN_CLICKED(101, &CEntornVGIView::OnBtnStartClicked)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -897,6 +899,10 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 void CEntornVGIView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
+
+	// ====== Buttons GUI ============
+	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+		CRect(w/2+100, h+150, w/2+240, h+200), this, 101);
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
@@ -5992,21 +5998,25 @@ void CEntornVGIView::OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI)
 	if (target_planet == 5) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
 void CEntornVGIView::OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI)
 {
 	if (target_planet == 6) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
 void CEntornVGIView::OnUpdateLockonplanetUranus(CCmdUI* pCmdUI)
 {
 	if (target_planet == 7) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
 }
-
 void CEntornVGIView::OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI)
 {
 	if (target_planet == 8) pCmdUI->SetCheck(1);
 	else pCmdUI->SetCheck(0);
+}
+/* ----------------------------------------------------------------------- */
+/* ------------------------------BUTTONS GUI------------------------------ */
+/* ----------------------------------------------------------------------- */
+void CEntornVGIView::OnBtnStartClicked()
+{
+	OnSistemasolarStart();
 }
