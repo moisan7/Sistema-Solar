@@ -46,7 +46,7 @@ GLuint* loadIMA_SOIL_texture()
 
 	};
 
-	glGenTextures(11, textureID);
+	glGenTextures(15, textureID);
 
 
 	int i = 0;

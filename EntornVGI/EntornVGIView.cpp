@@ -5632,7 +5632,7 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
 	static DWORD lastTime = 0;								// Variable estática para almacenar el tiempo de la última actualización
 	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
-	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
+	float deltaTime = (currentTime - lastTime) / 100000.0f;	// Tiempo en segundos desde la última actualización
 
 	//if (rotation) {
 	//	// Movimiento de rotación
@@ -5662,8 +5662,8 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
 		for (int i = 0; i < 4; i++) {
-			jupiter_moon_ort[i] += (ORBIT_SPEED[8] * deltaTime * speed_inc)+i;
-			jupiter_moon_rot[i] += (ROTATION_SPEED[9] * deltaTime * speed_inc)+i;
+			jupiter_moon_ort[i] += (ORBIT_SPEED[9+i] * deltaTime * speed_inc);
+			jupiter_moon_rot[i] += (ROTATION_SPEED[10+i] * deltaTime * speed_inc);
 		}
 	}
 
