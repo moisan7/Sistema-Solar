@@ -430,7 +430,8 @@ void IluminacioSol(GLint shaderId)
 
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
-	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle)
+	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], 
+	bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle)
 {	
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;

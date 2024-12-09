@@ -5620,16 +5620,7 @@ std::string CEntornVGIView::CString2String(const CString& cString)
 /* ------------------------------------------------------------------------- */
 /*					     TIMER (ANIMACIÓ)									 */
 /* ------------------------------------------------------------------------- */
-// ROTATION
-float rotationAngle = 0.0f;    // Ángulo de rotación del planeta
-float newAngle = 0.05f;
-float rotationSpeed = 5.0f;   // Velocidad angular de la rotación
-// TRANSLATION
-float orbitAngle = 0.0f;    // Ángulo de rotación de la órbita del planeta
-float orbitSpeed = 0.05f;   // Velocidad angular de la órbita
-
-float orbitRadiusX = 10.0f;  // Radio de la órbita en el eje X
-float orbitRadiusZ = 5.0f;   // Radio de la órbita en el eje Z
+ 
 
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
