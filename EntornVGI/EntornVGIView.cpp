@@ -926,78 +926,56 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 void CEntornVGIView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-
+	
 	// ====== Buttons GUI ============
 	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 		CRect(w / 2 + 100, h + 150, w / 2 + 240, h + 200), this, 101);
 	// Show / Hide
 	m_btnShowMenu.Create(_T("Show/Hide"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 10, 1890, 40), this, 111);
-	m_btnShowMenu.ShowWindow(SW_HIDE);
 	m_btnShowMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 45, 1890, 75), this, 102);
-	m_btnShowMercury.ShowWindow(SW_HIDE);
 	m_btnShowVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 80, 1890, 110), this, 103);
-	m_btnShowVenus.ShowWindow(SW_HIDE);
 	m_btnShowEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 115, 1890, 145), this, 104);
-	m_btnShowEarth.ShowWindow(SW_HIDE);
 	m_btnShowMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 150, 1890, 180), this, 105);
-	m_btnShowMars.ShowWindow(SW_HIDE);
 	m_btnShowJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 185, 1890, 215), this, 106);
-	m_btnShowJupiter.ShowWindow(SW_HIDE);
 	m_btnShowSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 220, 1890, 250), this, 107);
-	m_btnShowSaturn.ShowWindow(SW_HIDE);
 	m_btnShowUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 255, 1890, 285), this, 108);
-	m_btnShowUranus.ShowWindow(SW_HIDE);
 	m_btnShowNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 290, 1890, 320), this, 109);
-	m_btnShowNeptune.ShowWindow(SW_HIDE);
 	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(1815, 325, 1890, 355), this, 110);
-	m_btnShowOrbits.ShowWindow(SW_HIDE);
 	// Camera
 	m_btnCameraMenu.Create(_T("Camera"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 10, 85, 40), this, 112);
-	m_btnCameraMenu.ShowWindow(SW_HIDE);
 	m_btnCameraSun.Create(_T("Sun"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 45, 85, 75), this, 113);
-	m_btnCameraSun.ShowWindow(SW_HIDE);
 	m_btnCameraMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 80, 85, 110), this, 114);
-	m_btnCameraMercury.ShowWindow(SW_HIDE);
 	m_btnCameraVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 115, 85, 145), this, 115);
-	m_btnCameraVenus.ShowWindow(SW_HIDE);
 	m_btnCameraEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 150, 85, 180), this, 116);
-	m_btnCameraEarth.ShowWindow(SW_HIDE);
 	m_btnCameraMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 185, 85, 215), this, 117);
-	m_btnCameraMars.ShowWindow(SW_HIDE);
 	m_btnCameraJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 220, 85, 250), this, 118);
-	m_btnCameraJupiter.ShowWindow(SW_HIDE);
 	m_btnCameraSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 255, 85, 285), this, 119);
-	m_btnCameraSaturn.ShowWindow(SW_HIDE);
 	m_btnCameraUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 290, 85, 320), this, 120);
-	m_btnCameraUranus.ShowWindow(SW_HIDE);
 	m_btnCameraNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 325, 85, 355), this, 121);
-	m_btnCameraNeptune.ShowWindow(SW_HIDE);
 	// Slider Speeds
 	m_btnSpeedMenu.Create(_T("Speed"), WS_CHILD | BS_PUSHBUTTON,
 		CRect(10, 870, 85, 890), this, 123);
-	m_btnSpeedMenu.ShowWindow(SW_HIDE);
 	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(90, 870, 280, 890), this, 122);
-	m_sliderSpeed.ShowWindow(SW_HIDE);
 	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
 	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
 
