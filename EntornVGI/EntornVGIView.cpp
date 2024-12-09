@@ -5606,24 +5606,6 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
 	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
 
-	//if (rotation) {
-	//	// Movimiento de rotación
-	//	rotationAngle += newAngle;
-	//	if (rotationAngle >= 360.0f)
-	//		rotationAngle -= 360.0f;
-	//	//// Calcular la nueva orientación de rotación del planeta
-	//	// Calcular la nueva posición de traslación del planeta en la órbita
-	//	TG.VRota.z = rotationSpeed * rotationAngle; // Coordenada Z en el eje
-	//}
-	//if (translation) {
-	//	// Movimiento de traslación
-	//	orbitAngle += orbitSpeed;
-	//	if (orbitAngle >= 360.0f)
-	//		orbitAngle -= 360.0f;
-	//	// Calcular la nueva posición de traslación del planeta en la órbita
-	//	TG.VTras.x = orbitRadiusX * cos(orbitAngle); // Coordenada X en la órbita
-	//	TG.VTras.z = orbitRadiusZ * sin(orbitAngle); // Coordenada Z en la órbita
-	//}
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
 			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
