@@ -979,6 +979,12 @@ void CEntornVGIView::OnInitialUpdate()
 	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
 	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
 
+	// Initialize the starting date
+	m_currentDate.SetDate(1900, 1, 1);  // Start date: 01-01-1900
+
+	// Set a timer to trigger every 1 second (1000 ms)
+	m_timerID = SetTimer(1, 1000, nullptr);	
+
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
@@ -1060,6 +1066,18 @@ void CEntornVGIView::OnPaint()
 		texturesID_planets = loadIMA_SOIL_texture();
 		load_textures = true;
 	}
+	///////
+	// Format the date as DD/MM/YYYY
+	CString dateStr = m_currentDate.Format(_T("%d/%m/%Y"));
+
+	// Set the text position
+	CRect rect;
+	GetClientRect(&rect);
+
+	// Draw the date centered at the top of the window
+	rect.top += 20;  // Adjust the position as needed
+	dc.SetTextAlign(TA_CENTER);
+	dc.TextOutW(rect.Width() / 2, rect.top, dateStr);
 	///////
 
 	// Dibujo de la Escena
@@ -5616,7 +5634,14 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
 	}
+	if (nIDEvent == m_timerID)
+	{
+		// Increment the current date by 1 day
+		m_currentDate += COleDateTimeSpan(1, 0, 0, 0);
 
+		// Redraw the view
+		//Invalidate();
+	}
 	// Actualizar la última vez que se llamó al timer
 	lastTime = currentTime;
 

@@ -235,6 +235,9 @@ public:
 	CButton m_btnSpeedMenu;
 	CSliderCtrl m_sliderSpeed;
 	int m_speedIndex;
+	// Timer
+	COleDateTime m_currentDate;  // Stores the current date
+	UINT_PTR m_timerID;          // Timer ID for updating the date
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
