@@ -22,7 +22,8 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle);
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, 
+	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[]);
 
 // Entorn VGI: dibuixa -> Funció que dibuixa objectes simples de la llibreria GLUT segons obj
 void dibuixa(GLuint sh_programID, char obj, glm::mat4 MatriuVista, glm::mat4 MatriuTG);
@@ -41,7 +42,8 @@ void Cuerpo(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_m
 void Cabina(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5]);
 
 // Entorn VGI: Sis.
-void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5], GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle);
+void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5], GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], bool draw_planets[9], 
+	int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[]);
 // Dibujar órbitas planetas
 void DrawOrbit(float a, float b, int planet, int numSegments);
 

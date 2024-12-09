@@ -24,7 +24,7 @@ GLuint* loadIMA_SOIL_texture()
 {
 	FILE* file = NULL;
 	int errno;
-	GLuint* textureID = new GLuint[10];
+	GLuint* textureID = new GLuint[15];
 
 	std::vector<std::string> filenames =
 	{ 
@@ -32,14 +32,18 @@ GLuint* loadIMA_SOIL_texture()
 		".\\textures\\planets\\8k_mercury.jpg",
 		".\\textures\\planets\\4k_venus_atmosphere.jpg",
 		".\\textures\\planets\\8k_earth_daymap.jpg",
-		//".\\textures\\planets\\8k_moon.jpg",
 		".\\textures\\planets\\8k_mars.jpg",
 		".\\textures\\planets\\8k_jupiter.jpg",
 		".\\textures\\planets\\8k_saturn.jpg",
 		".\\textures\\planets\\2k_uranus.jpg",
 		".\\textures\\planets\\2k_neptune.jpg",
 		".\\textures\\planets\\8k_moon.jpg",
-		".\\textures\\planets\\8k_saturn_ring_alpha.png"
+		".\\textures\\planets\\8k_saturn_ring_alpha.png",
+		".\\textures\\planets\\Io.jpg",
+		".\\textures\\planets\\Europa.jpg",
+		".\\textures\\planets\\Ganymede.png",
+		".\\textures\\planets\\Callisto.png"
+
 	};
 
 	glGenTextures(11, textureID);

@@ -80,7 +80,8 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	bool textur, GLuint texturID[NUM_MAX_TEXTURES], GLuint* textures_planeta, bool textur_map, bool flagInvertY,
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
-	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle)
+	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, 
+	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[])
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -140,7 +141,8 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		// Definició propietats de reflexió (emissió, ambient, difusa, especular) del material pel color de l'objecte.
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
-		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
+		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle, 
+			jupiter_moon_ort, jupiter_moon_rot);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -431,7 +433,8 @@ void IluminacioSol(GLint shaderId)
 //Objecte sis
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
 	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], 
-	bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle)
+	bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle, 
+	float jupiter_moon_ort[], float jupiter_moon_rot[])
 {	
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
@@ -510,6 +513,36 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		}
 		/*----------MOON----------*/
 
+		/*----------JUIPTER MOON----------*/
+		if (i - 1 == 5 && draw_planets[4]) // if drawing Earth, draw Moon:
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				float x = 0;
+				float y = 0;
+				glm::mat4 moonTransMatrix = glm::mat4(1.0f);
+
+				int index = 10 + i;
+				glActiveTexture(GL_TEXTURE0);
+				SetTextureParameters(textures_planeta[index], true, true, false, false);
+				glUniform1i(uni_id, 0);
+				// Calculos de orbitas
+				x = SEMIMAJOR_AXIS[8] * cos(jupiter_moon_ort[index]); // X position based on orbit angle
+				y = SEMIMAJOR_AXIS[8] * sin(jupiter_moon_ort[index]); // Y position based on orbit angle
+				moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+				moonTransMatrix = glm::rotate(moonTransMatrix, radians(jupiter_moon_rot[index]), vec3(0.0f, 0.0f, 1.0f));
+				moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[9], P_SCALE[9], P_SCALE[9]));
+
+				// Pas ModelView Matrix a shader
+				glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
+				// Pas NormalMatrix a shader
+				NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+				glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+				draw_TriEBO_Object(GLU_SPHERE);
+			}
+			
+		}
+		/*----------JUIPTER MOON----------*/
 
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);

@@ -547,6 +547,11 @@ CEntornVGIView::CEntornVGIView()
 	}
 	moon_rotation_angle = 0;
 	moon_orbit_angle = 0;
+	// Jupiter Moons
+	for (int i = 0; i < 4; i++) {
+		jupiter_moon_rot[i] = 0.0f; // Asigna 0 a cada elemento
+		jupiter_moon_ort[i] = 0.0f; // Asigna 0 a cada elemento
+	}
 	showMenu = false;
 	cameraMenu = false;
 	speedMenu = false;
@@ -1149,7 +1154,8 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle,
+		jupiter_moon_ort, jupiter_moon_rot);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5655,6 +5661,10 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
+		for (int i = 0; i < 4; i++) {
+			jupiter_moon_ort[i] += (ORBIT_SPEED[8] * deltaTime * speed_inc)+i;
+			jupiter_moon_rot[i] += (ROTATION_SPEED[9] * deltaTime * speed_inc)+i;
+		}
 	}
 
 	// Actualizar la última vez que se llamó al timer

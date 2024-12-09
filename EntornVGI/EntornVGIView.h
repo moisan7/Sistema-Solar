@@ -204,6 +204,8 @@ public:
 	// Moon
 	float moon_rotation_angle;
 	float moon_orbit_angle;
+	float jupiter_moon_rot[4];
+	float jupiter_moon_ort[4];
 	// ====== Buttons GUI ============
 	CButton m_btnStart;
 	// Show/Hide
