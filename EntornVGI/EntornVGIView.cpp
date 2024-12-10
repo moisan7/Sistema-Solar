@@ -782,6 +782,68 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Entorn VGI: Desactivació el contexte OpenGL. Permet la coexistencia d'altres contextes de generació
 	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
 
+	// ====== Buttons GUI ============
+	// Obtener el tamaño inicial del área cliente
+	CRect rect;
+	GetClientRect(&rect);
+	int w = rect.Width();
+	int h = rect.Height();
+
+	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE,
+		CRect(0, 0, 0, 0), this, 101); // Posición temporal, se ajustará en OnSize()
+
+	// Show / Hide
+	m_btnShowMenu.Create(_T("Show/Hide"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 111);
+
+	m_btnShowMercury.Create(_T("Mercury"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 102);
+	m_btnShowVenus.Create(_T("Venus"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 103);
+	m_btnShowEarth.Create(_T("Earth"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 104);
+	m_btnShowMars.Create(_T("Mars"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 105);
+	m_btnShowJupiter.Create(_T("Jupiter"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 106);
+	m_btnShowSaturn.Create(_T("Saturn"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 107);
+	m_btnShowUranus.Create(_T("Uranus"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 108);
+	m_btnShowNeptune.Create(_T("Neptune"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 109);
+	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 110);
+
+	// Camera
+	m_btnCameraMenu.Create(_T("Camera"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 112);
+	m_btnCameraSun.Create(_T("Sun"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 113);
+	m_btnCameraMercury.Create(_T("Mercury"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 114);
+	m_btnCameraVenus.Create(_T("Venus"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 115);
+	m_btnCameraEarth.Create(_T("Earth"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 116);
+	m_btnCameraMars.Create(_T("Mars"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 117);
+	m_btnCameraJupiter.Create(_T("Jupiter"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 118);
+	m_btnCameraSaturn.Create(_T("Saturn"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 119);
+	m_btnCameraUranus.Create(_T("Uranus"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 120);
+	m_btnCameraNeptune.Create(_T("Neptune"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 121);
+
+	// Slider Speeds
+	m_btnSpeedMenu.Create(_T("Speed"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 123);
+	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(0, 0, 0, 0), this, 122);
+	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
+	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
+
 	return true;
 }
 
@@ -912,73 +974,243 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 {
 	CView::OnSize(nType, cx, cy);
 
-	// TODO: Agregue aquí su código de controlador de mensajes
-
 	// A resize event occured; cx and cy are the window's new width and height.
-	// Find the OpenGL change size function given in the Lab 1 notes and call it here
 
 	// Entorn VGI: MODIFICACIÓ ->Establim les mides de la finestra actual
 	w = cx;
 	h = cy;
 
+	// Modificar el viewport de OpenGL
+	if (h > 0) {
+		glViewport(0, 0, w, h); // Ajustar el viewport a toda el área cliente
+	}
+
+	// Layout
+	float paddingX = 0.01f; // 1% padding horizontal
+	float paddingY = 0.01f; // 1% padding vertical
+	float buttonWidthPercentage = 0.04f; // Ancho: 4% de la ventana
+	float buttonHeightPercentage = 0.03f; // Alto: 3% de la ventana
+	float buttonSpacingPercentage = 0.005f; // Espacio entre botones: 0.5%
+
+	// Reposicionar botones con porcentajes::
+	// Botón Start
+	if (m_btnStart.GetSafeHwnd()) {
+		float startButtonWidthPercentage = 0.09f;	// Ancho : 9%
+		float startButtonHeightPercentage = 0.05f;
+		float startButtonYOffset = 0.08f;			// Desplazamiento arriba: 8%
+		m_btnStart.MoveWindow(
+			static_cast<int>(w * (0.5f - startButtonWidthPercentage / 2.0f)),
+			static_cast<int>(h * (1.0f - startButtonHeightPercentage - startButtonYOffset)),
+			static_cast<int>(w * startButtonWidthPercentage),
+			static_cast<int>(h * startButtonHeightPercentage)
+		);
+	}
+
+	// Botones Show/Hide
+	float rightColumnX = 1.0f - buttonWidthPercentage - paddingX; // Posición X de la columna derecha
+	if (m_btnShowMenu.GetSafeHwnd()) {
+		m_btnShowMenu.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * paddingY),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowMercury.GetSafeHwnd()) {
+		m_btnShowMercury.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + buttonHeightPercentage + buttonSpacingPercentage)),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowVenus.GetSafeHwnd())
+	{
+		m_btnShowVenus.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 2 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowEarth.GetSafeHwnd())
+	{
+		m_btnShowEarth.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 3 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowMars.GetSafeHwnd())
+	{
+		m_btnShowMars.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 4 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowJupiter.GetSafeHwnd())
+	{
+		m_btnShowJupiter.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 5 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowSaturn.GetSafeHwnd())
+	{
+		m_btnShowSaturn.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 6 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowUranus.GetSafeHwnd())
+	{
+		m_btnShowUranus.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 7 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowNeptune.GetSafeHwnd())
+	{
+		m_btnShowNeptune.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 8 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnShowOrbits.GetSafeHwnd())
+	{
+		m_btnShowOrbits.MoveWindow(
+			static_cast<int>(w * rightColumnX),
+			static_cast<int>(h * (paddingY + 9 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+
+	// Botones Camera
+	if (m_btnCameraMenu.GetSafeHwnd()) {
+		m_btnCameraMenu.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * paddingY),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraSun.GetSafeHwnd()) {
+		m_btnCameraSun.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + buttonHeightPercentage + buttonSpacingPercentage)),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraMercury.GetSafeHwnd())
+	{
+		m_btnCameraMercury.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 2 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraVenus.GetSafeHwnd())
+	{
+		m_btnCameraVenus.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 3 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraEarth.GetSafeHwnd())
+	{
+		m_btnCameraEarth.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 4 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraMars.GetSafeHwnd())
+	{
+		m_btnCameraMars.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 5 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraJupiter.GetSafeHwnd())
+	{
+		m_btnCameraJupiter.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 6 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraSaturn.GetSafeHwnd())
+	{
+		m_btnCameraSaturn.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 7 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraUranus.GetSafeHwnd())
+	{
+		m_btnCameraUranus.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 8 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_btnCameraNeptune.GetSafeHwnd())
+	{
+		m_btnCameraNeptune.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (paddingY + 9 * (buttonHeightPercentage + buttonSpacingPercentage))),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+
+	// Botones Speed
+	if (m_btnSpeedMenu.GetSafeHwnd()) {
+		m_btnSpeedMenu.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (1.0f - buttonHeightPercentage - paddingY)),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_sliderSpeed.GetSafeHwnd()) {
+		m_sliderSpeed.MoveWindow(
+			static_cast<int>(w * (paddingX + buttonWidthPercentage + buttonSpacingPercentage)),
+			static_cast<int>(h * (1.0f - buttonHeightPercentage - paddingY)),
+			static_cast<int>(w * (0.15f - buttonWidthPercentage - paddingX - buttonSpacingPercentage)), // Ancho del slider
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+
+	Invalidate(); // Forzar repintado para actualizar la posición de los botones
 }
 
 void CEntornVGIView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-	
-	// ====== Buttons GUI ============
-	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		CRect(w / 2 + 100, h + 150, w / 2 + 240, h + 200), this, 101);
-	// Show / Hide
-	m_btnShowMenu.Create(_T("Show/Hide"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 10, 1890, 40), this, 111);
-	m_btnShowMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 45, 1890, 75), this, 102);
-	m_btnShowVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 80, 1890, 110), this, 103);
-	m_btnShowEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 115, 1890, 145), this, 104);
-	m_btnShowMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 150, 1890, 180), this, 105);
-	m_btnShowJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 185, 1890, 215), this, 106);
-	m_btnShowSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 220, 1890, 250), this, 107);
-	m_btnShowUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 255, 1890, 285), this, 108);
-	m_btnShowNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 290, 1890, 320), this, 109);
-	m_btnShowOrbits.Create(_T("Orbits"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(1815, 325, 1890, 355), this, 110);
-	// Camera
-	m_btnCameraMenu.Create(_T("Camera"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 10, 85, 40), this, 112);
-	m_btnCameraSun.Create(_T("Sun"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 45, 85, 75), this, 113);
-	m_btnCameraMercury.Create(_T("Mercury"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 80, 85, 110), this, 114);
-	m_btnCameraVenus.Create(_T("Venus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 115, 85, 145), this, 115);
-	m_btnCameraEarth.Create(_T("Earth"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 150, 85, 180), this, 116);
-	m_btnCameraMars.Create(_T("Mars"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 185, 85, 215), this, 117);
-	m_btnCameraJupiter.Create(_T("Jupiter"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 220, 85, 250), this, 118);
-	m_btnCameraSaturn.Create(_T("Saturn"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 255, 85, 285), this, 119);
-	m_btnCameraUranus.Create(_T("Uranus"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 290, 85, 320), this, 120);
-	m_btnCameraNeptune.Create(_T("Neptune"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 325, 85, 355), this, 121);
-	// Slider Speeds
-	m_btnSpeedMenu.Create(_T("Speed"), WS_CHILD | BS_PUSHBUTTON,
-		CRect(10, 870, 85, 890), this, 123);
-	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(90, 870, 280, 890), this, 122);
-	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
-	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
-
 
 	CDC* pDC = GetDC();
 	//m_glRenderer.PrepareScene(pDC);
