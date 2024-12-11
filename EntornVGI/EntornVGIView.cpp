@@ -450,28 +450,6 @@ CEntornVGIView::CEntornVGIView()
 	llumGL[5].spotdirection[0] = 0.0;	llumGL[5].spotdirection[1] = 0.0;	llumGL[5].spotdirection[2] = 0.0;
 	llumGL[5].spotcoscutoff = 0.0;		llumGL[5].spotexponent = 0.0;
 
-	// LLum #6: Llum Vaixell, configurada a la funció vaixell() en escena.cpp.
-	llumGL[6].encesa = false;
-	llumGL[6].difusa[0] = 1.0f;			llumGL[6].difusa[1] = 1.0f;			llumGL[6].difusa[2] = 1.0f;		llumGL[6].difusa[3] = 1.0f;
-	llumGL[6].especular[0] = 1.0f;		llumGL[6].especular[1] = 1.0f;		llumGL[6].especular[2] = 1.0f;	llumGL[6].especular[3] = 1;
-
-	llumGL[6].posicio.R = 0.0;			llumGL[6].posicio.alfa = 0.0;		llumGL[6].posicio.beta = 0.0; // Cap posició definida, definida en funció vaixell() en escena.cpp
-	llumGL[6].atenuacio.a = 0.0;		llumGL[6].atenuacio.b = 0.0;		llumGL[6].atenuacio.c = 1.0;
-	llumGL[6].restringida = false;
-	llumGL[6].spotdirection[0] = 0.0;	llumGL[6].spotdirection[1] = 0.0;	llumGL[6].spotdirection[2] = 0.0;
-	llumGL[6].spotcoscutoff = 0.0;		llumGL[6].spotexponent = 0.0;
-
-	// LLum #7: Llum Far, configurada a la funció faro() en escena.cpp.
-	llumGL[7].encesa = false;
-	llumGL[7].difusa[0] = 1.0f;			llumGL[7].difusa[1] = 1.0f;			llumGL[7].difusa[2] = 1.0f;		llumGL[7].difusa[3] = 1.0f;
-	llumGL[7].especular[0] = 1.0f;		llumGL[7].especular[1] = 1.0f;		llumGL[7].especular[2] = 1.0f;	llumGL[7].especular[3] = 1;
-
-	llumGL[7].posicio.R = 0.0;			llumGL[7].posicio.alfa = 0.0;		llumGL[7].posicio.beta = 0.0; // Cap posició definida, definida en funció faro() en escena.cpp
-	llumGL[7].atenuacio.a = 0.0;		llumGL[7].atenuacio.b = 0.0;		llumGL[7].atenuacio.c = 1.0;
-	llumGL[7].restringida = false;
-	llumGL[7].spotdirection[0] = 0.0;	llumGL[7].spotdirection[1] = 0.0;	llumGL[7].spotdirection[2] = 0.0;
-	llumGL[7].spotcoscutoff = 0.0;		llumGL[7].spotexponent = 0.0;
-
 	// Entorn VGI: Variables de control del menú Shaders		
 	shader = PHONG_SHADER;		shader_programID = 0;
 
@@ -1240,7 +1218,7 @@ void CEntornVGIView::OnInitialUpdate()
 	ReleaseDC(pDC);
 
 	// Enviar mensaje para forzar Fullscreen cuando se muestre la ventana
-	PostMessage(WM_USER + 1); // WM_USER + 1 (MESSAGE MAP)
+	PostMessage(WM_USER + 1); // WM_USER + 1 (MESSAGE_MAP)
 
 	Invalidate(); // Forzar llamada a OnPaint()
 }
@@ -6081,15 +6059,15 @@ void CEntornVGIView::OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI) { pCmdUI->Se
 /* ----------------------------------------------------------------------- */
 /* ------------------------------CAMERA LOCK------------------------------ */
 /* ----------------------------------------------------------------------- */
-void CEntornVGIView::OnLockonplanetSun() { target_planet = 0; }
-void CEntornVGIView::OnLockonplanetMercury() { target_planet = 1; }
-void CEntornVGIView::OnLockonplanetVenus() { target_planet = 2; }
-void CEntornVGIView::OnLockonplanetEarth() { target_planet = 3; }
-void CEntornVGIView::OnLockonplanetMars() { target_planet = 4; }
-void CEntornVGIView::OnLockonplanetJupiter() { target_planet = 5; }
-void CEntornVGIView::OnLockonplanetSaturn() { target_planet = 6; }
-void CEntornVGIView::OnLockonplanetUranus() { target_planet = 7; }
-void CEntornVGIView::OnLockonplanetNeptune() { target_planet = 8; }
+void CEntornVGIView::OnLockonplanetSun() { target_planet = 0; OPV.R = 400.0f; }
+void CEntornVGIView::OnLockonplanetMercury() { target_planet = 1; OPV.R = 50.0f; }
+void CEntornVGIView::OnLockonplanetVenus() { target_planet = 2; OPV.R = 50.0f; }
+void CEntornVGIView::OnLockonplanetEarth() { target_planet = 3; OPV.R = 50.0f; }
+void CEntornVGIView::OnLockonplanetMars() { target_planet = 4; OPV.R = 50.0f; }
+void CEntornVGIView::OnLockonplanetJupiter() { target_planet = 5; OPV.R = 100.0f; }
+void CEntornVGIView::OnLockonplanetSaturn() { target_planet = 6; OPV.R = 100.0f; }
+void CEntornVGIView::OnLockonplanetUranus() { target_planet = 7; OPV.R = 100.0f; }
+void CEntornVGIView::OnLockonplanetNeptune() { target_planet = 8; OPV.R = 100.0f; }
 void CEntornVGIView::OnUpdateLockonplanetSun(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 0 ? 1 : 0); }
 void CEntornVGIView::OnUpdateLockonplanetMercury(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 1 ? 1 : 0); }
 void CEntornVGIView::OnUpdateLockonplanetVenus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 2 ? 1 : 0); }
