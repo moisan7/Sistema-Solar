@@ -235,6 +235,10 @@ public:
 	CButton m_btnSpeedMenu;
 	CSliderCtrl m_sliderSpeed;
 	int m_speedIndex;
+	// Timer display
+	CTime m_currentDate;    // Current date and time for the timer display
+	CString m_dateString;   // String to hold the formatted date
+	CStatic m_timerLabel;   // Static text control to display the timer
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -578,6 +582,8 @@ public:
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	// Fullscreen
 	afx_msg LRESULT OnForceFullscreen(WPARAM wParam, LPARAM lParam);
+	// Timer
+	void UpdateTimerDisplay();
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 	
 };
