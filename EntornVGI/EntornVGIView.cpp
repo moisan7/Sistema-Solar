@@ -5697,7 +5697,7 @@ void CEntornVGIView::OnSistemasolarStart()
 
 		//if (Get_VAOId(GLU_SPHERE) != 0)deleteVAOList(GLU_SPHERE);
 		Set_VAOList(GLU_SPHERE, loadgluSphere_EBO(5.0f, 80, 80));    // Càrrega esfera com a VAO
-		Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 30, 20));    // Càrrega dics com a VAO
+		Set_VAOList(GLU_DISK, loadgluDisk_EBO(7.0f, 11.0f, 80, 40));    // Càrrega dics com a VAO
 
 		// Entorn VGI: Desactivació del contexte OpenGL. Permet la coexistencia d'altres contextes de generació
 		wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);

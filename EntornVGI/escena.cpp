@@ -531,7 +531,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 				y = SEMIMAJOR_AXIS[9+i] * sin(jupiter_moon_ort[i]); // Y position based on orbit angle
 				ju_moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
 				ju_moonTransMatrix = glm::rotate(ju_moonTransMatrix, radians(jupiter_moon_rot[i]), vec3(0.0f, 0.0f, 1.0f));
-				ju_moonTransMatrix = glm::scale(ju_moonTransMatrix, vec3(P_SCALE[9], P_SCALE[9], P_SCALE[9]));
+				ju_moonTransMatrix = glm::scale(ju_moonTransMatrix, vec3(P_SCALE[10+i], P_SCALE[10+i], P_SCALE[10+i]));
 
 				// Pas ModelView Matrix a shader
 				glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ju_moonTransMatrix[0][0]);
@@ -543,6 +543,34 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			
 		}
 		/*----------JUIPTER MOON----------*/
+
+		/*----------SATRUN RING----------*/
+		if (i - 1 == 6 && draw_planets[5]) // if drawing Earth, draw Moon:
+		{
+			
+			glm::mat4 moonTransMatrix = glm::mat4(1.0f);
+
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[10], true, true, false, false);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // Clamp in the s direction
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Clamp in the t direction
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Minification filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Magnification filtering
+			glUniform1i(uni_id, 0);
+			
+			moonTransMatrix = glm::translate(TransMatrix, vec3(0.0f, 0.0f, 0.0f));
+			moonTransMatrix = glm::rotate(moonTransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
+
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+			draw_TriEBO_Object(GLU_DISK);
+		}
+		/*----------SATRUN RING----------*/
+
 
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
