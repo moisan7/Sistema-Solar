@@ -234,7 +234,7 @@ public:
 	bool speedMenu;
 	CButton m_btnSpeedMenu;
 	CSliderCtrl m_sliderSpeed;
-	int m_speedIndex;
+	int m_speedIndex = 0;
 	// Timer display
 	CTime m_currentDate;    // Current date and time for the timer display
 	CString m_dateString;   // String to hold the formatted date

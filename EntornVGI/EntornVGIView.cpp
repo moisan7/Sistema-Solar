@@ -302,7 +302,7 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_BN_CLICKED(123, &CEntornVGIView::OnBtnSpeedMenu)
 	// FULLSCREEN
 	ON_WM_TIMER()
-	ON_MESSAGE(WM_USER+ 1, &CEntornVGIView::OnForceFullscreen)
+	ON_MESSAGE(WM_USER + 1, &CEntornVGIView::OnForceFullscreen)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -365,9 +365,9 @@ CEntornVGIView::CEntornVGIView()
 	// Entorn VGI: Variables de control per les opcions de menú Ocultacions
 	front_faces = true;	test_vis = false;	oculta = true;
 
-// Entorn VGI: Variables de control del menú Iluminació		
+	// Entorn VGI: Variables de control del menú Iluminació		
 	ilumina = PLANA;			ifixe = true;					ilum2sides = false;
-// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
+	// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
 	sw_material[0] = true;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
 	textura = false;				t_textura = CAP;				textura_map = true;
@@ -384,7 +384,7 @@ CEntornVGIView::CEntornVGIView()
 		llumGL[i].especular[0] = 1.0f; llumGL[i].especular[1] = 1.0f; llumGL[i].especular[2] = 1.0f; llumGL[i].especular[3] = 1.0f;
 	}
 
-// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
+	// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
 	llumGL[0].encesa = false;
 	llumGL[0].difusa[0] = 1.0f;			llumGL[0].difusa[1] = 1.0f;			llumGL[0].difusa[2] = 1.0f;		llumGL[0].difusa[3] = 1.0f;
 	llumGL[0].especular[0] = 1.0f;		llumGL[0].especular[1] = 1.0f;		llumGL[0].especular[2] = 1.0f;	llumGL[0].especular[3] = 1.0f;
@@ -393,7 +393,7 @@ CEntornVGIView::CEntornVGIView()
 	llumGL[0].atenuacio.a = 0.0;		llumGL[0].atenuacio.b = 0.0;		llumGL[0].atenuacio.c = 1.0;		// Llum sense atenuació per distància (a,b,c)=(0,0,1)
 	llumGL[0].restringida = false;
 	llumGL[0].spotdirection[0] = 0.0;	llumGL[0].spotdirection[1] = 0.0;	llumGL[0].spotdirection[2] = -1.0;
-	llumGL[0].spotcoscutoff = cos(25.0*PI/180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)	
+	llumGL[0].spotcoscutoff = cos(25.0 * PI / 180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)	
 
 	// LLum 1: Atenuació constant (c=1), sobre l'eix X, no restringida.
 	llumGL[1].encesa = false;
@@ -838,7 +838,7 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CEntornVGIView::InitAPI()
 {
-		// Program
+	// Program
 	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
 	glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
 	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
@@ -1366,7 +1366,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5837,7 +5837,7 @@ std::string CEntornVGIView::CString2String(const CString& cString)
 /* ------------------------------------------------------------------------- */
 /*					     TIMER (ANIMACIÓ)									 */
 /* ------------------------------------------------------------------------- */
- 
+
 
 // EntornVGIView.cpp
 
@@ -5858,6 +5858,9 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
 	}
 
+	// Accumulate delta time based on speed
+	static double accumulatedTime = 0.0;
+
 	// Update the timer based on the speed index
 	if (sis_start) {
 		int daysToAdd = 0;
@@ -5873,12 +5876,15 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		case 8: daysToAdd = 1000; break; // x1000
 		}
 
-		// Adjust daysToAdd based on deltaTime
-		daysToAdd *= deltaTime;
+		accumulatedTime += deltaTime * daysToAdd; // Scale deltaTime by daysToAdd
 
-		// Update the current date with daysToAdd
-		m_currentDate += CTimeSpan(daysToAdd, 0, 0, 0);
-		UpdateTimerDisplay();
+		// Update the current date
+		if (accumulatedTime >= 1.0) { // Check if at least 1 day has accumulated
+			int wholeDays = static_cast<int>(accumulatedTime); // Get the whole number of days
+			m_currentDate += CTimeSpan(wholeDays, 0, 0, 0);
+			accumulatedTime -= wholeDays; // Keep the fractional part for the next update
+			UpdateTimerDisplay();
+		}
 	}
 
 	// Actualizar la última vez que se llamó al timer
@@ -6045,7 +6051,7 @@ void CEntornVGIView::OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI)
 }
 /* ---------------------------ÓRBITAS-------------------------- */
 void CEntornVGIView::OnSistemasolarTestOrbita()
-{	
+{
 	// Alternar entre activar y desactivar la traslación
 	translation_orbit = !translation_orbit;
 	if (translation_orbit) {
@@ -6170,7 +6176,7 @@ void CEntornVGIView::OnBtnShowMenu()
 		m_btnShowNeptune.ShowWindow(SW_HIDE);
 		m_btnShowOrbits.ShowWindow(SW_HIDE);
 	}
-	
+
 }
 void CEntornVGIView::OnBtnShowMercury() { OnSistemasolarShowMercury(); }
 void CEntornVGIView::OnBtnShowVenus() { OnSistemasolarShowVenus(); }
