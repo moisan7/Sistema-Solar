@@ -982,8 +982,12 @@ void CEntornVGIView::OnInitialUpdate()
 	// Initialize the starting date
 	m_currentDate.SetDate(1900, 1, 1);  // Start date: 01-01-1900
 
+	// Create the static text control for the timer
+	m_timerDisplay.Create(_T("01/01/1900"), WS_CHILD | WS_VISIBLE | SS_CENTER,
+		CRect(90, 10, 290, 40), this);
+
 	// Set a timer to trigger every 1 second (1000 ms)
-	m_timerID = SetTimer(1, 1000, nullptr);	
+	m_timerID = 0;	
 
 
 	CDC* pDC = GetDC();
@@ -1067,17 +1071,6 @@ void CEntornVGIView::OnPaint()
 		load_textures = true;
 	}
 	///////
-	// Format the date as DD/MM/YYYY
-	CString dateStr = m_currentDate.Format(_T("%d/%m/%Y"));
-
-	// Set the text position
-	CRect rect;
-	GetClientRect(&rect);
-
-	// Draw the date centered at the top of the window
-	rect.top += 20;  // Adjust the position as needed
-	dc.SetTextAlign(TA_CENTER);
-	dc.TextOutW(rect.Width() / 2, rect.top, dateStr);
 	///////
 
 	// Dibujo de la Escena
@@ -5636,11 +5629,9 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	}
 	if (nIDEvent == m_timerID)
 	{
-		// Increment the current date by 1 day
 		m_currentDate += COleDateTimeSpan(1, 0, 0, 0);
-
-		// Redraw the view
-		//Invalidate();
+		CString dateStr = m_currentDate.Format(_T("%d/%m/%Y"));
+		m_timerDisplay.SetWindowText(dateStr);
 	}
 	// Actualizar la última vez que se llamó al timer
 	lastTime = currentTime;
@@ -5900,6 +5891,10 @@ void CEntornVGIView::OnBtnStartClicked()
 	m_btnSpeedMenu.ShowWindow(SW_SHOW);
 	// ====== Buttons Show/Hide ============
 	m_btnShowMenu.ShowWindow(SW_SHOW);
+	if (m_timerID == 0)
+	{
+		m_timerID = SetTimer(1, 1000, nullptr);  // Start at 1 second per tick
+	}
 }
 void CEntornVGIView::OnBtnShowMenu()
 {
@@ -5993,6 +5988,17 @@ void CEntornVGIView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
 	if (pScrollBar && pScrollBar->GetDlgCtrlID() == 122) {
 		m_speedIndex = m_sliderSpeed.GetPos(); // Obtén la nueva posición del slider
 		speed_inc = INCREMENTADOR[m_speedIndex]; // Actualiza el incremento
+		m_timerID = (int)m_speedIndex; // Assignar ID
+	}
+
+	if (m_timerID > 0)
+	{
+		KillTimer(m_timerID);
+		UINT timerInterval = static_cast<UINT>(1000.0 / speed_inc);
+		m_timerID = SetTimer(1, timerInterval, nullptr);
+	}
+	else {
+		m_timerID = 0;
 	}
 
 	CView::OnHScroll(nSBCode, nPos, pScrollBar);

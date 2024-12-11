@@ -238,6 +238,7 @@ public:
 	// Timer
 	COleDateTime m_currentDate;  // Stores the current date
 	UINT_PTR m_timerID;          // Timer ID for updating the date
+	CStatic m_timerDisplay;		 // Static control for showing the timer
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
