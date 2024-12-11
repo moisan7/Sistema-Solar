@@ -300,7 +300,9 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	// SLIDER SPEEDS
 	ON_WM_HSCROLL(122, &CEntornVGIView::OnHSCroll)
 	ON_BN_CLICKED(123, &CEntornVGIView::OnBtnSpeedMenu)
-
+	// FULLSCREEN
+	ON_WM_TIMER()
+	ON_MESSAGE(WM_USER+ 1, &CEntornVGIView::OnForceFullscreen)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -1236,6 +1238,9 @@ void CEntornVGIView::OnInitialUpdate()
 
 	// Libera el contexto de dispositivo después de la configuración inicial
 	ReleaseDC(pDC);
+
+	// Enviar mensaje para forzar Fullscreen cuando se muestre la ventana
+	PostMessage(WM_USER + 1); // WM_USER + 1 (MESSAGE MAP)
 
 	Invalidate(); // Forzar llamada a OnPaint()
 }
@@ -6195,16 +6200,17 @@ void CEntornVGIView::OnBtnSpeedMenu()
 		m_sliderSpeed.ShowWindow(SW_HIDE);
 	}
 }
-
 void CEntornVGIView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
 	if (pScrollBar && pScrollBar->GetDlgCtrlID() == 122) {
 		m_speedIndex = m_sliderSpeed.GetPos(); // Obtén la nueva posición del slider
 		speed_inc = INCREMENTADOR[m_speedIndex]; // Actualiza el incremento
 	}
-
 	CView::OnHScroll(nSBCode, nPos, pScrollBar);
 }
+void CEntornVGIView::UpdateSpeedFromSlider() { m_sliderSpeed.SetPos(m_speedIndex); }
 
-void CEntornVGIView::UpdateSpeedFromSlider() {
-	m_sliderSpeed.SetPos(m_speedIndex); // Ajusta el slider al nuevo índice
+LRESULT CEntornVGIView::OnForceFullscreen(WPARAM wParam, LPARAM lParam)
+{
+	OnVistaFullscreen();
+	return 0;
 }

@@ -576,6 +576,8 @@ public:
 	// Slider Speeds
 	afx_msg void OnBtnSpeedMenu();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	// Fullscreen
+	afx_msg LRESULT OnForceFullscreen(WPARAM wParam, LPARAM lParam);
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 	
 };
