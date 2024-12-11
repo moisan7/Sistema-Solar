@@ -56,10 +56,9 @@
 #define OBJOBJ '4'		// Objecte format OBJ
 // SISTEMA SOLAR
 #define SIS 'L'
-const float ORBIT_MOON = 10.0f;
 const double M_PI = glm::pi<double>();
-const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 }; // FALTA ASIGNARLO A UN BOTON
-const float ORBIT_SPEED[13] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
+const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 };
+const float ORBIT_SPEED[12] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 88.0f,		// Mercury (88d)
     2 * glm::pi<float>() / 225.0f,		// Venus (225d)
     2 * glm::pi<float>() / 365.0f,		// Earth (365d)
@@ -69,24 +68,25 @@ const float ORBIT_SPEED[13] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 30689.0f,	// Uranus (30689d)
     2 * glm::pi<float>() / 60182.0f,	// Neptune (60182d)
 	2 * glm::pi<float>() / 27.32f,		// Moon (27.32d)
-	2 * glm::pi<float>() / 1.77f,       // Io (1.77d)
-	2 * glm::pi<float>() / 3.55f,       // Europa (3.55d)
-	2 * glm::pi<float>() / 7.16f,       // Ganymede (7.16d)
-	2 * glm::pi<float>() / 16.69f       // Callisto (16.69d)
-
+	2 * glm::pi<float>() / 27.32f,      // Europa (3.55d)
+	2 * glm::pi<float>() / 27.32f,      // Ganymede (7.15d)
+	2 * glm::pi<float>() / 27.32f       // Callisto (16.69d)
 };
-const float ECCENTRICITIES[9]= { // REAL
-	0.2056,		// Mercury
-	0.0067,		// Venus
-	0.0167,		// Earth
-	0.0934,		// Mars
-	0.0489,		// Jupiter
-	0.0565,		// Saturn
-	0.0463,		// Uranus
-	0.0097,		// Neptune
-	0.0f		// Moon
+const float ECCENTRICITIES[12]= { // REAL
+	0.2056f,		// Mercury
+	0.0067f,		// Venus
+	0.0167f,		// Earth
+	0.0934f,		// Mars
+	0.0489f,		// Jupiter
+	0.0565f,		// Saturn
+	0.0463f,		// Uranus
+	0.0097f,		// Neptune
+	0.0549f,		// Moon
+	0.0094f,		// Europa
+	0.0013f,		// Ganymede
+	0.0074f			// Callisto
 };
-const float INCLINATION[9] = { // REAL (GRADOS)
+const float INCLINATION[8] = { // REAL (GRADOS)
 	7.00487f,	// Mercury
 	3.39471f, 	// Venus
 	0.00005f,	// Earth
@@ -94,26 +94,24 @@ const float INCLINATION[9] = { // REAL (GRADOS)
 	1.30463f, 	// Jupiter 
 	2.48524f, 	// Saturn
 	0.76986f, 	// Uranus
-	1.76917f, 	// Neptune 
-	0.0f 		// Moon
+	1.76917f, 	// Neptune
 };
-const float ROTATION_SPEED[14] = { // CORRECTO
+const float ROTATION_SPEED[13] = { // CORRECTO
 	365.0f * (1.0f / 25.0f),	// Sun: 25.0 veces más lento
-	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento (2pi/1406.4)
-	365.0f * (1.0f / 243.0f),	// Venus: 243 veces más lento (2pi/5832)
-	365.0f,						// Earth: (2pi/24)
-	365.0f * 1.025f,            // Mars: 1.025 veces más rápido (2pi/24.6)
-	365.0f * 2.4f,				// Jupiter: 2.4 veces más rápido (2pi/9.9)
-	365.0f * 2.24f,				// Saturn: 2.24 veces más rápido (2pi/10.7)
-	-365.0f * 1.4f,				// Uranus: 1.4 veces más rápido (2pi/17.2)
-	365.0f * 1.49f ,            // Neptune: 1.49 veces más rápido (2pi/16.1)
+	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento
+	365.0f * (1.0f / 243.0f),	// Venus: 243 veces más lento
+	365.0f,						// Earth: BASE (2pi/24)
+	365.0f * 1.025f,            // Mars: 1.025 veces más rápido
+	365.0f * 2.4f,				// Jupiter: 2.4 veces más rápido
+	365.0f * 2.24f,				// Saturn: 2.24 veces más rápido
+	-365.0f * 1.4f,				// Uranus: 1.4 veces más rápido
+	365.0f * 1.49f ,            // Neptune: 1.49 veces más rápido
 	365.0f * (1.0f / 27.32f),	// Moon: 27.32 veces más lento
-	365.0f * (1.0f / 1.77f),       // Io: Tidally locked (1.77d)
-	365.0f * (1.0f / 3.55f),       // Europa: Tidally locked (3.55d)
-	365.0f * (1.0f / 7.16f),       // Ganymede: Tidally locked (7.16d)
-	365.0f * (1.0f / 16.69f)       // Callisto: Tidally locked (16.69d)
+	365.0f * (1.0f / 3.55f),    // Europa: 3.55 veces más lento
+	365.0f * (1.0f / 7.15f),    // Ganymede: 7.15 veces más lento
+	365.0f * (1.0f / 16.69f)    // Callisto: 16.69 veces más lento
 };
-const float SEMIMAJOR_AXIS[13] = { // REAL * 100
+const float SEMIMAJOR_AXIS[12] = { // REAL (UA) * 100
 	38.7f,      // Mercury
 	72.3f,      // Venus
 	100.0f,     // Earth
@@ -123,10 +121,9 @@ const float SEMIMAJOR_AXIS[13] = { // REAL * 100
 	1930.0f,    // Uranus
 	3040.0f,    // Neptune
 	12.85f,     // Moon * 50 (relative to Earth)
-	5.0f * 10,       // Io (421,700 km, scaled relative to Jupiter)
-	8.0f * 10,       // Europa (671,100 km, scaled relative to Jupiter)
-	12.3f * 10,      // Ganymede (1,070,400 km, scaled relative to Jupiter)
-	21.7f * 10       // Callisto (1,882,700 km, scaled relative to Jupiter)
+	44.83f,      // Europa * 100 (relative to Jupiter)
+	71.54f,      // Ganymede * 100 (relative to Jupiter)
+	125.85f      // Callisto * 100 (relative to Jupiter)
 };
 const float ROTATION_ANGLE[9] = { // INCLINACION DEL EJE (ROTATION_AXIS)
 		glm::radians(7.25f),    // Sun
@@ -148,9 +145,8 @@ const glm::vec3 ROTATION_AXIS[9] = { // EJE SOBRE EL QUE SE APLICA LA INCLINACIO
 		glm::vec3(1.0f, 0.0f, 0.0f),    // Saturn
 		glm::vec3(0.0f, 1.0f, 0.0f),	// Uranus
 		glm::vec3(1.0f, 0.0f, 0.0f),	// Neptune
-		glm::vec3(1.0f, 0.0f, 0.0f)		// Moon
 };
-const float P_SCALE[15] = { // Todo multiplicado * 10000
+const float P_SCALE[14] = { // Todo multiplicado * 10000
 	  93.058f / 30.0f,    // Sun
 	  0.326f,             // Mercury
 	  0.809f,             // Venus
@@ -161,7 +157,6 @@ const float P_SCALE[15] = { // Todo multiplicado * 10000
 	  3.39f / 2.5f,       // Uranus
 	  3.29f / 2.5f,       // Neptune
 	  0.232f,			  // Moon
-	  0.243f,			  // Io
 	  0.208f,			  // Europa
 	  0.352f,			  // Ganymede
 	  0.322f,			  // Callisto
