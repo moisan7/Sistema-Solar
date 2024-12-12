@@ -439,6 +439,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	SeleccionaColorMaterial(shaderId, col_object, sw_mat);
 
 	/*------------SUN------------*/
+	
 	glm::mat4 sunMatrix(1.0f);
 	// Pas de paràmetres material a shader
 	glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 1.0, 1.0, 1.0, 1.0);
@@ -504,7 +505,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
 			// Pas NormalMatrix a shader
-			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			NormalMatrix = transpose(inverse(MatriuVista * moonTransMatrix));
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 			draw_TriEBO_Object(GLU_SPHERE);
 		}
@@ -550,6 +551,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			targetPos = vec3(0.0f);
 		}
 	}
+	
 };
 
 // Dibujar órbitas planetas
