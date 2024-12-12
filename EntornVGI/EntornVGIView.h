@@ -196,6 +196,18 @@ public:
 	bool load_textures;
 	bool skyb;
 	bool draw_planets[9];
+	vec3 bufferPlanetColors[9] = {
+		glm::vec3(1.0f, 0.0f, 0.0f), // Sun
+		glm::vec3(0.5f, 0.5f, 1.0f), // Mercury
+		glm::vec3(0.8f, 0.3f, 0.2f), // Venus
+		glm::vec3(0.0f, 0.7f, 0.0f), // Earth
+		glm::vec3(0.7f, 0.3f, 0.8f), // Mars
+		glm::vec3(0.3f, 0.3f, 0.3f), // Jupiter
+		glm::vec3(0.9f, 0.1f, 0.1f), // Saturn
+		glm::vec3(0.4f, 0.4f, 0.8f), // Uranus
+		glm::vec3(0.9f, 0.8f, 0.5f), // Neptune
+
+	};
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones

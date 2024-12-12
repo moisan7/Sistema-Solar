@@ -916,7 +916,6 @@ void CEntornVGIView::OnDraw(CDC* /*pDC*/)
 		return;
 }
 
-
 void CEntornVGIView::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
@@ -941,6 +940,7 @@ void CEntornVGIView::OnPaint()
 
 	// Definición del Viewport, Proyección y Cámara
 	ProjectionMatrix = Projeccio_Perspectiva(shader_programID, 0, 0, w, h, OPV.R);
+
 
 	// Configuración de la cámara esférica
 	if (camera == CAM_ESFERICA) {
@@ -970,6 +970,7 @@ void CEntornVGIView::OnPaint()
 
 	// Actualiza la barra de estado con los valores actuales
 	Barra_Estat();
+
 }
 
 
