@@ -81,7 +81,8 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
 	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, 
-	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort)
+	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort, 
+	float unanos_titania_rot, float unanos_titania_ort, float neptune_triton_rot, float neptune_triton_ort)
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -142,7 +143,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
 		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle, 
-			jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort);
+			jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort, unanos_titania_rot, unanos_titania_ort, neptune_triton_rot, neptune_triton_ort);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -434,7 +435,8 @@ void IluminacioSol(GLint shaderId)
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
 	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], 
 	bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle, 
-	float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort)
+	float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort,
+	float unanos_titania_rot, float unanos_titania_ort, float neptune_triton_rot, float neptune_triton_ort)
 {	
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
@@ -483,12 +485,12 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 	}
 
 	// Dibujado de planetas + movimiento
-	for (int i = 1; i <= 8; i++) { // De 1 a 8 para dibujar todos (Moon => i = 9)
+	for (int i = 1; i <= 9; i++) { // De 1 a 8 para dibujar todos (Moon => i = 9)
 		// Verificar si el planeta debe dibujarse
 		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
 
 		/*----------MOON----------*/
-		if (i-1 == 3 && draw_planets[2]) // if drawing Earth, draw Moon:
+		if (i == 4 && draw_planets[2]) // if drawing Earth, draw Moon:
 		{
 			float x = 0;
 			float y = 0;
@@ -521,7 +523,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		/*----------MOON----------*/
 
 		/*----------JUIPTER MOON----------*/
-		if (i - 1 == 5 && draw_planets[4]) // if drawing JUIPTER, draw Moon:
+		if (i == 6 && draw_planets[4]) // if drawing JUIPTER, draw Moon:
 		{
 			for (int i = 0; i < 3; i++)
 			{
@@ -557,7 +559,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		/*----------JUIPTER MOON----------*/
 
 		/*----------SATRUN RING/MOON----------*/
-		if (i - 1 == 6 && draw_planets[5]) // if drawing Saturn, draw Ring/Moon:
+		if (i == 7 && draw_planets[5]) // if drawing Saturn, draw Ring/Moon:
 		{
 			
 			glm::mat4 moonTransMatrix = glm::mat4(1.0f);
@@ -611,46 +613,112 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		}
 		/*----------SATRUN RING/MOON----------*/
 
+		/*----------Uranos MOON----------*/
+		if (i == 8 && draw_planets[6]) // if drawing Uranos, draw Moon:
+		{
+			float x = 0;
+			float y = 0;
+			glm::mat4 moonTransMatrix = glm::mat4(1.0f);
 
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[15], true, true, false, false);
+			glUniform1i(uni_id, 0);
 
+			// Calculos de orbitas con excentricidad
+			float a = SEMIMAJOR_AXIS[13];
+			float e = ECCENTRICITIES[13];
+			float r = (a * (1 - e * e)) / (1 + e * cos(unanos_titania_rot));
+			x = r * cos(unanos_titania_rot); // X position based on orbit angle and excentricity
+			y = r * sin(unanos_titania_rot); // Y position based on orbit angle and excentricity
 
-		glActiveTexture(GL_TEXTURE0);
-		SetTextureParameters(textures_planeta[i], true, true, false, false);
-		glUniform1i(uni_id, 0);
+			// Transformaciones
+			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::rotate(moonTransMatrix, radians(unanos_titania_ort), vec3(0.0f, 0.0f, 1.0f));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[15], P_SCALE[15], P_SCALE[15]));
 
-		// Desactivar reflectivitat de llum d'emissió
-		glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
-		// Calculos órbitas elípticas
-		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
-		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
-		float x = a * (cos(orbit_angle[i - 1]) - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
-		float y = b * sin(orbit_angle[i - 1]);  // Coordenada Y en la elipse
-
-		float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i - 1])); // Efecto de inclinación en Y
-		float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i - 1])); // Efecto de inclinación en Z
-
-		TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
-		// Inclinacion
-		TransMatrix = glm::rotate(TransMatrix, -ROTATION_ANGLE[i], ROTATION_AXIS[i - 1]);
-		// Rotacion
-		TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
-		ModelMatrix = glm::scale(TransMatrix, vec3(P_SCALE[i], P_SCALE[i], P_SCALE[i]));
-
-		// Pas ModelView Matrix a shader
-		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
-
-		// Pas NormalMatrix a shader
-		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
-
-		draw_TriEBO_Object(GLU_SPHERE);
-		// Si el planeta es el objetivo, actualiza la posición de la cámara
-		if (i == target_planet) {
-			targetPos = glm::vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z);
+			draw_TriEBO_Object(GLU_SPHERE);
 		}
-		else if (target_planet == 0) {
-			targetPos = vec3(0.0f);
+		/*----------Uranos MOON----------*/
+
+		/*----------Neptune MOON----------*/
+		if (i == 9 && draw_planets[7]) // if drawing Neptune, draw Moon:
+		{
+			float x = 0;
+			float y = 0;
+			glm::mat4 moonTransMatrix = glm::mat4(1.0f);
+
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[16], true, true, false, false);
+			glUniform1i(uni_id, 0);
+
+			// Calculos de orbitas con excentricidad
+			float a = SEMIMAJOR_AXIS[14];
+			float e = ECCENTRICITIES[14];
+			float r = (a * (1 - e * e)) / (1 + e * cos(neptune_triton_rot));
+			x = r * cos(neptune_triton_rot); // X position based on orbit angle and excentricity
+			y = r * sin(neptune_triton_rot); // Y position based on orbit angle and excentricity
+
+			// Transformaciones
+			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::rotate(moonTransMatrix, radians(neptune_triton_ort), vec3(0.0f, 0.0f, 1.0f));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[16], P_SCALE[16], P_SCALE[16]));
+
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+
+			draw_TriEBO_Object(GLU_SPHERE);
+		}
+		/*----------Neptune MOON----------*/
+
+		if (i != 9)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[i], true, true, false, false);
+			glUniform1i(uni_id, 0);
+
+			// Desactivar reflectivitat de llum d'emissió
+			glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+
+			// Calculos órbitas elípticas
+			float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
+			float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
+			float x = a * (cos(orbit_angle[i - 1]) - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
+			float y = b * sin(orbit_angle[i - 1]);  // Coordenada Y en la elipse
+
+			float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i - 1])); // Efecto de inclinación en Y
+			float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i - 1])); // Efecto de inclinación en Z
+
+			TransMatrix = glm::translate(MatriuTG, vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
+			// Inclinacion
+			TransMatrix = glm::rotate(TransMatrix, -ROTATION_ANGLE[i], ROTATION_AXIS[i - 1]);
+			// Rotacion
+			TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
+			ModelMatrix = glm::scale(TransMatrix, vec3(P_SCALE[i], P_SCALE[i], P_SCALE[i]));
+
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+
+			draw_TriEBO_Object(GLU_SPHERE);
+			// Si el planeta es el objetivo, actualiza la posición de la cámara
+			if (i == target_planet) {
+				targetPos = glm::vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z);
+			}
+			else if (target_planet == 0) {
+				targetPos = vec3(0.0f);
+			}
 		}
 	}
 };

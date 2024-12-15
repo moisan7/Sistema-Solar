@@ -208,6 +208,10 @@ public:
 	float jupiter_moon_ort[3];
 	float saturn_titan_rot;
 	float saturn_titan_ort;
+	float unanos_titania_rot;
+	float unanos_titania_ort;
+	float neptune_triton_rot;
+	float neptune_triton_ort;
 	// ====== Buttons GUI ============
 	CButton m_btnStart;
 	// Show/Hide
