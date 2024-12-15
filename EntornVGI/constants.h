@@ -58,7 +58,7 @@
 #define SIS 'L'
 const double M_PI = glm::pi<double>();
 const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 };
-const float ORBIT_SPEED[12] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
+const float ORBIT_SPEED[13] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 88.0f,		// Mercury (88d)
     2 * glm::pi<float>() / 225.0f,		// Venus (225d)
     2 * glm::pi<float>() / 365.0f,		// Earth (365d)
@@ -70,9 +70,10 @@ const float ORBIT_SPEED[12] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
 	2 * glm::pi<float>() / 27.32f,		// Moon (27.32d)
 	2 * glm::pi<float>() / 27.32f,      // Europa (3.55d)
 	2 * glm::pi<float>() / 27.32f,      // Ganymede (7.15d)
-	2 * glm::pi<float>() / 27.32f       // Callisto (16.69d)
+	2 * glm::pi<float>() / 27.32f,       // Callisto (16.69d)
+	2 * glm::pi<float>() / 15.945f      // Titan (15.945d)
 };
-const float ECCENTRICITIES[12]= { // REAL
+const float ECCENTRICITIES[13]= { // REAL
 	0.2056f,		// Mercury
 	0.0067f,		// Venus
 	0.0167f,		// Earth
@@ -84,7 +85,8 @@ const float ECCENTRICITIES[12]= { // REAL
 	0.0549f,		// Moon
 	0.0094f,		// Europa
 	0.0013f,		// Ganymede
-	0.0074f			// Callisto
+	0.0074f,		// Callisto
+	0.0288f			// Titan
 };
 const float INCLINATION[8] = { // REAL (GRADOS)
 	7.00487f,	// Mercury
@@ -96,7 +98,7 @@ const float INCLINATION[8] = { // REAL (GRADOS)
 	0.76986f, 	// Uranus
 	1.76917f, 	// Neptune
 };
-const float ROTATION_SPEED[13] = { // CORRECTO
+const float ROTATION_SPEED[14] = { // CORRECTO
 	365.0f * (1.0f / 25.0f),	// Sun: 25.0 veces más lento
 	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento
 	365.0f * (1.0f / 243.0f),	// Venus: 243 veces más lento
@@ -109,9 +111,10 @@ const float ROTATION_SPEED[13] = { // CORRECTO
 	365.0f * (1.0f / 27.32f),	// Moon: 27.32 veces más lento
 	365.0f * (1.0f / 3.55f),    // Europa: 3.55 veces más lento
 	365.0f * (1.0f / 7.15f),    // Ganymede: 7.15 veces más lento
-	365.0f * (1.0f / 16.69f)    // Callisto: 16.69 veces más lento
+	365.0f * (1.0f / 16.69f),    // Callisto: 16.69 veces más lento
+	365.0f * (1.0f / 15.945f)   // Titan: 15.945 veces más lento
 };
-const float SEMIMAJOR_AXIS[12] = { // REAL (UA) * 100
+const float SEMIMAJOR_AXIS[13] = { // REAL (UA) * 100
 	38.7f,      // Mercury
 	72.3f,      // Venus
 	100.0f,     // Earth
@@ -123,7 +126,8 @@ const float SEMIMAJOR_AXIS[12] = { // REAL (UA) * 100
 	12.85f,     // Moon * 50 (relative to Earth)
 	44.83f,      // Europa * 100 (relative to Jupiter)
 	71.54f,      // Ganymede * 100 (relative to Jupiter)
-	125.85f      // Callisto * 100 (relative to Jupiter)
+	125.85f,      // Callisto * 100 (relative to Jupiter)
+	81.65f        // Titan * 100 (relative to Saturn)
 };
 const float ROTATION_ANGLE[9] = { // INCLINACION DEL EJE (ROTATION_AXIS)
 		glm::radians(7.25f),    // Sun
@@ -146,7 +150,7 @@ const glm::vec3 ROTATION_AXIS[9] = { // EJE SOBRE EL QUE SE APLICA LA INCLINACIO
 		glm::vec3(0.0f, 1.0f, 0.0f),	// Uranus
 		glm::vec3(1.0f, 0.0f, 0.0f),	// Neptune
 };
-const float P_SCALE[14] = { // Todo multiplicado * 10000
+const float P_SCALE[15] = { // Todo multiplicado * 10000
 	  93.058f / 30.0f,    // Sun
 	  0.326f,             // Mercury
 	  0.809f,             // Venus
@@ -160,7 +164,8 @@ const float P_SCALE[14] = { // Todo multiplicado * 10000
 	  0.208f,			  // Europa
 	  0.352f,			  // Ganymede
 	  0.322f,			  // Callisto
-	  (7.78f / 5.0f) * 1.5f // Saturns Ring
+	  (7.78f / 5.0f) * 1.5f, // Saturns Ring
+	  0.311f              // Titan
 };
 
 //-------------- VGI: Tipus d'Iluminacio

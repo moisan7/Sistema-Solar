@@ -548,10 +548,14 @@ CEntornVGIView::CEntornVGIView()
 	moon_rotation_angle = 0;
 	moon_orbit_angle = 0;
 	// Jupiter Moons
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		jupiter_moon_rot[i] = 0.0f; // Asigna 0 a cada elemento
 		jupiter_moon_ort[i] = 0.0f; // Asigna 0 a cada elemento
 	}
+
+	saturn_titan_rot = 0;
+	saturn_titan_ort = 0;
+
 	showMenu = false;
 	cameraMenu = false;
 	speedMenu = false;
@@ -1155,7 +1159,7 @@ void CEntornVGIView::dibuixa_Escena()
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
 		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle,
-		jupiter_moon_ort, jupiter_moon_rot);
+		jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5632,21 +5636,33 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
 	static DWORD lastTime = 0;								// Variable estática para almacenar el tiempo de la última actualización
 	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
-	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
+	float deltaTime = (currentTime - lastTime) / 10000.0f;	// Tiempo en segundos desde la última actualización
 
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
 			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
+			orbit_angle[i] = fmod(orbit_angle[i], 360.0);
 		}
 		for (int i = 0; i < 10; i++) {
 			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
+			rotation_angle[i] = fmod(rotation_angle[i], 360.0);
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
+		moon_rotation_angle = fmod(moon_rotation_angle, 360.0);
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
+		moon_orbit_angle = fmod(moon_orbit_angle, 360.0);
 		for (int i = 0; i < 3; i++) {
 			jupiter_moon_ort[i] += (ORBIT_SPEED[9+i] * deltaTime * speed_inc);
+			jupiter_moon_ort[i] = fmod(jupiter_moon_ort[i], 360.0);
 			jupiter_moon_rot[i] += (ROTATION_SPEED[10+i] * deltaTime * speed_inc);
+			jupiter_moon_rot[i] = fmod(jupiter_moon_rot[i], 360.0);
 		}
+		saturn_titan_rot += ROTATION_SPEED[13] * deltaTime * speed_inc;
+		saturn_titan_rot = fmod(saturn_titan_rot, 360.0);
+		saturn_titan_ort += ORBIT_SPEED[12] * deltaTime * speed_inc;
+		saturn_titan_ort = fmod(saturn_titan_ort, 360.0);
+
+
 	}
 
 	// Actualizar la última vez que se llamó al timer

@@ -81,7 +81,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 	int nptsU, CPunt3D PC_u[MAX_PATCH_CORBA], GLfloat pasCS, bool sw_PC, bool dib_TFrenet,
 	COBJModel* objecteOBJ,
 	glm::mat4 MatriuVista, glm::mat4 MatriuTG, float orbit_angle[], float rotation_angle[], bool draw_planets[9], int target_planet, glm::vec3& targetPos, 
-	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[])
+	float moon_rotation_angle, float moon_orbit_angle, float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort)
 {
 	float altfar = 0;
 	GLint npunts = 0, nvertexs = 0;
@@ -142,7 +142,7 @@ void dibuixa_EscenaGL(GLuint sh_programID, bool eix, GLuint axis_Id, CMask3D rei
 		SeleccionaColorMaterial(sh_programID, col_object, sw_mat);
 		//carrgar texturas de planetas
 		sis(sh_programID, MatriuVista, MatriuTG, sw_mat, uni_id, textures_planeta, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle, 
-			jupiter_moon_ort, jupiter_moon_rot);
+			jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort);
 		break;
 
 // Dibuix de l'objecte OBJ
@@ -434,7 +434,7 @@ void IluminacioSol(GLint shaderId)
 void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[5],
 	GLint uni_id, GLuint* textures_planeta, float orbit_angle[], float rotation_angle[], 
 	bool draw_planets[9], int target_planet, glm::vec3& targetPos, float moon_rotation_angle, float moon_orbit_angle, 
-	float jupiter_moon_ort[], float jupiter_moon_rot[])
+	float jupiter_moon_ort[], float jupiter_moon_rot[], float saturn_titan_rot, float saturn_titan_ort)
 {	
 	glm::mat4 NormalMatrix(1.0), ModelMatrix(1.0), TransMatrix(1.0);
 	CColor col_object;
@@ -521,7 +521,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		/*----------MOON----------*/
 
 		/*----------JUIPTER MOON----------*/
-		if (i - 1 == 5 && draw_planets[4]) // if drawing Earth, draw Moon:
+		if (i - 1 == 5 && draw_planets[4]) // if drawing JUIPTER, draw Moon:
 		{
 			for (int i = 0; i < 3; i++)
 			{
@@ -556,8 +556,8 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		}
 		/*----------JUIPTER MOON----------*/
 
-		/*----------SATRUN RING----------*/
-		if (i - 1 == 6 && draw_planets[5]) // if drawing Earth, draw Moon:
+		/*----------SATRUN RING/MOON----------*/
+		if (i - 1 == 6 && draw_planets[5]) // if drawing Saturn, draw Ring/Moon:
 		{
 			
 			glm::mat4 moonTransMatrix = glm::mat4(1.0f);
@@ -572,7 +572,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			
 			moonTransMatrix = glm::translate(TransMatrix, vec3(0.0f, 0.0f, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[13], P_SCALE[13], P_SCALE[13]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -580,8 +580,38 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 			draw_TriEBO_Object(GLU_DISK);
+
+			float x = 0;
+			float y = 0;
+			moonTransMatrix = glm::mat4(1.0f);
+
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[14], true, true, false, false);
+			glUniform1i(uni_id, 0);
+
+			// Calculos de orbitas con excentricidad
+			float a = SEMIMAJOR_AXIS[12];
+			float e = ECCENTRICITIES[12];
+			float r = (a * (1 - e * e)) / (1 + e * cos(saturn_titan_rot));
+			x = r * cos(saturn_titan_rot); // X position based on orbit angle and excentricity
+			y = r * sin(saturn_titan_rot); // Y position based on orbit angle and excentricity
+
+			// Transformaciones
+			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::rotate(moonTransMatrix, radians(saturn_titan_ort), vec3(0.0f, 0.0f, 1.0f));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
+
+			// Pas ModelView Matrix a shader
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
+			// Pas NormalMatrix a shader
+			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+
+			draw_TriEBO_Object(GLU_SPHERE);
 		}
-		/*----------SATRUN RING----------*/
+		/*----------SATRUN RING/MOON----------*/
+
+
 
 
 		glActiveTexture(GL_TEXTURE0);

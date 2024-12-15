@@ -24,7 +24,7 @@ GLuint* loadIMA_SOIL_texture()
 {
 	FILE* file = NULL;
 	int errno;
-	GLuint* textureID = new GLuint[14]; //Añadir numeros si hay nuevas texturas.
+	GLuint* textureID = new GLuint[17]; //Añadir numeros si hay nuevas texturas.
 
 	std::vector<std::string> filenames =
 	{ 
@@ -41,11 +41,14 @@ GLuint* loadIMA_SOIL_texture()
 		".\\textures\\planets\\8k_saturn_ring_beta.png",
 		".\\textures\\planets\\Europa.jpg",
 		".\\textures\\planets\\Ganymede.png",
-		".\\textures\\planets\\Callisto.png"
+		".\\textures\\planets\\Callisto.png",
+		".\\textures\\planets\\titan.png",
+		".\\textures\\planets\\titania.jpg",
+		".\\textures\\planets\\triton.jpg"
 
 	};
 
-	glGenTextures(14, textureID); //Añadir texturas si hay cosa nueva.
+	glGenTextures(17, textureID); //Añadir texturas si hay cosa nueva.
 
 
 	int i = 0;
