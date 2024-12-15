@@ -298,8 +298,11 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_BN_CLICKED(120, &CEntornVGIView::OnBtnCameraUranus)
 	ON_BN_CLICKED(121, &CEntornVGIView::OnBtnCameraNeptune)
 	// SLIDER SPEEDS
-	ON_WM_HSCROLL(122, &CEntornVGIView::OnHSCroll)
+	ON_WM_HSCROLL()
 	ON_BN_CLICKED(123, &CEntornVGIView::OnBtnSpeedMenu)
+	// SLIDER SCALES
+	ON_BN_CLICKED(125, &CEntornVGIView::OnBtnScaleMenu)
+	ON_WM_HSCROLL()
 	// FULLSCREEN
 	ON_WM_TIMER()
 	ON_MESSAGE(WM_USER + 1, &CEntornVGIView::OnForceFullscreen)
@@ -535,6 +538,8 @@ CEntornVGIView::CEntornVGIView()
 	showMenu = false;
 	cameraMenu = false;
 	speedMenu = false;
+	scaleMenu = false;
+	m_planetName = "Sun";
 }
 
 CEntornVGIView::~CEntornVGIView()
@@ -768,14 +773,14 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	wglMakeCurrent(m_pDC->GetSafeHdc(), NULL);
 
 	// ====== Buttons GUI ============
-	// Obtener el tama�o inicial del �rea cliente
+	// Obtener la mida inicial del area cliente
 	CRect rect;
 	GetClientRect(&rect);
 	int w = rect.Width();
 	int h = rect.Height();
 
 	m_btnStart.Create(_T("Start"), WS_CHILD | WS_VISIBLE,
-		CRect(0, 0, 0, 0), this, 101); // Posici�n temporal, se ajustar� en OnSize()
+		CRect(0, 0, 0, 0), this, 101); // Posicion temporal, ajustar en OnSize()
 
 	// Show / Hide
 	m_btnShowMenu.Create(_T("Show/Hide"), WS_CHILD,
@@ -828,12 +833,18 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(0, 0, 0, 0), this, 122);
 	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
 	m_sliderSpeed.SetPos(0); // Posicion inicial
-
+	// Slider Scales
+	m_btnScaleMenu.Create(_T("Scale"), WS_CHILD,
+		CRect(0, 0, 0, 0), this, 125);
+	m_sliderScale.Create(WS_CHILD | TBS_HORZ, CRect(0, 0, 0, 0), this, 124);
+	m_sliderScale.SetRange(0, 8); // Rango para indices de scale (0 a 8)
+	m_sliderScale.SetPos(4);      // Posición inicial
 	// ===== Timer Label =====
 	// Create the static text control for the timer
-	m_timerLabel.Create(_T("01/01/1970"), WS_CHILD | WS_VISIBLE,
-		CRect(0, 0, 0, 0), this, 124); // ID 124 for the timer label
-
+	m_timerLabel.Create(_T("01/01/1970"), WS_CHILD | SS_CENTER | SS_CENTERIMAGE,
+		CRect(0, 0, 0, 0), this, 126);
+	m_planetLabel.Create(_T("Sun"), WS_CHILD | SS_CENTER | SS_CENTERIMAGE,
+		CRect(0, 0, 0, 0), this, 127);
 	return true;
 }
 
@@ -963,6 +974,7 @@ void CEntornVGIView::OnDestroy()
 void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 {
 	CView::OnSize(nType, cx, cy);
+	CView::OnSize(nType, cx, cy);
 
 	// A resize event occured; cx and cy are the window's new width and height.
 
@@ -981,9 +993,14 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 	float buttonWidthPercentage = 0.04f; // Ancho: 4% de la ventana
 	float buttonHeightPercentage = 0.03f; // Alto: 3% de la ventana
 	float buttonSpacingPercentage = 0.005f; // Espacio entre botones: 0.5%
+	float labelWidthPercentage = 0.1f;
+	float labelHeightPercentage = 0.0275f; // Altura para cada etiqueta
+	float labelSpacingPercentage = 0.005f; // Espacio entre etiquetas
+	float totalHeight = 2 * labelHeightPercentage + labelSpacingPercentage;
+	float labelYOffset = 0.02f;
 
 	// Reposicionar botones con porcentajes::
-	// Bot�n Start
+	// Boton Start
 	if (m_btnStart.GetSafeHwnd()) {
 		float startButtonWidthPercentage = 0.09f;	// Ancho : 9%
 		float startButtonHeightPercentage = 0.05f;
@@ -1194,20 +1211,41 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 			static_cast<int>(h * buttonHeightPercentage)
 		);
 	}
+	// Botones Scale
+	if (m_btnScaleMenu.GetSafeHwnd()) {
+		m_btnScaleMenu.MoveWindow(
+			static_cast<int>(w * paddingX),
+			static_cast<int>(h * (1.0f - 2 * buttonHeightPercentage - 2 * paddingY)),
+			static_cast<int>(w * buttonWidthPercentage),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
+	if (m_sliderScale.GetSafeHwnd()) {
+		m_sliderScale.MoveWindow(
+			static_cast<int>(w * (paddingX + buttonWidthPercentage + buttonSpacingPercentage)),
+			static_cast<int>(h * (1.0f - 2 * buttonHeightPercentage - 2 * paddingY)),
+			static_cast<int>(w * (0.15f - buttonWidthPercentage - paddingX - buttonSpacingPercentage)),
+			static_cast<int>(h * buttonHeightPercentage)
+		);
+	}
 
-	// Reposition the timer label
-	if (m_timerLabel.GetSafeHwnd()) {
-		CRect cameraButtonRect;
-		m_btnCameraMenu.GetWindowRect(&cameraButtonRect);
-		ScreenToClient(&cameraButtonRect);
+	// Timer Label
+	if (m_planetLabel.GetSafeHwnd() && m_timerLabel.GetSafeHwnd()) {
+		// Posición de m_planetLabel (arriba)
+		m_planetLabel.MoveWindow(
+			static_cast<int>(w * (0.5f - labelWidthPercentage / 2.0f)),
+			static_cast<int>(h * (1.0f - totalHeight - labelYOffset)),
+			static_cast<int>(w * labelWidthPercentage),
+			static_cast<int>(h * labelHeightPercentage)
+		);
 
-		// Calculate position for the timer label
-		int timerLabelX = cameraButtonRect.right + static_cast<int>(w * buttonSpacingPercentage);
-		int timerLabelY = cameraButtonRect.top;
-		int timerLabelWidth = static_cast<int>(w * 0.08f); // For example, 8% of the window width
-		int timerLabelHeight = static_cast<int>(h * buttonHeightPercentage);
-
-		m_timerLabel.MoveWindow(timerLabelX, timerLabelY, timerLabelWidth, timerLabelHeight);
+		// Posición de m_dateLabel (debajo)
+		m_timerLabel.MoveWindow(
+			static_cast<int>(w * (0.5f - labelWidthPercentage / 2.0f)),
+			static_cast<int>(h * (1.0f - labelHeightPercentage - labelYOffset - labelSpacingPercentage)),
+			static_cast<int>(w * labelWidthPercentage),
+			static_cast<int>(h * labelHeightPercentage)
+		);
 	}
 
 	Invalidate(); // Forzar repintado para actualizar la posici�n de los botones
@@ -1368,7 +1406,7 @@ void CEntornVGIView::dibuixa_Escena()
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que cont� els VAO's
 		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle,
-		jupiter_moon_ort, jupiter_moon_rot);
+		jupiter_moon_ort, jupiter_moon_rot, m_scaleIndex);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicaci� amb els
@@ -5858,7 +5896,7 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i <= 3; i++) {
 			jupiter_moon_ort[i] += (ORBIT_SPEED[9+i] * deltaTime * speed_inc);
 			jupiter_moon_rot[i] += (ROTATION_SPEED[10+i] * deltaTime * speed_inc);
 		}
@@ -6124,15 +6162,15 @@ void CEntornVGIView::OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI) { pCmdUI->Se
 /* ----------------------------------------------------------------------- */
 /* ------------------------------CAMERA LOCK------------------------------ */
 /* ----------------------------------------------------------------------- */
-void CEntornVGIView::OnLockonplanetSun() { target_planet = 0; OPV.R = 400.0f; }
-void CEntornVGIView::OnLockonplanetMercury() { target_planet = 1; OPV.R = 50.0f; }
-void CEntornVGIView::OnLockonplanetVenus() { target_planet = 2; OPV.R = 50.0f; }
-void CEntornVGIView::OnLockonplanetEarth() { target_planet = 3; OPV.R = 50.0f; }
-void CEntornVGIView::OnLockonplanetMars() { target_planet = 4; OPV.R = 50.0f; }
-void CEntornVGIView::OnLockonplanetJupiter() { target_planet = 5; OPV.R = 150.0f; }
-void CEntornVGIView::OnLockonplanetSaturn() { target_planet = 6; OPV.R = 150.0f; }
-void CEntornVGIView::OnLockonplanetUranus() { target_planet = 7; OPV.R = 150.0f; }
-void CEntornVGIView::OnLockonplanetNeptune() { target_planet = 8; OPV.R = 150.0f; }
+void CEntornVGIView::OnLockonplanetSun() { target_planet = 0; OPV.R = 400.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Sun"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetMercury() { target_planet = 1; OPV.R = 50.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Mercury"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetVenus() { target_planet = 2; OPV.R = 50.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Venus"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetEarth() { target_planet = 3; OPV.R = 50.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Earth"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetMars() { target_planet = 4; OPV.R = 50.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Mars"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetJupiter() { target_planet = 5; OPV.R = 150.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Jupiter"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetSaturn() { target_planet = 6; OPV.R = 150.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Saturn"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetUranus() { target_planet = 7; OPV.R = 150.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Uranus"; UpdateTimerDisplay(); }
+void CEntornVGIView::OnLockonplanetNeptune() { target_planet = 8; OPV.R = 150.0f * SCALE_INC[m_scaleIndex]; m_planetName = "Neptune"; UpdateTimerDisplay(); }
 void CEntornVGIView::OnUpdateLockonplanetSun(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 0 ? 1 : 0); }
 void CEntornVGIView::OnUpdateLockonplanetMercury(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 1 ? 1 : 0); }
 void CEntornVGIView::OnUpdateLockonplanetVenus(CCmdUI* pCmdUI) { pCmdUI->SetCheck(target_planet == 2 ? 1 : 0); }
@@ -6153,8 +6191,13 @@ void CEntornVGIView::OnBtnStartClicked()
 	m_btnCameraMenu.ShowWindow(SW_SHOW);
 	// ====== Buttons Speed ================
 	m_btnSpeedMenu.ShowWindow(SW_SHOW);
+	// ====== Buttons Scale ================
+	m_btnScaleMenu.ShowWindow(SW_SHOW);
 	// ====== Buttons Show/Hide ============
 	m_btnShowMenu.ShowWindow(SW_SHOW);
+	// ====== Timer Label ============
+	m_timerLabel.ShowWindow(SW_SHOW);
+	m_planetLabel.ShowWindow(SW_SHOW);
 }
 void CEntornVGIView::OnBtnShowMenu()
 {
@@ -6244,13 +6287,29 @@ void CEntornVGIView::OnBtnSpeedMenu()
 	}
 }
 void CEntornVGIView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+	// SPEED SLIDER
 	if (pScrollBar && pScrollBar->GetDlgCtrlID() == 122) {
-		m_speedIndex = m_sliderSpeed.GetPos(); // Obt�n la nueva posici�n del slider
-		speed_inc = INCREMENTADOR[m_speedIndex]; // Actualiza el incremento
+		m_speedIndex = m_sliderSpeed.GetPos();
+		speed_inc = INCREMENTADOR[m_speedIndex];
+	}
+	else if (pScrollBar && pScrollBar->GetDlgCtrlID() == 124) {
+		m_scaleIndex = m_sliderScale.GetPos();
 	}
 	CView::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 void CEntornVGIView::UpdateSpeedFromSlider() { m_sliderSpeed.SetPos(m_speedIndex); }
+void CEntornVGIView::OnBtnScaleMenu()
+{
+	if (!scaleMenu) {
+		scaleMenu = true;
+		m_sliderScale.ShowWindow(SW_SHOW);
+	}
+	else {
+		scaleMenu = false;
+		m_sliderScale.ShowWindow(SW_HIDE);
+	}
+}
+void CEntornVGIView::UpdateScaleFromSlider() { m_sliderScale.SetPos(m_scaleIndex); }
 
 LRESULT CEntornVGIView::OnForceFullscreen(WPARAM wParam, LPARAM lParam)
 {
@@ -6261,6 +6320,10 @@ LRESULT CEntornVGIView::OnForceFullscreen(WPARAM wParam, LPARAM lParam)
 void CEntornVGIView::UpdateTimerDisplay()
 {
 	m_dateString = m_currentDate.Format(_T("%d/%m/%Y"));
+	if (m_planetLabel.GetSafeHwnd())
+	{
+		m_planetLabel.SetWindowText(m_planetName);
+	}
 	if (m_timerLabel.GetSafeHwnd())
 	{
 		m_timerLabel.SetWindowText(m_dateString);

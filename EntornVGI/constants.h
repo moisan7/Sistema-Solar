@@ -58,6 +58,7 @@
 #define SIS 'L'
 const double M_PI = glm::pi<double>();
 const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 };
+const float SCALE_INC[9] = { 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2 };
 const float ORBIT_SPEED[12] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
     2 * glm::pi<float>() / 88.0f,		// Mercury (88d)
     2 * glm::pi<float>() / 225.0f,		// Venus (225d)

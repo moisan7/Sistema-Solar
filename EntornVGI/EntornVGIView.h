@@ -237,10 +237,17 @@ public:
 	CButton m_btnSpeedMenu;
 	CSliderCtrl m_sliderSpeed;
 	int m_speedIndex = 0;
+	// Slider Scales
+	bool scaleMenu;
+	CButton m_btnScaleMenu;
+	CSliderCtrl m_sliderScale;
+	int m_scaleIndex = 4;
 	// Timer display
 	CTime m_currentDate;    // Current date and time for the timer display
 	CString m_dateString;   // String to hold the formatted date
 	CStatic m_timerLabel;   // Static text control to display the timer
+	CString m_planetName;
+	CStatic m_planetLabel;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -251,6 +258,7 @@ public:
 	virtual void OnDraw(CDC* pDC);  // Reemplazado para dibujar esta vista
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	void UpdateSpeedFromSlider();
+	void UpdateScaleFromSlider();
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -582,6 +590,9 @@ public:
 	// Slider Speeds
 	afx_msg void OnBtnSpeedMenu();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	// Slider Scales
+	afx_msg void OnBtnScaleMenu();
+	afx_msg void OnHScrollScale(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	// Fullscreen
 	afx_msg LRESULT OnForceFullscreen(WPARAM wParam, LPARAM lParam);
 	// Timer
