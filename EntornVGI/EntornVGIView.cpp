@@ -5643,7 +5643,7 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			jupiter_moon_ort[i] += (ORBIT_SPEED[9+i] * deltaTime * speed_inc);
 			jupiter_moon_rot[i] += (ROTATION_SPEED[10+i] * deltaTime * speed_inc);
 		}
