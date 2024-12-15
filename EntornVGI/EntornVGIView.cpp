@@ -520,7 +520,7 @@ CEntornVGIView::CEntornVGIView()
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
 	}
 	// Velocidades
-	speed_inc = INCREMENTADOR[1];
+	speed_inc = INCREMENTADOR[0];
 	// Planetas a dibujar
 	for (int i = 0; i <= 8; i++) {
 		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
@@ -822,15 +822,11 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect(0, 0, 0, 0), this, 123);
 	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(0, 0, 0, 0), this, 122);
 	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
-	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
-
-	// Initialize the date to 01/01/1900
-	m_currentDate = CTime(1900, 1, 1);
-	m_dateString = _T("01/01/1900"); // Initial formatted date string
+	m_sliderSpeed.SetPos(0); // Posicion inicial
 
 	// ===== Timer Label =====
 	// Create the static text control for the timer
-	m_timerLabel.Create(_T("01/01/1900"), WS_CHILD | WS_VISIBLE,
+	m_timerLabel.Create(_T("01/01/1970"), WS_CHILD | WS_VISIBLE,
 		CRect(0, 0, 0, 0), this, 124); // ID 124 for the timer label
 
 	return true;
@@ -5941,7 +5937,7 @@ void CEntornVGIView::OnSistemasolarStart()
 		snd->drop();
 
 		// Initialize and start the timer
-		m_currentDate = CTime(1900, 1, 1);
+		m_currentDate = CTime(1970, 1, 1, 15, 30, 45);
 		UpdateTimerDisplay();
 
 		// Movement
