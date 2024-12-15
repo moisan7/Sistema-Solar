@@ -549,7 +549,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 				// Pasar ModelView Matrix a shader
 				glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ju_moonTransMatrix[0][0]);
 				// Pasar NormalMatrix a shader
-				NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+				NormalMatrix = transpose(inverse(MatriuVista * ju_moonTransMatrix));
 				glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
 				draw_TriEBO_Object(GLU_SPHERE);
