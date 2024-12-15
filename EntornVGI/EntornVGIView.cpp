@@ -302,7 +302,7 @@ BEGIN_MESSAGE_MAP(CEntornVGIView, CView)
 	ON_BN_CLICKED(123, &CEntornVGIView::OnBtnSpeedMenu)
 	// FULLSCREEN
 	ON_WM_TIMER()
-	ON_MESSAGE(WM_USER+ 1, &CEntornVGIView::OnForceFullscreen)
+	ON_MESSAGE(WM_USER + 1, &CEntornVGIView::OnForceFullscreen)
 	// FIN AÑADIDO PARA EL SISTEMA SOLAR
 END_MESSAGE_MAP()
 
@@ -365,9 +365,9 @@ CEntornVGIView::CEntornVGIView()
 	// Entorn VGI: Variables de control per les opcions de menú Ocultacions
 	front_faces = true;	test_vis = false;	oculta = true;
 
-// Entorn VGI: Variables de control del menú Iluminació		
+	// Entorn VGI: Variables de control del menú Iluminació		
 	ilumina = PLANA;			ifixe = true;					ilum2sides = false;
-// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
+	// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
 	sw_material[0] = true;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
 	textura = false;				t_textura = CAP;				textura_map = true;
@@ -384,7 +384,7 @@ CEntornVGIView::CEntornVGIView()
 		llumGL[i].especular[0] = 1.0f; llumGL[i].especular[1] = 1.0f; llumGL[i].especular[2] = 1.0f; llumGL[i].especular[3] = 1.0f;
 	}
 
-// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
+	// LLum 0: Átenuació constant (c=1), sobre l'eix Z, no restringida.
 	llumGL[0].encesa = false;
 	llumGL[0].difusa[0] = 1.0f;			llumGL[0].difusa[1] = 1.0f;			llumGL[0].difusa[2] = 1.0f;		llumGL[0].difusa[3] = 1.0f;
 	llumGL[0].especular[0] = 1.0f;		llumGL[0].especular[1] = 1.0f;		llumGL[0].especular[2] = 1.0f;	llumGL[0].especular[3] = 1.0f;
@@ -393,7 +393,7 @@ CEntornVGIView::CEntornVGIView()
 	llumGL[0].atenuacio.a = 0.0;		llumGL[0].atenuacio.b = 0.0;		llumGL[0].atenuacio.c = 1.0;		// Llum sense atenuació per distància (a,b,c)=(0,0,1)
 	llumGL[0].restringida = false;
 	llumGL[0].spotdirection[0] = 0.0;	llumGL[0].spotdirection[1] = 0.0;	llumGL[0].spotdirection[2] = -1.0;
-	llumGL[0].spotcoscutoff = cos(25.0*PI/180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)	
+	llumGL[0].spotcoscutoff = cos(25.0 * PI / 180);		llumGL[0].spotexponent = 1.0;		// llumGL[0].spotexponent = 45.0; Model de Warn (10, 500)	
 
 	// LLum 1: Atenuació constant (c=1), sobre l'eix X, no restringida.
 	llumGL[1].encesa = false;
@@ -520,7 +520,7 @@ CEntornVGIView::CEntornVGIView()
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
 	}
 	// Velocidades
-	speed_inc = INCREMENTADOR[1];
+	speed_inc = INCREMENTADOR[0];
 	// Planetas a dibujar
 	for (int i = 0; i <= 8; i++) {
 		draw_planets[i] = true;	  // Inicialmente dibujar todos los planetas
@@ -822,14 +822,19 @@ int CEntornVGIView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect(0, 0, 0, 0), this, 123);
 	m_sliderSpeed.Create(WS_CHILD | TBS_HORZ, CRect(0, 0, 0, 0), this, 122);
 	m_sliderSpeed.SetRange(0, 8); // Rango para indices de velocidad (0 a 8)
-	m_sliderSpeed.SetPos(speed_index); // Posicion inicial
+	m_sliderSpeed.SetPos(0); // Posicion inicial
+
+	// ===== Timer Label =====
+	// Create the static text control for the timer
+	m_timerLabel.Create(_T("01/01/1970"), WS_CHILD | WS_VISIBLE,
+		CRect(0, 0, 0, 0), this, 124); // ID 124 for the timer label
 
 	return true;
 }
 
 void CEntornVGIView::InitAPI()
 {
-		// Program
+	// Program
 	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
 	glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
 	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
@@ -1185,6 +1190,21 @@ void CEntornVGIView::OnSize(UINT nType, int cx, int cy)
 		);
 	}
 
+	// Reposition the timer label
+	if (m_timerLabel.GetSafeHwnd()) {
+		CRect cameraButtonRect;
+		m_btnCameraMenu.GetWindowRect(&cameraButtonRect);
+		ScreenToClient(&cameraButtonRect);
+
+		// Calculate position for the timer label
+		int timerLabelX = cameraButtonRect.right + static_cast<int>(w * buttonSpacingPercentage);
+		int timerLabelY = cameraButtonRect.top;
+		int timerLabelWidth = static_cast<int>(w * 0.08f); // For example, 8% of the window width
+		int timerLabelHeight = static_cast<int>(h * buttonHeightPercentage);
+
+		m_timerLabel.MoveWindow(timerLabelX, timerLabelY, timerLabelWidth, timerLabelHeight);
+	}
+
 	Invalidate(); // Forzar repintado para actualizar la posición de los botones
 }
 
@@ -1342,7 +1362,7 @@ void CEntornVGIView::dibuixa_Escena()
 		textura, texturesID, texturesID_planets, textura_map, tFlag_invert_Y,
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que conté els VAO's
-		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
+		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets, target_planet, targetPos, moon_rotation_angle, moon_orbit_angle);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicació amb els
@@ -5813,13 +5833,15 @@ std::string CEntornVGIView::CString2String(const CString& cString)
 /* ------------------------------------------------------------------------- */
 /*					     TIMER (ANIMACIÓ)									 */
 /* ------------------------------------------------------------------------- */
- 
+
+
+// EntornVGIView.cpp
 
 void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 {
-	static DWORD lastTime = 0;								// Variable estática para almacenar el tiempo de la última actualización
-	DWORD currentTime = GetTickCount64();					// Obtener el tiempo actual en milisegundos
-	float deltaTime = (currentTime - lastTime) / 1000.0f;	// Tiempo en segundos desde la última actualización
+	static DWORD lastTime = 0; // Variable estática para almacenar el tiempo de la última actualización
+	DWORD currentTime = GetTickCount64(); // Obtener el tiempo actual en milisegundos
+	float deltaTime = (currentTime - lastTime) / 1000.0f; // Tiempo en segundos desde la última actualización
 
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
@@ -5830,6 +5852,35 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
+	}
+
+	// Accumulate delta time based on speed
+	static double accumulatedTime = 0.0;
+
+	// Update the timer based on the speed index
+	if (sis_start) {
+		int daysToAdd = 0;
+		switch (m_speedIndex) {
+		case 0: daysToAdd = 0; break; // Paused
+		case 1: daysToAdd = 1; break; // x1
+		case 2: daysToAdd = 2; break; // x2
+		case 3: daysToAdd = 5; break; // x5
+		case 4: daysToAdd = 10; break; // x10
+		case 5: daysToAdd = 100; break; // x100
+		case 6: daysToAdd = 200; break; // x200
+		case 7: daysToAdd = 500; break; // x500
+		case 8: daysToAdd = 1000; break; // x1000
+		}
+
+		accumulatedTime += deltaTime * daysToAdd; // Scale deltaTime by daysToAdd
+
+		// Update the current date
+		if (accumulatedTime >= 1.0) { // Check if at least 1 day has accumulated
+			int wholeDays = static_cast<int>(accumulatedTime); // Get the whole number of days
+			m_currentDate += CTimeSpan(wholeDays, 0, 0, 0);
+			accumulatedTime -= wholeDays; // Keep the fractional part for the next update
+			UpdateTimerDisplay();
+		}
 	}
 
 	// Actualizar la última vez que se llamó al timer
@@ -5884,6 +5935,10 @@ void CEntornVGIView::OnSistemasolarStart()
 		snd->setVolume(0.1);
 		snd->setIsPaused(false);
 		snd->drop();
+
+		// Initialize and start the timer
+		m_currentDate = CTime(1970, 1, 1, 15, 30, 45);
+		UpdateTimerDisplay();
 
 		// Movement
 		OnSistemasolarTestOrbita();
@@ -5992,7 +6047,7 @@ void CEntornVGIView::OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI)
 }
 /* ---------------------------ÓRBITAS-------------------------- */
 void CEntornVGIView::OnSistemasolarTestOrbita()
-{	
+{
 	// Alternar entre activar y desactivar la traslación
 	translation_orbit = !translation_orbit;
 	if (translation_orbit) {
@@ -6117,7 +6172,7 @@ void CEntornVGIView::OnBtnShowMenu()
 		m_btnShowNeptune.ShowWindow(SW_HIDE);
 		m_btnShowOrbits.ShowWindow(SW_HIDE);
 	}
-	
+
 }
 void CEntornVGIView::OnBtnShowMercury() { OnSistemasolarShowMercury(); }
 void CEntornVGIView::OnBtnShowVenus() { OnSistemasolarShowVenus(); }
@@ -6191,4 +6246,13 @@ LRESULT CEntornVGIView::OnForceFullscreen(WPARAM wParam, LPARAM lParam)
 {
 	OnVistaFullscreen();
 	return 0;
+}
+
+void CEntornVGIView::UpdateTimerDisplay()
+{
+	m_dateString = m_currentDate.Format(_T("%d/%m/%Y"));
+	if (m_timerLabel.GetSafeHwnd())
+	{
+		m_timerLabel.SetWindowText(m_dateString);
+	}
 }
