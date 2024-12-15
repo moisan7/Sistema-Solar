@@ -572,7 +572,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			
 			moonTransMatrix = glm::translate(TransMatrix, vec3(0.0f, 0.0f, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
+			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[13], P_SCALE[13], P_SCALE[13]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
