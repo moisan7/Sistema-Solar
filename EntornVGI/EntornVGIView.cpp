@@ -531,10 +531,18 @@ CEntornVGIView::CEntornVGIView()
 	moon_rotation_angle = 0;
 	moon_orbit_angle = 0;
 	// Jupiter Moons
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		jupiter_moon_rot[i] = 0.0f; // Asigna 0 a cada elemento
 		jupiter_moon_ort[i] = 0.0f; // Asigna 0 a cada elemento
 	}
+
+	saturn_titan_rot = 0;
+	saturn_titan_ort = 0;
+	unanos_titania_rot = 0;
+	unanos_titania_ort = 0;
+	neptune_triton_rot = 0;
+	neptune_triton_ort = 0;
+
 	showMenu = false;
 	cameraMenu = false;
 	speedMenu = false;
@@ -1406,7 +1414,7 @@ void CEntornVGIView::dibuixa_Escena()
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que cont� els VAO's
 		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle,
-		jupiter_moon_ort, jupiter_moon_rot, m_scaleIndex);
+		jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort, unanos_titania_rot, unanos_titania_ort, neptune_triton_rot, neptune_triton_ort);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicaci� amb els
@@ -5853,16 +5861,37 @@ void CEntornVGIView::OnTimer(UINT_PTR nIDEvent)
 	if (translation_orbit) {
 		for (int i = 0; i < 9; i++) {
 			orbit_angle[i] += ORBIT_SPEED[i] * deltaTime * speed_inc;
+			orbit_angle[i] = fmod(orbit_angle[i], 360.0);
 		}
 		for (int i = 0; i < 10; i++) {
 			rotation_angle[i] += ROTATION_SPEED[i] * deltaTime * speed_inc;
+			rotation_angle[i] = fmod(rotation_angle[i], 360.0);
 		}
 		moon_rotation_angle += ROTATION_SPEED[9] * deltaTime * speed_inc;
+		moon_rotation_angle = fmod(moon_rotation_angle, 360.0);
 		moon_orbit_angle += ORBIT_SPEED[8] * deltaTime * speed_inc;
-		for (int i = 0; i <= 3; i++) {
+		moon_orbit_angle = fmod(moon_orbit_angle, 360.0);
+		for (int i = 0; i < 3; i++) {
 			jupiter_moon_ort[i] += (ORBIT_SPEED[9+i] * deltaTime * speed_inc);
+			jupiter_moon_ort[i] = fmod(jupiter_moon_ort[i], 360.0);
 			jupiter_moon_rot[i] += (ROTATION_SPEED[10+i] * deltaTime * speed_inc);
+			jupiter_moon_rot[i] = fmod(jupiter_moon_rot[i], 360.0);
 		}
+		saturn_titan_rot += ROTATION_SPEED[13] * deltaTime * speed_inc;
+		saturn_titan_rot = fmod(saturn_titan_rot, 360.0);
+		saturn_titan_ort += ORBIT_SPEED[12] * deltaTime * speed_inc;
+		saturn_titan_ort = fmod(saturn_titan_ort, 360.0);
+
+		unanos_titania_rot += ROTATION_SPEED[14] * deltaTime * speed_inc;
+		unanos_titania_rot = fmod(unanos_titania_rot, 360.0);
+		unanos_titania_ort += ORBIT_SPEED[13] * deltaTime * speed_inc;
+		unanos_titania_ort = fmod(unanos_titania_ort, 360.0);
+
+		neptune_triton_rot -= ROTATION_SPEED[15] * deltaTime * speed_inc;
+		neptune_triton_rot = fmod(neptune_triton_rot, 360.0);
+		neptune_triton_ort -= ORBIT_SPEED[14] * deltaTime * speed_inc;
+		neptune_triton_ort = fmod(neptune_triton_ort, 360.0);
+
 	}
 
 	// Accumulate delta time based on speed

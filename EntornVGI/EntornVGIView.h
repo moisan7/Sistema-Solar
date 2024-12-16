@@ -204,8 +204,14 @@ public:
 	// Moon
 	float moon_rotation_angle;
 	float moon_orbit_angle;
-	float jupiter_moon_rot[4];
-	float jupiter_moon_ort[4];
+	float jupiter_moon_rot[3];
+	float jupiter_moon_ort[3];
+	float saturn_titan_rot;
+	float saturn_titan_ort;
+	float unanos_titania_rot;
+	float unanos_titania_ort;
+	float neptune_triton_rot;
+	float neptune_triton_ort;
 	// ====== Buttons GUI ============
 	CButton m_btnStart;
 	// Show/Hide
