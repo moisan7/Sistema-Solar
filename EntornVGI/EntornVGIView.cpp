@@ -1414,7 +1414,7 @@ void CEntornVGIView::dibuixa_Escena()
 		npts_T, PC_t, pas_CS, sw_Punts_Control, dibuixa_TriedreFrenet,
 		ObOBJ,				// Classe de l'objecte OBJ que cont� els VAO's
 		ViewMatrix, GTMatrix, orbit_angle, rotation_angle, draw_planets,target_planet, targetPos, moon_rotation_angle, moon_orbit_angle,
-		jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort, unanos_titania_rot, unanos_titania_ort, neptune_triton_rot, neptune_triton_ort);
+		jupiter_moon_ort, jupiter_moon_rot, saturn_titan_rot, saturn_titan_ort, unanos_titania_rot, unanos_titania_ort, neptune_triton_rot, neptune_triton_ort, m_scaleIndex);
 }
 
 // Barra_Estat: Actualitza la barra d'estat (Status Bar) de l'aplicaci� amb els

@@ -75,9 +75,6 @@ const float ORBIT_SPEED[15] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
 	2 * glm::pi<float>() / 15.945f,     // Titan (15.945d)
 	2 * glm::pi<float>() / 8.706f,       // Titania (8.706d)
 	2 * glm::pi<float>() / 5.876f       // Triton (5.876d)
-	2 * glm::pi<float>() / 15.945f,     // Titan (15.945d)
-	2 * glm::pi<float>() / 8.706f,      // Titania (8.706d)
-	2 * glm::pi<float>() / 5.876f       // Triton (5.876d)
 };
 const float ECCENTRICITIES[15]= { // REAL
 	0.2056f,		// Mercury

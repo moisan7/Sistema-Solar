@@ -469,23 +469,28 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		glEnable(GL_BLEND);                                 // Habilitar transparencia
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Configuración de transparencia
 
-		for (int i = 1; i <= 8; i++) { // De 1 a 9 para dibujar todas
+		for (int i = 1; i <= 8; i++) { // De 1 a 8 para dibujar todas
 			float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor del planeta
 			float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]);
 
-			glColor4f(1.0f, 1.0f, 1.0f, 0.2f); // Blanco con transparencia 50%
 			glLineWidth(0.5f);                 // Grosor de línea
 
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
 			// Desactivar reflectivitat de llum d'emissió
-			glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+			//glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+			
+			// Textura Gris Orbita
+			glActiveTexture(GL_TEXTURE0);
+			SetTextureParameters(textures_planeta[17], true, true, false, false);
+			glUniform1i(uni_id, 0);
+
 			// Dibujar órbita
 			DrawOrbit(SCALE_INC[scale_inc_index] * a, SCALE_INC[scale_inc_index] * b, (i - 1), 10000); // 10000 segmentos (para suavizar la línea)
 		}
 	}
 
 	// Dibujado de planetas + movimiento
-	for (int i = 1; i <= 8; i++) { // De 1 a 8 para dibujar todos
+	for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todos
 		// Verificar si el planeta debe dibujarse
 		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
 
@@ -678,24 +683,22 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			draw_TriEBO_Object(GLU_SPHERE);
 		}
 		/*----------Neptune MOON----------*/
+		/*----------- PLANETS -----------*/
+		glActiveTexture(GL_TEXTURE0);
+		SetTextureParameters(textures_planeta[i], true, true, false, false);
+		glUniform1i(uni_id, 0);
 
-		if (i != 9)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			SetTextureParameters(textures_planeta[i], true, true, false, false);
-			glUniform1i(uni_id, 0);
+		// Desactivar reflectivitat de llum d'emissió
+		glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
 
-			// Desactivar reflectivitat de llum d'emissió
-			glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+		// Calculos órbitas elípticas
+		float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
+		float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
+		float x = a * (cos(orbit_angle[i - 1]) - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
+		float y = b * sin(orbit_angle[i - 1]);  // Coordenada Y en la elipse
 
-			// Calculos órbitas elípticas
-			float a = SEMIMAJOR_AXIS[i - 1]; // Semieje mayor para cada planeta
-			float b = a * sqrt(1.0f - ECCENTRICITIES[i - 1] * ECCENTRICITIES[i - 1]); // Semieje menor
-			float x = a * (cos(orbit_angle[i - 1]) - ECCENTRICITIES[i - 1]);  // Coordenada X en la elipse
-			float y = b * sin(orbit_angle[i - 1]);  // Coordenada Y en la elipse
-
-			float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i - 1])); // Efecto de inclinación en Y
-			float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i - 1])); // Efecto de inclinación en Z
+		float ORBIT_ANGLE_Y = y * cos(radians(INCLINATION[i - 1])); // Efecto de inclinación en Y
+		float ORBIT_ANGLE_Z = y * sin(radians(INCLINATION[i - 1])); // Efecto de inclinación en Z
 
 		TransMatrix = glm::translate(MatriuTG, SCALE_INC[scale_inc_index] * vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z));
 		// Inclinacion
@@ -704,22 +707,22 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 		TransMatrix = glm::rotate(TransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
 		ModelMatrix = glm::scale(TransMatrix, SCALE_INC[scale_inc_index] * vec3(P_SCALE[i], P_SCALE[i], P_SCALE[i]));
 
-			// Pas ModelView Matrix a shader
-			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
+		// Pas ModelView Matrix a shader
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &ModelMatrix[0][0]);
 
-			// Pas NormalMatrix a shader
-			NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
-			glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
+		// Pas NormalMatrix a shader
+		NormalMatrix = transpose(inverse(MatriuVista * ModelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
-			draw_TriEBO_Object(GLU_SPHERE);
-			// Si el planeta es el objetivo, actualiza la posición de la cámara
-			if (i == target_planet) {
-				targetPos = glm::vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z) * SCALE_INC[scale_inc_index];
-			}
-			else if (target_planet == 0) {
-				targetPos = vec3(0.0f);
-			}
+		draw_TriEBO_Object(GLU_SPHERE);
+		// Si el planeta es el objetivo, actualiza la posición de la cámara
+		if (i == target_planet) {
+			targetPos = glm::vec3(x, ORBIT_ANGLE_Y, ORBIT_ANGLE_Z) * SCALE_INC[scale_inc_index];
 		}
+		else if (target_planet == 0) {
+			targetPos = vec3(0.0f);
+		}
+		/*----------- PLANETS -----------*/
 	}
 };
 
