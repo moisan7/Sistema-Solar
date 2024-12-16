@@ -491,9 +491,6 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 
 	// Dibujado de planetas + movimiento
 	for (int i = 1; i <= 9; i++) { // De 1 a 9 para dibujar todos
-		// Verificar si el planeta debe dibujarse
-		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
-
 		/*----------MOON----------*/
 		if (i == 4 && draw_planets[2]) // if drawing Earth, draw Moon:
 		{
@@ -579,7 +576,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			
 			moonTransMatrix = glm::translate(TransMatrix, SCALE_INC[scale_inc_index] * vec3(0.0f, 0.0f, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(rotation_angle[i]), glm::vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[13], P_SCALE[13], P_SCALE[13]));
+			moonTransMatrix = glm::scale(moonTransMatrix, SCALE_INC[scale_inc_index] * vec3(P_SCALE[13], P_SCALE[13], P_SCALE[13]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -604,9 +601,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			y = r * sin(saturn_titan_rot); // Y position based on orbit angle and excentricity
 
 			// Transformaciones
-			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::translate(TransMatrix, SCALE_INC[scale_inc_index] * vec3(x, y, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(saturn_titan_ort), vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
+			moonTransMatrix = glm::scale(moonTransMatrix, SCALE_INC[scale_inc_index] * vec3(P_SCALE[14], P_SCALE[14], P_SCALE[14]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -637,9 +634,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			y = r * sin(unanos_titania_rot); // Y position based on orbit angle and excentricity
 
 			// Transformaciones
-			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::translate(TransMatrix, SCALE_INC[scale_inc_index] * vec3(x, y, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(unanos_titania_ort), vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[15], P_SCALE[15], P_SCALE[15]));
+			moonTransMatrix = glm::scale(moonTransMatrix, SCALE_INC[scale_inc_index] * vec3(P_SCALE[15], P_SCALE[15], P_SCALE[15]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -670,9 +667,9 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			y = r * sin(neptune_triton_rot); // Y position based on orbit angle and excentricity
 
 			// Transformaciones
-			moonTransMatrix = glm::translate(TransMatrix, vec3(x, y, 0.0f));
+			moonTransMatrix = glm::translate(TransMatrix, SCALE_INC[scale_inc_index] * vec3(x, y, 0.0f));
 			moonTransMatrix = glm::rotate(moonTransMatrix, radians(neptune_triton_ort), vec3(0.0f, 0.0f, 1.0f));
-			moonTransMatrix = glm::scale(moonTransMatrix, vec3(P_SCALE[16], P_SCALE[16], P_SCALE[16]));
+			moonTransMatrix = glm::scale(moonTransMatrix, SCALE_INC[scale_inc_index] * vec3(P_SCALE[16], P_SCALE[16], P_SCALE[16]));
 
 			// Pas ModelView Matrix a shader
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &moonTransMatrix[0][0]);
@@ -683,7 +680,11 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 			draw_TriEBO_Object(GLU_SPHERE);
 		}
 		/*----------Neptune MOON----------*/
+
 		/*----------- PLANETS -----------*/
+		// Verificar si el planeta debe dibujarse
+		if (draw_planets[i - 1] == false) continue; // Saltar si el planeta no debe dibujarse
+
 		glActiveTexture(GL_TEXTURE0);
 		SetTextureParameters(textures_planeta[i], true, true, false, false);
 		glUniform1i(uni_id, 0);
