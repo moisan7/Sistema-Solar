@@ -371,7 +371,7 @@ CEntornVGIView::CEntornVGIView()
 	// Entorn VGI: Variables de control del men� Iluminaci�		
 	ilumina = PLANA;			ifixe = true;					ilum2sides = false;
 	// Reflexions actives: Ambient [1], Difusa [2] i Especular [3]. No actives: Emission [0]. 
-	sw_material[0] = true;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = true;	sw_material[4] = true;
+	sw_material[0] = true;			sw_material[1] = true;			sw_material[2] = true;			sw_material[3] = false;	sw_material[4] = true;
 	sw_material_old[0] = false;		sw_material_old[1] = true;		sw_material_old[2] = true;		sw_material_old[3] = true;	sw_material_old[4] = true;
 	textura = false;				t_textura = CAP;				textura_map = true;
 	for (i = 0; i < NUM_MAX_TEXTURES; i++) texturesID[i] = -1;
@@ -3130,47 +3130,10 @@ BOOL CEntornVGIView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	if ((zzoom || zzoomO) || (transX) || (transY) || (transZ))
 	{
 		if (camera == CAM_ESFERICA) {	// C�mera Esf�rica
-			OPV.R = OPV.R + zDelta / 4;
+			OPV.R = OPV.R + zDelta / 8;
 			if (OPV.R < 0.25) OPV.R = 0.25;
 			InvalidateRect(NULL, false);
 		}
-		else if (camera == CAM_GEODE)
-		{	// C�mera Geode
-			OPV_G.R = OPV_G.R + zDelta / 4.0f;
-			if (OPV_G.R < 0.0f) OPV_G.R = 0.0f;
-			InvalidateRect(NULL, false);
-		}
-	}
-	else if (camera == CAM_NAVEGA)
-	{
-		vdir[0] = n[0] - opvN.x;
-		vdir[1] = n[1] - opvN.y;
-		vdir[2] = n[2] - opvN.z;
-		modul = sqrt(vdir[0] * vdir[0] + vdir[1] * vdir[1] + vdir[2] * vdir[2]);
-		vdir[0] = vdir[0] / modul;
-		vdir[1] = vdir[1] / modul;
-		vdir[2] = vdir[2] / modul;
-
-		// Entorn VGI: Segons orientaci� dels eixos Polars (Vis_Polar)
-		if (Vis_Polar == POLARZ) { // (X,Y,Z)
-			opvN.x += (zDelta / 4.0) * vdir[0];
-			opvN.y += (zDelta / 4.0) * vdir[1];
-			n[0] += (zDelta / 4.0) * vdir[0];
-			n[1] += (zDelta / 4.0) * vdir[1];
-		}
-		else if (Vis_Polar == POLARY) { //(X,Y,Z) --> (Z,X,Y)
-			opvN.z += (zDelta / 4.0) * vdir[2];
-			opvN.x += (zDelta / 4.0) * vdir[0];
-			n[2] += (zDelta / 4.0) * vdir[2];
-			n[0] += (zDelta / 4.0) * vdir[0];
-		}
-		else if (Vis_Polar == POLARX) { //(X,Y,Z) --> (Y,Z,X)
-			opvN.y += (zDelta / 4.0) * vdir[1];
-			opvN.z += (zDelta / 4.0) * vdir[2];
-			n[1] += (zDelta / 4.0) * vdir[1];
-			n[2] += (zDelta / 4.0) * vdir[2];
-		}
-		InvalidateRect(NULL, false);
 	}
 
 	return CView::OnMouseWheel(nFlags, zDelta, pt);

@@ -477,7 +477,7 @@ void sis(GLint shaderId, glm::mat4 MatriuVista, glm::mat4 MatriuTG, bool sw_mat[
 
 			glUniformMatrix4fv(glGetUniformLocation(shaderId, "modelMatrix"), 1, GL_FALSE, &orbitMatrix[0][0]);
 			// Desactivar reflectivitat de llum d'emissió
-			//glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
+			glUniform4f(glGetUniformLocation(shaderId, "material.emission"), 0.0, 0.0, 0.0, 1.0);
 			// Dibujar órbita
 			DrawOrbit(SCALE_INC[scale_inc_index] * a, SCALE_INC[scale_inc_index] * b, (i - 1), 10000); // 10000 segmentos (para suavizar la línea)
 		}
