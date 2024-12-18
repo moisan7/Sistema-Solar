@@ -174,6 +174,13 @@ public:
 	double t;		// Paràmetre t pel Timer.
 	bool anima;		// Booleana que controla si l'animació és activa (TRUE) o no (FALSE)
 					//    dins la funció de control del rellotge OnTimer.
+	bool rotation;
+	bool translation;
+	bool translation_orbit;
+	bool sis_start;
+	float orbit_angle[9];		// ANGULO TRASLACION
+	float rotation_angle[10];	// ANGULO ROTACION
+	float speed_inc, speed_index;
 
 // Entorn VGI: Variables de l'objecte FRACTAL
 	char t_fractal;		// Tipus de fractal.
@@ -186,6 +193,67 @@ public:
 	GLdouble mida;	// Factor d'escala per calcular Volum de Visualització de l'objecte que encaixi.
 	CString nom;	// Nom de fitxer.
 	CString buffer; // Buffer que magatzema string caracters corresponent a variables double a printar en Status Bar (funció Barra_Estat).
+	// SISTEMA SOLAR
+	GLuint* texturesID_planets;
+	bool load_textures;
+	bool skyb;
+	bool draw_planets[9];
+	// Camera
+	vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	int target_planet = 0; 
+	// Moon
+	float moon_rotation_angle;
+	float moon_orbit_angle;
+	float jupiter_moon_rot[3];
+	float jupiter_moon_ort[3];
+	float saturn_titan_rot;
+	float saturn_titan_ort;
+	float unanos_titania_rot;
+	float unanos_titania_ort;
+	float neptune_triton_rot;
+	float neptune_triton_ort;
+	// ====== Buttons GUI ============
+	CButton m_btnStart;
+	// Show/Hide
+	bool showMenu;
+	CButton m_btnShowMenu;
+	CButton m_btnShowMercury;
+	CButton m_btnShowVenus;
+	CButton m_btnShowEarth;
+	CButton m_btnShowMars;
+	CButton m_btnShowJupiter;
+	CButton m_btnShowSaturn;
+	CButton m_btnShowUranus;
+	CButton m_btnShowNeptune;
+	CButton m_btnShowOrbits;
+	// Camera
+	bool cameraMenu;
+	CButton m_btnCameraMenu;
+	CButton m_btnCameraSun;
+	CButton m_btnCameraMercury;
+	CButton m_btnCameraVenus;
+	CButton m_btnCameraEarth;
+	CButton m_btnCameraMars;
+	CButton m_btnCameraJupiter;
+	CButton m_btnCameraSaturn;
+	CButton m_btnCameraUranus;
+	CButton m_btnCameraNeptune;
+	// Slider Speeds
+	bool speedMenu;
+	CButton m_btnSpeedMenu;
+	CSliderCtrl m_sliderSpeed;
+	int m_speedIndex = 0;
+	// Slider Scales
+	bool scaleMenu;
+	CButton m_btnScaleMenu;
+	CSliderCtrl m_sliderScale;
+	int m_scaleIndex = 4;
+	// Timer display
+	CTime m_currentDate;    // Current date and time for the timer display
+	CString m_dateString;   // String to hold the formatted date
+	CStatic m_timerLabel;   // Static text control to display the timer
+	CString m_planetName;
+	CStatic m_planetLabel;
 //-------------- Entorn VGI: Fi De Variables globals de CEntornVGIView
 
 // Operaciones
@@ -195,6 +263,8 @@ public:
 public:
 	virtual void OnDraw(CDC* pDC);  // Reemplazado para dibujar esta vista
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	void UpdateSpeedFromSlider();
+	void UpdateScaleFromSlider();
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -387,20 +457,8 @@ public:
 	afx_msg void OnUpdateObjecteCorbaBSpline(CCmdUI *pCmdUI);
 	afx_msg void OnObjectePuntsControl();
 	afx_msg void OnUpdateObjectePuntsControl(CCmdUI *pCmdUI);
-//	afx_msg void OnVistaGridXY();
-//	afx_msg void OnUpdateVistaGridXY(CCmdUI *pCmdUI);
-//	afx_msg void OnVistaGridXZ();
-//	afx_msg void OnUpdateVistaGridXZ(CCmdUI *pCmdUI);
-//	afx_msg void OnVistaGridYZ();
-//	afx_msg void OnUpdateVistaGridYZ(CCmdUI *pCmdUI);
-//	afx_msg void OnVistaGridXYZ();
-//	afx_msg void OnUpdateVistaGridXYZ(CCmdUI *pCmdUI);
 	afx_msg void OnIluminacio2Sides();
 	afx_msg void OnUpdateIluminacio2Sides(CCmdUI *pCmdUI);
-//	afx_msg void OnObjecteTexteBITMAP();
-//	afx_msg void OnUpdateObjecteTexteBitmap(CCmdUI* pCmdUI);
-//	afx_msg void OnObjecteTexteSTROKE();
-//	afx_msg void OnUpdateObjecteTexteSTROKE(CCmdUI* pCmdUI);
 	afx_msg void OnObjecteMatriuPrimitives();
 	afx_msg void OnUpdateObjecteMatriuPrimitives(CCmdUI* pCmdUI);
 	afx_msg void OnObjecteMatriuPrimitivesVBO();
@@ -443,6 +501,110 @@ public:
 	afx_msg void OnUpdateObjecteCorbaHermitte(CCmdUI* pCmdUI);
 	afx_msg void OnObjecteCorbaCatmullRom();
 	afx_msg void OnUpdateObjecteCorbaCatmullRom(CCmdUI* pCmdUI);
+	// AÑADIDO PARA EL SISTEMA SOLAR:
+	afx_msg void OnSistemasolarStart();
+	afx_msg void OnUpdateSistemasolarStart(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestRotacio();
+	afx_msg void OnUpdateSistemasolarTestRotacio(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestTranslacio();
+	afx_msg void OnUpdateSistemasolarTestTranslacio(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestTextures();
+	afx_msg void OnUpdateSistemasolarTestTextures(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarTestOrbita();
+	afx_msg void OnUpdateSistemasolarTestOrbita(CCmdUI* pCmdUI);
+	// Increment Speed
+	afx_msg void OnSistemasolarIncrementx0();
+	afx_msg void OnUpdateSistemasolarIncrementx0(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx1();
+	afx_msg void OnUpdateSistemasolarIncrementx1(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx2();
+	afx_msg void OnUpdateSistemasolarIncrementx2(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx5();
+	afx_msg void OnUpdateSistemasolarIncrementx5(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx10();
+	afx_msg void OnUpdateSistemasolarIncrementx10(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx100();
+	afx_msg void OnUpdateSistemasolarIncrementx100(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx200();
+	afx_msg void OnUpdateSistemasolarIncrementx200(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx500();
+	afx_msg void OnUpdateSistemasolarIncrementx500(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarIncrementx1000();
+	afx_msg void OnUpdateSistemasolarIncrementx1000(CCmdUI* pCmdUI);
+	// Show Planets
+	afx_msg void OnSistemasolarShowMercury();
+	afx_msg void OnUpdateSistemasolarShowMercury(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowVenus();
+	afx_msg void OnUpdateSistemasolarShowVenus(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowEarth();
+	afx_msg void OnUpdateSistemasolarShowEarth(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowMars();
+	afx_msg void OnUpdateSistemasolarShowMars(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowJupiter();
+	afx_msg void OnUpdateSistemasolarShowJupiter(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowSaturn();
+	afx_msg void OnUpdateSistemasolarShowSaturn(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowUranus();
+	afx_msg void OnUpdateSistemasolarShowUranus(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowNeptune();
+	afx_msg void OnUpdateSistemasolarShowNeptune(CCmdUI* pCmdUI);
+	afx_msg void OnSistemasolarShowOrbits();
+	afx_msg void OnUpdateSistemasolarShowOrbits(CCmdUI* pCmdUI);
+	// Camera Lock
+	afx_msg void OnLockonplanetSun();
+	afx_msg void OnLockonplanetMercury();
+	afx_msg void OnLockonplanetVenus();
+	afx_msg void OnLockonplanetEarth();
+	afx_msg void OnLockonplanetMars();
+	afx_msg void OnLockonplanetJupiter();
+	afx_msg void OnLockonplanetSaturn();
+	afx_msg void OnLockonplanetUranus();
+	afx_msg void OnLockonplanetNeptune();
+	afx_msg void OnUpdateLockonplanetSun(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetMercury(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetVenus(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetEarth(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetMars(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetJupiter(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetSaturn(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetUranus(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLockonplanetNeptune(CCmdUI* pCmdUI);
+	// ====== Buttons GUI ============
+	afx_msg void OnBtnStartClicked();
+	// Show / Hide
+	afx_msg void OnBtnShowMenu();
+	afx_msg void OnBtnShowMercury();
+	afx_msg void OnBtnShowVenus();
+	afx_msg void OnBtnShowEarth();
+	afx_msg void OnBtnShowMars();
+	afx_msg void OnBtnShowJupiter();
+	afx_msg void OnBtnShowSaturn();
+	afx_msg void OnBtnShowUranus();
+	afx_msg void OnBtnShowNeptune();
+	afx_msg void OnBtnShowOrbits();
+	// Camera
+	afx_msg void OnBtnCameraMenu();
+	afx_msg void OnBtnCameraSun();
+	afx_msg void OnBtnCameraMercury();
+	afx_msg void OnBtnCameraVenus();
+	afx_msg void OnBtnCameraEarth();
+	afx_msg void OnBtnCameraMars();
+	afx_msg void OnBtnCameraJupiter();
+	afx_msg void OnBtnCameraSaturn();
+	afx_msg void OnBtnCameraUranus();
+	afx_msg void OnBtnCameraNeptune();
+	// Slider Speeds
+	afx_msg void OnBtnSpeedMenu();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	// Slider Scales
+	afx_msg void OnBtnScaleMenu();
+	afx_msg void OnHScrollScale(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	// Fullscreen
+	afx_msg LRESULT OnForceFullscreen(WPARAM wParam, LPARAM lParam);
+	// Timer
+	void UpdateTimerDisplay();
+	// FIN AÑADIDO PARA EL SISTEMA SOLAR
+	
 };
 
 #ifndef _DEBUG  // Versión de depuración en EntornVGIView.cpp

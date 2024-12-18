@@ -54,6 +54,130 @@
 #define VAIXELL 'v'
 #define OBJ3DS '3'		// Objecte format 3DS
 #define OBJOBJ '4'		// Objecte format OBJ
+// SISTEMA SOLAR
+#define SIS 'L'
+const double M_PI = glm::pi<double>();
+const float INCREMENTADOR[9] = { 0, 1, 2, 5, 10, 100, 200, 500, 1000 };
+const float SCALE_INC[9] = { 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2 };
+const float ORBIT_SPEED[15] = {			// 1 SEGUNDO = 1 DIA TERRESTRE
+	2 * glm::pi<float>() / 88.0f,       // Mercury (88d)
+	2 * glm::pi<float>() / 225.0f,      // Venus (225d)
+	2 * glm::pi<float>() / 365.0f,      // Earth (365d)
+	2 * glm::pi<float>() / 687.0f,      // Mars (687d)
+	2 * glm::pi<float>() / 4333.0f,     // Jupiter (4333d)
+	2 * glm::pi<float>() / 10759.0f,    // Saturn (10759d)
+	2 * glm::pi<float>() / 30689.0f,    // Uranus (30689d)
+	2 * glm::pi<float>() / 60182.0f,    // Neptune (60182d)
+	2 * glm::pi<float>() / 27.32f,      // Moon (27.32d)
+	2 * glm::pi<float>() / 3.55f,       // Europa (3.55d)
+	2 * glm::pi<float>() / 7.15f,       // Ganymede (7.15d)
+	2 * glm::pi<float>() / 16.69f,      // Callisto (16.69d)
+	2 * glm::pi<float>() / 15.945f,     // Titan (15.945d)
+	2 * glm::pi<float>() / 8.706f,       // Titania (8.706d)
+	2 * glm::pi<float>() / 5.876f       // Triton (5.876d)
+};
+const float ECCENTRICITIES[15]= { // REAL
+	0.2056f,		// Mercury
+	0.0067f,		// Venus
+	0.0167f,		// Earth
+	0.0934f,		// Mars
+	0.0489f,		// Jupiter
+	0.0565f,		// Saturn
+	0.0463f,		// Uranus
+	0.0097f,		// Neptune
+	0.0549f,		// Moon
+	0.0094f,		// Europa
+	0.0013f,		// Ganymede
+	0.0074f,		// Callisto
+	0.0288f,		// Titan
+	0.0014f,		// Titania
+	0.00002f        // Triton
+};
+const float INCLINATION[8] = { // REAL (GRADOS)
+	7.00487f,	// Mercury
+	3.39471f, 	// Venus
+	0.00005f,	// Earth
+	1.85061f, 	// Mars
+	1.30463f, 	// Jupiter 
+	2.48524f, 	// Saturn
+	0.76986f, 	// Uranus
+	1.76917f, 	// Neptune
+};
+const float ROTATION_SPEED[16] = { // CORRECTO
+	365.0f * (1.0f / 25.0f),	// Sun: 25.0 veces más lento
+	365.0f * (1.0f / 58.6f),	// Mercury: 58.6 veces más lento
+	365.0f * (1.0f / 243.0f),	// Venus: 243 veces más lento
+	365.0f,						// Earth: BASE (2pi/24)
+	365.0f * 1.025f,            // Mars: 1.025 veces más rápido
+	365.0f * 2.4f,				// Jupiter: 2.4 veces más rápido
+	365.0f * 2.24f,				// Saturn: 2.24 veces más rápido
+	-365.0f * 1.4f,				// Uranus: 1.4 veces más rápido
+	365.0f * 1.49f ,            // Neptune: 1.49 veces más rápido
+	365.0f * (1.0f / 27.32f),	// Moon: 27.32 veces más lento
+	365.0f * (1.0f / 3.55f),    // Europa: 3.55 veces más lento
+	365.0f * (1.0f / 7.15f),    // Ganymede: 7.15 veces más lento
+	365.0f * (1.0f / 16.69f),   // Callisto: 16.69 veces más lento
+	365.0f * (1.0f / 15.945f),  // Titan: 15.945 veces más lento
+	365.0f * (1.0f / 16.5f),    // Titania: 16.5 veces más lento
+	365.0f * (1.0f / 5.876f)    // Triton: 5.876 veces más lento
+};
+const float SEMIMAJOR_AXIS[15] = { // REAL (UA) * 100
+	38.7f,      // Mercury
+	72.3f,      // Venus
+	100.0f,     // Earth
+	152.0f,     // Mars
+	520.0f,     // Jupiter
+	956.0f,     // Saturn
+	1930.0f,    // Uranus
+	3040.0f,    // Neptune
+	12.85f,     // Moon * 50 (relative to Earth)
+	44.83f,      // Europa * 100 (relative to Jupiter)
+	71.54f,      // Ganymede * 100 (relative to Jupiter)
+	125.85f,      // Callisto * 100 (relative to Jupiter)
+	81.65f,        // Titan * 100 (relative to Saturn)
+	45.24f,     // Titania (Manualy adjusted)
+	50.35f     // Triton (Manualy adjusted)
+};
+const float ROTATION_ANGLE[9] = { // INCLINACION DEL EJE (ROTATION_AXIS)
+		glm::radians(7.25f),    // Sun
+		glm::radians(0.034f),   // Mercury
+		glm::radians(177.4f),	// Venus
+		glm::radians(23.44f),	// Earth
+		glm::radians(25.2f),    // Mars
+		glm::radians(3.1f),     // Jupiter
+		glm::radians(26.7f),    // Saturn
+		glm::radians(97.8f),	// Uranus
+		glm::radians(28.3f)		// Neptune
+};
+const glm::vec3 ROTATION_AXIS[9] = { // EJE SOBRE EL QUE SE APLICA LA INCLINACION
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Mercury
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Venus
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Earth
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Mars
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Jupiter
+		glm::vec3(1.0f, 0.0f, 0.0f),    // Saturn
+		glm::vec3(0.0f, 1.0f, 0.0f),	// Uranus
+		glm::vec3(1.0f, 0.0f, 0.0f),	// Neptune
+};
+const float P_SCALE[17] = { // Todo multiplicado * 10000
+	  93.058f / 30.0f,    // Sun
+	  0.326f,             // Mercury
+	  0.809f,             // Venus
+	  0.851f,             // Earth
+	  0.453f,             // Mars
+	  9.34f / 5.0f,       // Jupiter
+	  7.78f / 5.0f,       // Saturn
+	  3.39f / 2.5f,       // Uranus
+	  3.29f / 2.5f,       // Neptune
+	  0.232f,			  // Moon
+	  0.208f,			  // Europa
+	  0.352f,			  // Ganymede
+	  0.322f,			  // Callisto
+	  (7.78f / 5.0f) * 1.5f, // Saturns Ring
+	  0.311f,              // Titan
+	  0.195f,              // Titania
+	  0.3f               // Triton
+};
 
 //-------------- VGI: Tipus d'Iluminacio
 #define PUNTS 'P'
@@ -171,6 +295,7 @@ struct INSTANCIA
 {	CPunt3D VTras;	// Vector de Traslació
 	CPunt3D VScal;	// Vector d'Escalatge
 	CPunt3D VRota;	// Vector de Rotació
+	float rotationAngle; // Ángulo de rotación
 };
 
 // --------------- VGI: Coeficients equació d'atenuació de la llum fatt=1/(ad2+bd+c)

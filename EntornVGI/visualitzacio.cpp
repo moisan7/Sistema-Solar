@@ -22,7 +22,7 @@
 #include "escena.h"
 
 // Iluminació: Configurar iluminació de l'escena
-void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool ll_amb, LLUM* lumin, 
+void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool ll_amb, LLUM* lumin,
 	char obj, bool frnt_fcs, int step)
 {
 	//bool ll_amb=true;
@@ -33,25 +33,25 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	GLfloat especular[] = { 0.0,0.0,0.0,1.0 };
 	GLfloat ambientg[] = { .5,.5,.5,1.0 };
 
-// Definició de llum ambient segons booleana ll_amb
-//	if (ll_amb) glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientg);
-//		else glLightModelfv(GL_LIGHT_MODEL_AMBIENT,especular);
+	// Definició de llum ambient segons booleana ll_amb
+	//	if (ll_amb) glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientg);
+	//		else glLightModelfv(GL_LIGHT_MODEL_AMBIENT,especular);
 	if (ll_amb) glUniform4f(glGetUniformLocation(sh_programID, "LightModelAmbient"), ambientg[0], ambientg[1], ambientg[2], ambientg[3]);
 	else glUniform4f(glGetUniformLocation(sh_programID, "LightModelAmbient"), especular[0], especular[1], especular[2], especular[3]);
 
-// Passar llum fixe a Coordenades Món o llum lligada a càmera
+	// Passar llum fixe a Coordenades Món o llum lligada a càmera
 	glUniform1i(glGetUniformLocation(sh_programID, "fixedLight"), ifix);
 
-// Llum #0 - (+Z)
-// Conversió angles graus -> radians
+	// Llum #0 - (+Z)
+	// Conversió angles graus -> radians
 	angv = lumin[0].posicio.alfa * PI / 180;
 	angh = lumin[0].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes per a la posició de la llum
+	// Conversió Coord. esfèriques -> Coord. cartesianes per a la posició de la llum
 	position[0] = lumin[0].posicio.R * cos(angh) * cos(angv);
 	position[1] = lumin[0].posicio.R * sin(angh) * cos(angv);
 	position[2] = lumin[0].posicio.R * sin(angv);
-	position[3]=1.0;
+	position[3] = 1.0;
 	//	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[0].position"), position[0], position[1], position[2], position[3]);
 
@@ -77,28 +77,28 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glEnable(GL_LIGHT0);	//	else glDisable(GL_LIGHT0);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[0].sw_light"), lumin[0].encesa);
 
-// Llum #1 (+X)
-// Conversió angles graus -> radians
-	angv = lumin[1].posicio.alfa*PI / 180;
-	angh = lumin[1].posicio.beta*PI / 180;
+	// Llum #1 (+X)
+	// Conversió angles graus -> radians
+	angv = lumin[1].posicio.alfa * PI / 180;
+	angh = lumin[1].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes per a la posició de la llum
-	position[0] = lumin[1].posicio.R*cos(angh)*cos(angv);
-	position[1] = lumin[1].posicio.R*sin(angh)*cos(angv);
-	position[2] = lumin[1].posicio.R*sin(angv);
+	// Conversió Coord. esfèriques -> Coord. cartesianes per a la posició de la llum
+	position[0] = lumin[1].posicio.R * cos(angh) * cos(angv);
+	position[1] = lumin[1].posicio.R * sin(angh) * cos(angv);
+	position[2] = lumin[1].posicio.R * sin(angv);
 	position[3] = 1.0;
 	//glLightfv(GL_LIGHT1, GL_POSITION, position);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[1].position"), position[0], position[1], position[2], position[3]);
 
-//	glLightfv(GL_LIGHT1, GL_DIFFUSE, lumin[1].difusa);
+	//	glLightfv(GL_LIGHT1, GL_DIFFUSE, lumin[1].difusa);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[1].diffuse"), lumin[0].difusa[1], lumin[1].difusa[1], lumin[1].difusa[2], lumin[1].difusa[3]);
-//	glLightfv(GL_LIGHT1, GL_SPECULAR, lumin[1].especular);
+	//	glLightfv(GL_LIGHT1, GL_SPECULAR, lumin[1].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[1].specular"), lumin[1].especular[0], lumin[1].especular[1], lumin[1].especular[2], lumin[1].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-//	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, lumin[1].atenuacio.c);
-//	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, lumin[1].atenuacio.b);
-//	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, lumin[1].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+	//	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, lumin[1].atenuacio.c);
+	//	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, lumin[1].atenuacio.b);
+	//	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, lumin[1].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[1].attenuation"), lumin[1].atenuacio.a, lumin[1].atenuacio.b, lumin[1].atenuacio.c);
 
 	//	if (lumin[1].restringida) {	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lumin[1].spotdirection);
@@ -113,15 +113,15 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glEnable(GL_LIGHT1);	//	glDisable(GL_LIGHT1);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[1].sw_light"), lumin[1].encesa);
 
-// Llum #2 (+Y)
-// Conversió angles graus -> radians
-	angv = lumin[2].posicio.alfa*PI / 180;
-	angh = lumin[2].posicio.beta*PI / 180;
-				
-// Conversió Coord. esfèriques -> Coord. cartesianes
-	position[0] = lumin[2].posicio.R*cos(angh)*cos(angv);
-	position[1] = lumin[2].posicio.R*sin(angh)*cos(angv);
-	position[2] = lumin[2].posicio.R*sin(angv);
+	// Llum #2 (+Y)
+	// Conversió angles graus -> radians
+	angv = lumin[2].posicio.alfa * PI / 180;
+	angh = lumin[2].posicio.beta * PI / 180;
+
+	// Conversió Coord. esfèriques -> Coord. cartesianes
+	position[0] = lumin[2].posicio.R * cos(angh) * cos(angv);
+	position[1] = lumin[2].posicio.R * sin(angh) * cos(angv);
+	position[2] = lumin[2].posicio.R * sin(angv);
 	position[3] = 1.0;
 	//	glLightfv(GL_LIGHT2, GL_POSITION, position);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[2].position"), position[0], position[1], position[2], position[3]);
@@ -131,10 +131,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT2, GL_SPECULAR, lumin[2].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[2].specular"), lumin[2].especular[0], lumin[2].especular[1], lumin[2].especular[2], lumin[2].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, lumin[2].atenuacio.c);
-	//	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, lumin[2].atenuacio.b);
-	//	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, lumin[2].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, lumin[2].atenuacio.c);
+		//	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, lumin[2].atenuacio.b);
+		//	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, lumin[2].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[2].attenuation"), lumin[2].atenuacio.a, lumin[2].atenuacio.b, lumin[2].atenuacio.c);
 
 	//	if (lumin[2].restringida) {	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lumin[2].spotdirection);
@@ -149,15 +149,15 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glEnable(GL_LIGHT2);	//	glDisable(GL_LIGHT2);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[2].sw_light"), lumin[2].encesa);
 
-// Llum #3 (Z=Y=X)
-// Conversió angles graus -> radians
-	angv = lumin[3].posicio.alfa*PI / 180;
-	angh = lumin[3].posicio.beta*PI / 180;
+	// Llum #3 (Z=Y=X)
+	// Conversió angles graus -> radians
+	angv = lumin[3].posicio.alfa * PI / 180;
+	angh = lumin[3].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes
-	position[0] = lumin[3].posicio.R*cos(angh)*cos(angv);
-	position[1] = lumin[3].posicio.R*sin(angh)*cos(angv);
-	position[2] = lumin[3].posicio.R*sin(angv);
+	// Conversió Coord. esfèriques -> Coord. cartesianes
+	position[0] = lumin[3].posicio.R * cos(angh) * cos(angv);
+	position[1] = lumin[3].posicio.R * sin(angh) * cos(angv);
+	position[2] = lumin[3].posicio.R * sin(angv);
 	position[3] = 1.0;
 	//glLightfv(GL_LIGHT3, GL_POSITION, position);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[3].position"), position[0], position[1], position[2], position[3]);
@@ -167,10 +167,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT3, GL_SPECULAR, lumin[3].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[3].specular"), lumin[3].especular[0], lumin[3].especular[1], lumin[3].especular[2], lumin[3].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, lumin[3].atenuacio.c);
-	//	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, lumin[3].atenuacio.b);
-	//	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, lumin[3].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, lumin[3].atenuacio.c);
+		//	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, lumin[3].atenuacio.b);
+		//	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, lumin[3].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[3].attenuation"), lumin[3].atenuacio.a, lumin[3].atenuacio.b, lumin[3].atenuacio.c);
 
 	//	if (lumin[3].restringida) {	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, lumin[3].spotdirection);
@@ -185,15 +185,15 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glEnable(GL_LIGHT3);	// glDisable(GL_LIGHT3);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[3].sw_light"), lumin[3].encesa);
 
-// Llum #4 (-Z)
-// Conversió angles graus -> radians
-	angv = lumin[4].posicio.alfa*PI / 180;
-	angh = lumin[4].posicio.beta*PI / 180;
-				
-// Conversió Coord. esfèriques -> Coord. cartesianes
-	position[0] = lumin[4].posicio.R*cos(angh)*cos(angv);
-	position[1] = lumin[4].posicio.R*sin(angh)*cos(angv);
-	position[2] = lumin[4].posicio.R*sin(angv);
+	// Llum #4 (-Z)
+	// Conversió angles graus -> radians
+	angv = lumin[4].posicio.alfa * PI / 180;
+	angh = lumin[4].posicio.beta * PI / 180;
+
+	// Conversió Coord. esfèriques -> Coord. cartesianes
+	position[0] = lumin[4].posicio.R * cos(angh) * cos(angv);
+	position[1] = lumin[4].posicio.R * sin(angh) * cos(angv);
+	position[2] = lumin[4].posicio.R * sin(angv);
 	position[3] = 1.0;
 	//glLightfv(GL_LIGHT4, GL_POSITION, position);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[4].position"), position[0], position[1], position[2], position[3]);
@@ -203,10 +203,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT4, GL_SPECULAR, lumin[4].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[4].specular"), lumin[4].especular[0], lumin[4].especular[1], lumin[4].especular[2], lumin[4].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, lumin[4].atenuacio.c);
-	//	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, lumin[4].atenuacio.b);
-	//	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, lumin[4].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, lumin[4].atenuacio.c);
+		//	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, lumin[4].atenuacio.b);
+		//	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, lumin[4].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[4].attenuation"), lumin[4].atenuacio.a, lumin[4].atenuacio.b, lumin[4].atenuacio.c);
 
 	//	if (lumin[4].restringida) {	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lumin[4].spotdirection);
@@ -221,12 +221,12 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glEnable(GL_LIGHT4);	//	else glDisable(GL_LIGHT4);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[4].sw_light"), lumin[4].encesa);
 
-// Llum #5
-// Conversió angles graus -> radians
+	// Llum #5
+	// Conversió angles graus -> radians
 	angv = lumin[5].posicio.alfa * PI / 180;
 	angh = lumin[5].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes
+	// Conversió Coord. esfèriques -> Coord. cartesianes
 	position[0] = lumin[5].posicio.R * cos(angh) * cos(angv);
 	position[1] = lumin[5].posicio.R * sin(angh) * cos(angv);
 	position[2] = lumin[5].posicio.R * sin(angv);
@@ -239,10 +239,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT5, GL_SPECULAR, lumin[5].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[5].specular"), lumin[5].especular[0], lumin[5].especular[1], lumin[5].especular[2], lumin[5].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, lumin[5].atenuacio.c);
-	//	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, lumin[5].atenuacio.b);
-	//	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, lumin[5].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, lumin[5].atenuacio.c);
+		//	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, lumin[5].atenuacio.b);
+		//	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, lumin[5].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[5].attenuation"), lumin[5].atenuacio.a, lumin[5].atenuacio.b, lumin[5].atenuacio.c);
 
 	//	if (lumin[5].restringida) {	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, lumin[5].spotdirection);
@@ -253,15 +253,15 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[5].spotDirection"), lumin[5].spotdirection[0], lumin[5].spotdirection[1], lumin[5].spotdirection[2]);
 	glUniform1f(glGetUniformLocation(sh_programID, "LightSource[5].spotCosCutoff"), lumin[5].spotcoscutoff);
 	glUniform1f(glGetUniformLocation(sh_programID, "LightSource[5].spotExponent"), lumin[5].spotexponent);
-//	else glDisable(GL_LIGHT5);
+	//	else glDisable(GL_LIGHT5);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[5].sw_light"), lumin[5].encesa);
 
-// Llum #6 
-// Conversió angles graus -> radians
+	// Llum #6 
+	// Conversió angles graus -> radians
 	angv = lumin[6].posicio.alfa * PI / 180;
 	angh = lumin[6].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes
+	// Conversió Coord. esfèriques -> Coord. cartesianes
 	position[0] = lumin[6].posicio.R * cos(angh) * cos(angv);
 	position[1] = lumin[6].posicio.R * sin(angh) * cos(angv);
 	position[2] = lumin[6].posicio.R * sin(angv);
@@ -274,10 +274,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT6, GL_SPECULAR, lumin[6].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[6].specular"), lumin[6].especular[0], lumin[6].especular[1], lumin[6].especular[2], lumin[6].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT6, GL_CONSTANT_ATTENUATION, lumin[6].atenuacio.c);
-	//	glLightf(GL_LIGHT6, GL_LINEAR_ATTENUATION, lumin[6].atenuacio.b);
-	//	glLightf(GL_LIGHT6, GL_QUADRATIC_ATTENUATION, lumin[6].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT6, GL_CONSTANT_ATTENUATION, lumin[6].atenuacio.c);
+		//	glLightf(GL_LIGHT6, GL_LINEAR_ATTENUATION, lumin[6].atenuacio.b);
+		//	glLightf(GL_LIGHT6, GL_QUADRATIC_ATTENUATION, lumin[6].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[6].attenuation"), lumin[6].atenuacio.a, lumin[6].atenuacio.b, lumin[6].atenuacio.c);
 
 	//	if (lumin[6].restringida) {	glLightfv(GL_LIGHT6, GL_SPOT_DIRECTION, lumin[6].spotdirection);
@@ -288,16 +288,16 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[6].spotDirection"), lumin[6].spotdirection[0], lumin[6].spotdirection[1], lumin[6].spotdirection[2]);
 	glUniform1f(glGetUniformLocation(sh_programID, "LightSource[6].spotCosCutoff"), lumin[6].spotcoscutoff);
 	glUniform1f(glGetUniformLocation(sh_programID, "LightSource[6].spotExponent"), lumin[6].spotexponent);
-	
+
 	// glEnable(GL_LIGHT6)	//	glDisable(GL_LIGHT6);
 	glUniform1i(glGetUniformLocation(sh_programID, "LightSource[6].sw_light"), lumin[6].encesa);
 
-// Llum #7 
-// Conversió angles graus -> radians
+	// Llum #7 
+	// Conversió angles graus -> radians
 	angv = lumin[7].posicio.alfa * PI / 180;
 	angh = lumin[7].posicio.beta * PI / 180;
 
-// Conversió Coord. esfèriques -> Coord. cartesianes
+	// Conversió Coord. esfèriques -> Coord. cartesianes
 	position[0] = lumin[7].posicio.R * cos(angh) * cos(angv);
 	position[1] = lumin[7].posicio.R * sin(angh) * cos(angv);
 	position[2] = lumin[7].posicio.R * sin(angv);
@@ -310,10 +310,10 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//	glLightfv(GL_LIGHT7, GL_SPECULAR, lumin[7].especular);
 	glUniform4f(glGetUniformLocation(sh_programID, "LightSource[7].specular"), lumin[7].especular[0], lumin[7].especular[1], lumin[7].especular[2], lumin[7].especular[3]);
 
-// Coeficients factor atenuació f_att=1/(ad2+bd+c)
-	//	glLightf(GL_LIGHT7, GL_CONSTANT_ATTENUATION, lumin[7].atenuacio.c);
-	//	glLightf(GL_LIGHT7, GL_LINEAR_ATTENUATION, lumin[7].atenuacio.b);
-	//	glLightf(GL_LIGHT7, GL_QUADRATIC_ATTENUATION, lumin[7].atenuacio.a);
+	// Coeficients factor atenuació f_att=1/(ad2+bd+c)
+		//	glLightf(GL_LIGHT7, GL_CONSTANT_ATTENUATION, lumin[7].atenuacio.c);
+		//	glLightf(GL_LIGHT7, GL_LINEAR_ATTENUATION, lumin[7].atenuacio.b);
+		//	glLightf(GL_LIGHT7, GL_QUADRATIC_ATTENUATION, lumin[7].atenuacio.a);
 	glUniform3f(glGetUniformLocation(sh_programID, "LightSource[7].attenuation"), lumin[7].atenuacio.a, lumin[7].atenuacio.b, lumin[7].atenuacio.c);
 
 	//	if (lumin[5].restringida) {	glLightfv(GL_LIGHT7, GL_SPOT_DIRECTION, lumin[7].spotdirection);
@@ -331,29 +331,29 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 	//glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
 
 // Selecció del model d'iluminació segons variable ilumin
-	switch(ilumin)
+	switch (ilumin)
 	{
 	case PUNTS:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 		break;
 
 	case FILFERROS:
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		break;
 
-    case PLANA:
+	case PLANA:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-// PRÀCTICA 3: Crida a la funció pel càlcul dels vectors normals a les cares si l'objecte és un fractal
-   
-		// Il.luminació per cares planes
-		glShadeModel(GL_FLAT); 
+		// PRÀCTICA 3: Crida a la funció pel càlcul dels vectors normals a les cares si l'objecte és un fractal
+
+				// Il.luminació per cares planes
+		glShadeModel(GL_FLAT);
 		break;
 
 	case SUAU:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-// PRÀCTICA 3: Crida a la funció pel càlcul dels vectors normals a les cares si l'objecte és un fractal
+		// PRÀCTICA 3: Crida a la funció pel càlcul dels vectors normals a les cares si l'objecte és un fractal
 
-		// Il.luminació per cares suavitzat
+				// Il.luminació per cares suavitzat
 		glShadeModel(GL_SMOOTH);
 		break;
 	}
@@ -365,149 +365,124 @@ void Iluminacio(GLint sh_programID, char ilumin, bool ifix, bool ilu2sides, bool
 // Projeccio_Orto: Definició Viewport i glOrtho 
 // ---- Entorn VGI: ATENCIÓ!!. CAL DEFINIR PARÀMETRES DE LA FUNCIÓ
 glm::mat4 Projeccio_Orto()
-{   
+{
 	glm::mat4 MatriuProjeccio(1.0);
-// ---- Entorn VGI: ATENCIÓ!!. ESPECIFICACIO DELS PARÀMETRES DE PROJECCIÓ ORTOGRÀFICA
-//			        QUE ES CARREGUEN A LA MATRIU DE PROJECCIÓ GL_PROJECTION
+	// ---- Entorn VGI: ATENCIÓ!!. ESPECIFICACIO DELS PARÀMETRES DE PROJECCIÓ ORTOGRÀFICA
+	//			        QUE ES CARREGUEN A LA MATRIU DE PROJECCIÓ GL_PROJECTION
 	return MatriuProjeccio;
 }
 
 // Vista_Ortogràfica: Ilumina i dibuixa l'escena. Crida a la funció glm::LookAt segons la variable prj 
 //				(planta, alçat, perfil o axonometrica).
-glm::mat4 Vista_Ortografica(GLuint sh_programID, int prj,GLdouble Raux,CColor col_fons,CColor col_object,char objecte,GLdouble mida,int step,
-				bool frnt_fcs, bool oculta, bool testv,
-				char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides, 
-				bool eix, CMask3D reixa, CPunt3D hreixa)
-{
-	glm::mat4 MatriuVista(1.0);
-
-// Iluminacio movent-se amb la camara (abans glm::lookAt() )
-	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
-
-// Implementació de planta,alçat,perfil i isomètrica 
-// ---- Entorn VGI: ATENCIÓ!!. ESPECIFICACIO DEL PUNT DE VISTA
-//								Cal definir el punt de vista (glm::lookAt() ) en funció del
-//								tipus de projecció definit a la variable prj.
-
-// Pas Matriu a shader
-	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
-
-// Neteja dels buffers de color i profunditat
-	Fons(col_fons);
-
-// Iluminacio fixe respecte la camara (després glm::LookAt() )
-	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
-
-// Test de Visibilitat
-	if (testv) glEnable(GL_CULL_FACE);
-		else glDisable(GL_CULL_FACE);
-
-// Ocultacions (Z-buffer)
-	if (oculta) glEnable(GL_DEPTH_TEST);
-		else glDisable(GL_DEPTH_TEST);
-	
-	return MatriuVista;
-}
+glm::mat4 Vista_Ortografica(GLuint sh_programID, int prj, GLdouble Raux, CColor col_fons, CColor col_object, char objecte, GLdouble mida, int step,
+	bool frnt_fcs, bool oculta, bool testv,
+	char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
+	bool eix, CMask3D reixa, CPunt3D hreixa)
+{return glm::mat4(1.0);}
 
 // -------- Entorn VGI: PERSPECTIVA (Funcions Projeccio_Perspectiva i Vista_Esferica)
 
 // Projeccio_Perspectiva: Definició Viewport i glm::perspective
-glm::mat4 Projeccio_Perspectiva(GLuint sh_programID, int minx,int miny,GLsizei w,GLsizei h,double zoom)
+glm::mat4 Projeccio_Perspectiva(GLuint sh_programID, int minx, int miny, GLsizei w, GLsizei h, double zoom)
 {
 	glm::mat4 MatriuProjeccio(1.0);
 
-// Definició Viewport
-	glViewport(minx,miny,w,h);
-	if (h==0) h=1;
+	// Definició Viewport
+	glViewport(minx, miny, w, h);
+	if (h == 0) h = 1;
 
-// PROJECCIO PERSPECTIVA.Definim volum de visualització adaptant-lo 
-//	 a les mides actuals de la finestra windows. Amb glm::perspective()
+	// PROJECCIO PERSPECTIVA.Definim volum de visualització adaptant-lo 
+	//	 a les mides actuals de la finestra windows. Amb glm::perspective()
 	if (w >= h) MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
 	else MatriuProjeccio = glm::perspective(glm::radians(60.0), 1.0 * w / h, p_near, p_far);
 
-// Pas Matriu a shader
+	// Pas Matriu a shader
 	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "projectionMatrix"), 1, GL_FALSE, &MatriuProjeccio[0][0]);
 
-// Activació matriu MODELVIEW (tancar matriu PROJECTION)
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+	// Activació matriu MODELVIEW (tancar matriu PROJECTION)
+		//glMatrixMode(GL_MODELVIEW);
+		//glLoadIdentity();
 
 	return MatriuProjeccio;
 }
 
 // Vista_Esferica: Definició gluLookAt amb possibilitat de moure el punt de vista interactivament amb el ratolí, 
 //					ilumina i dibuixa l'escena
-glm::mat4 Vista_Esferica(GLuint sh_programID,CEsfe3D opv,char VPol,bool pant,CPunt3D tr,CPunt3D trF,
-				 CColor col_fons,CColor col_object,char objecte,double mida,int step, 
-				 bool frnt_fcs, bool oculta, bool testv,
-				 char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
-				 bool eix, CMask3D reixa, CPunt3D hreixa)
-{    
-	GLdouble cam[3],up[3];
+glm::mat4 Vista_Esferica(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant, CPunt3D tr, CPunt3D trF,
+	CColor col_fons, CColor col_object, char objecte, double mida, int step,
+	bool frnt_fcs, bool oculta, bool testv,
+	char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
+	bool eix, CMask3D reixa, CPunt3D hreixa, glm::vec3 targetPos) // Añadimos targetPos
+{
+	GLdouble cam[3], up[3];
 	glm::mat4 MatriuVista(1.0);
-	// Matrius Traslació
 	glm::mat4 TransMatrix(1.0);
 
-// Conversió angles radians -> graus
-   	opv.alfa=opv.alfa*PI/180;
-    opv.beta=opv.beta*PI/180;
+	// Conversió angles radians -> graus
+	opv.alfa = opv.alfa * PI / 180;
+	opv.beta = opv.beta * PI / 180;
 
-	if(opv.R<1.0) opv.R=1.0;
+	if (opv.R < 1.0) opv.R = 1.0;
 
-// Neteja dels buffers de color i profunditat
+	// Neteja dels buffers de color i profunditat
 	Fons(col_fons);
 
-// Posició càmera i vector cap amunt
-	if (VPol==POLARZ) { cam[0]=opv.R*cos(opv.beta)*cos(opv.alfa);
-						cam[1]=opv.R*sin(opv.beta)*cos(opv.alfa);
-						cam[2]=opv.R*sin(opv.alfa);		
-						up[0]=-cos(opv.beta)*sin(opv.alfa);
-						up[1]=-sin(opv.beta)*sin(opv.alfa);
-						up[2]=cos(opv.alfa);	}
-		else if (VPol==POLARY) {	cam[0]=opv.R*sin(opv.beta)*cos(opv.alfa);
-									cam[1]=opv.R*sin(opv.alfa);
-									cam[2]=opv.R*cos(opv.beta)*cos(opv.alfa);		
-									up[0]=-sin(opv.beta)*sin(opv.alfa);
-									up[1]=cos(opv.alfa);
-									up[2]=-cos(opv.beta)*sin(opv.alfa);		}
-			else {	cam[0]=opv.R*sin(opv.alfa);
-					cam[1]=opv.R*cos(opv.beta)*cos(opv.alfa);
-					cam[2]=opv.R*sin(opv.beta)*cos(opv.alfa);		
-					up[0]=cos(opv.alfa);
-					up[1]=-cos(opv.beta)*sin(opv.alfa);
-					up[2]=-sin(opv.beta)*sin(opv.alfa);		}
+	// Posició càmera i vector cap amunt
+	if (VPol == POLARZ) {
+		cam[0] = targetPos.x + opv.R * cos(opv.beta) * cos(opv.alfa);
+		cam[1] = targetPos.y + opv.R * sin(opv.beta) * cos(opv.alfa);
+		cam[2] = targetPos.z + opv.R * sin(opv.alfa);
+		up[0] = -cos(opv.beta) * sin(opv.alfa);
+		up[1] = -sin(opv.beta) * sin(opv.alfa);
+		up[2] = cos(opv.alfa);
+	}
+	else if (VPol == POLARY) {
+		cam[0] = targetPos.x + opv.R * sin(opv.beta) * cos(opv.alfa);
+		cam[1] = targetPos.y + opv.R * sin(opv.alfa);
+		cam[2] = targetPos.z + opv.R * cos(opv.beta) * cos(opv.alfa);
+		up[0] = -sin(opv.beta) * sin(opv.alfa);
+		up[1] = cos(opv.alfa);
+		up[2] = -cos(opv.beta) * sin(opv.alfa);
+	}
+	else {
+		cam[0] = targetPos.x + opv.R * sin(opv.alfa);
+		cam[1] = targetPos.y + opv.R * cos(opv.beta) * cos(opv.alfa);
+		cam[2] = targetPos.z + opv.R * sin(opv.beta) * cos(opv.alfa);
+		up[0] = cos(opv.alfa);
+		up[1] = -cos(opv.beta) * sin(opv.alfa);
+		up[2] = -sin(opv.beta) * sin(opv.alfa);
+	}
 
-// Iluminacio movent-se amb la camara (abans glm::lookAt() )
-	if (!ifix) Iluminacio(sh_programID,iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
+	// Iluminacio movent-se amb la camara (abans glm::lookAt())
+	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Opció pan: desplaçament del Centre de l'esfera (pant=1)
-	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));	//glTranslatef(tr.x, tr.y, tr.z);
-	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z));	// Traslació fixada amb la INSERT dins l'opció pan
+	// Opció pan: desplaçament del Centre de l'esfera (pant=1)
+	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));
+	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z));
 
-// Especificació del punt de vista
-   //gluLookAt(cam[0],cam[1],cam[2],0.,0.,0.,up[0],up[1],up[2]);
-   MatriuVista = glm::lookAt(
-	   glm::vec3(cam[0], cam[1], cam[2]), // Camera is here
-	   glm::vec3(0, 0, 0), // and looks here
-	   glm::vec3(up[0], up[1], up[2])  // Head is up (set to 0,-1,0 to look upside-down)
-	   );
+	// Especificació del punt de vista
+	MatriuVista = glm::lookAt(
+		glm::vec3(cam[0], cam[1], cam[2]), // Camera position
+		targetPos, // Focus on target
+		glm::vec3(up[0], up[1], up[2])  // Up vector
+	);
 
-// Concatenar matrius Traslació amb la de càmera per al pan
-   MatriuVista = TransMatrix * MatriuVista;
+	// Concatenar matrius Traslació amb la de càmera per al pan
+	MatriuVista = TransMatrix * MatriuVista;
 
-// Pas Matriu Vista a shader
-   glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
+	// Pas Matriu Vista a shader
+	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
 
-// Iluminacio fixe respecte la camara (després gllookAt() )
-   if (ifix) Iluminacio(sh_programID,iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
+	// Iluminacio fixe respecte la camara (després gllookAt())
+	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Test de Visibilitat
+	// Test de Visibilitat
 	if (testv) glEnable(GL_CULL_FACE);
-		else glDisable(GL_CULL_FACE);
+	else glDisable(GL_CULL_FACE);
 
-// Ocultacions (Z-buffer)
+	// Ocultacions (Z-buffer)
 	if (oculta) glEnable(GL_DEPTH_TEST);
-		else glDisable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
 
 	return MatriuVista;
 }
@@ -516,48 +491,49 @@ glm::mat4 Vista_Esferica(GLuint sh_programID,CEsfe3D opv,char VPol,bool pant,CPu
 //Vista_Navega: Definició glm::lookAt directament per paràmetre, sense esfèriques.
 //              amb possibilitat de moure el punt de vista interactivament amb les
 //				tecles de cursor per poder navegar.
-glm::mat4 Vista_Navega(GLuint sh_programID, CPunt3D pv, GLdouble n[3],GLdouble v[3],bool pant,CPunt3D tr,CPunt3D trF,
-				  CColor col_fons,CColor col_object,char objecte,bool color, int step,
-				  bool frnt_fcs, bool oculta, bool testv,
-				  char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
-				  bool eix, CMask3D reixa, CPunt3D hreixa)
-{   double altfar=0;
+glm::mat4 Vista_Navega(GLuint sh_programID, CPunt3D pv, GLdouble n[3], GLdouble v[3], bool pant, CPunt3D tr, CPunt3D trF,
+	CColor col_fons, CColor col_object, char objecte, bool color, int step,
+	bool frnt_fcs, bool oculta, bool testv,
+	char iluminacio, bool llum_amb, LLUM* lumi, bool ifix, bool il2sides,
+	bool eix, CMask3D reixa, CPunt3D hreixa)
+{
+	double altfar = 0;
 	glm::mat4 MatriuVista(1.0), TransMatrix(1.0);
 
-// Neteja dels buffers de color i profunditat
+	// Neteja dels buffers de color i profunditat
 	Fons(col_fons);
 
-// Iluminacio movent-se amb la camara (abans glm::lookAt() )
-	if (!ifix) Iluminacio(sh_programID,iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
+	// Iluminacio movent-se amb la camara (abans glm::lookAt() )
+	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Opció pan: desplaçament del Centre de l'esfera (pant=true)
+	// Opció pan: desplaçament del Centre de l'esfera (pant=true)
 	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));	//glTranslatef(tr.x, tr.y, tr.z);
 	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z)); //glTranslatef(trF.x,trF.y,trF.z);	// Traslació fixada amb la INSERT dins l'opció pan
 
-// Especificació del punt de vista (CÀMERA)
-	//gluLookAt(pv.x,pv.y,pv.z,n[0],n[1],n[2],v[0],v[1],v[2]);
+	// Especificació del punt de vista (CÀMERA)
+		//gluLookAt(pv.x,pv.y,pv.z,n[0],n[1],n[2],v[0],v[1],v[2]);
 	MatriuVista = glm::lookAt(
 		glm::vec3(pv.x, pv.y, pv.z), // Camera is here
 		glm::vec3(n[0], n[1], n[2]), // and looks here
 		glm::vec3(v[0], v[1], v[2])  // Head is up (set to 0,-1,0 to look upside-down)
-		);
+	);
 
-// Concatenar matrius Traslació amb la de càmera per al pan
+	// Concatenar matrius Traslació amb la de càmera per al pan
 	MatriuVista = TransMatrix * MatriuVista;
 
-// Pas Matriu a shader
+	// Pas Matriu a shader
 	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
 
-// Iluminacio fixe respecte la camara (després glm::lookAt() )
-	if (ifix) Iluminacio(sh_programID,iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
+	// Iluminacio fixe respecte la camara (després glm::lookAt() )
+	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Test de Visibilitat
+	// Test de Visibilitat
 	if (testv) glEnable(GL_CULL_FACE);
-		else glDisable(GL_CULL_FACE);
+	else glDisable(GL_CULL_FACE);
 
-// Ocultacions (Z-buffer)
+	// Ocultacions (Z-buffer)
 	if (oculta) glEnable(GL_DEPTH_TEST);
-		else glDisable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
 
 	return MatriuVista;
 }
@@ -577,17 +553,17 @@ glm::mat4 Vista_Geode(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant, CP
 	// Matrius Traslació
 	glm::mat4 TransMatrix(1.0);
 
-// Conversió angles radians -> graus
+	// Conversió angles radians -> graus
 	opv.alfa = opv.alfa * PI / 180;
 	opv.beta = opv.beta * PI / 180;
 
 	if (opv.R < 1.0) opv.R = 1.0;
 
-// Neteja dels buffers de color i profunditat
+	// Neteja dels buffers de color i profunditat
 	Fons(col_fons);
 
-// Posició càmera i vector cap amunt
-	// Posició Càmera
+	// Posició càmera i vector cap amunt
+		// Posició Càmera
 	cam[0] = opv.R * cos(opv.beta) * cos(opv.alfa);
 	cam[1] = opv.R * sin(opv.beta) * cos(opv.alfa);
 	cam[2] = opv.R * sin(opv.alfa);
@@ -600,35 +576,35 @@ glm::mat4 Vista_Geode(GLuint sh_programID, CEsfe3D opv, char VPol, bool pant, CP
 	up[1] = -sin(opv.beta) * sin(opv.alfa);
 	up[2] = cos(opv.alfa);
 
-// Iluminacio movent-se amb la camara (abans glm::lookAt() )
+	// Iluminacio movent-se amb la camara (abans glm::lookAt() )
 	if (!ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Opció pan: desplaçament del Centre de l'esfera (pant=1)
+	// Opció pan: desplaçament del Centre de l'esfera (pant=1)
 	if (pant) TransMatrix = glm::translate(TransMatrix, vec3(tr.x, tr.y, tr.z));	//glTranslatef(tr.x, tr.y, tr.z);
 	TransMatrix = glm::translate(TransMatrix, vec3(trF.x, trF.y, trF.z));	// Traslació fixada amb la INSERT dins l'opció pan
 
-// Especificació del punt de vista
-   //gluLookAt(cam[0],cam[1],cam[2],0.,0.,0.,up[0],up[1],up[2]);
+	// Especificació del punt de vista
+	   //gluLookAt(cam[0],cam[1],cam[2],0.,0.,0.,up[0],up[1],up[2]);
 	MatriuVista = glm::lookAt(
 		glm::vec3(cam[0], cam[1], cam[2]), // Camera is here
 		glm::vec3(cam[0] + camN[0], cam[1] + camN[1], cam[2] + camN[2]), // and looks here
 		glm::vec3(up[0], up[1], up[2])  // Head is up (set to 0,-1,0 to look upside-down)
 	);
 
-// Concatenar matrius Traslació amb la de càmera per al pan
+	// Concatenar matrius Traslació amb la de càmera per al pan
 	MatriuVista = TransMatrix * MatriuVista;
 
-// Pas Matriu Vista a shader
+	// Pas Matriu Vista a shader
 	glUniformMatrix4fv(glGetUniformLocation(sh_programID, "viewMatrix"), 1, GL_FALSE, &MatriuVista[0][0]);
 
-// Iluminacio fixe respecte la camara (després glm::lookAt() )
+	// Iluminacio fixe respecte la camara (després glm::lookAt() )
 	if (ifix) Iluminacio(sh_programID, iluminacio, ifix, il2sides, llum_amb, lumi, objecte, frnt_fcs, step);
 
-// Test de Visibilitat
+	// Test de Visibilitat
 	if (testv) glEnable(GL_CULL_FACE);
 	else glDisable(GL_CULL_FACE);
 
-// Ocultacions (Z-buffer)
+	// Ocultacions (Z-buffer)
 	if (oculta) glEnable(GL_DEPTH_TEST);
 	else glDisable(GL_DEPTH_TEST);
 
@@ -641,31 +617,34 @@ glm::mat4 instancia(bool TR, INSTANCIA tg, INSTANCIA tgF)
 {
 	glm::mat4 MatriuTG(1.0), MatriuT(1.0);
 
-// Transformacions geometriques sobre objecte (Traslacio, Rotacions i Escalatge) amb conversió angles Euler.
+	// Transformacions geometriques sobre objecte (Traslacio, Rotacions i Escalatge) amb conversió angles Euler.
 	if (TR) MatriuTG = glm::translate(MatriuTG, glm::vec3(tg.VTras.x, tg.VTras.y, tg.VTras.z));
 	MatriuTG = glm::translate(MatriuTG, glm::vec3(tgF.VTras.x, tgF.VTras.y, tgF.VTras.z));	// Traslacio fixada amb la INSERT dins l'opcio Transformacions
 
-// Convertir angles Euler tg i tgF en Matrius
-	if (TR) {	MatriuT = glm::eulerAngleX(tg.VRota.x * PI / 180.f); // Passar angle en radians
-				MatriuTG = MatriuTG * MatriuT;
-			}
+	// Convertir angles Euler tg i tgF en Matrius
+	if (TR) {
+		MatriuT = glm::eulerAngleX(tg.VRota.x * PI / 180.f); // Passar angle en radians
+		MatriuTG = MatriuTG * MatriuT;
+	}
 	MatriuT = glm::eulerAngleX(tgF.VRota.x * PI / 180.f); // Passar angle en radians
 	MatriuTG = MatriuTG * MatriuT;
-	if (TR) {	MatriuT = glm::eulerAngleY(tg.VRota.y * PI / 180.f); // Passar angle en radians
-				MatriuTG = MatriuTG * MatriuT;
-			}
+	if (TR) {
+		MatriuT = glm::eulerAngleY(tg.VRota.y * PI / 180.f); // Passar angle en radians
+		MatriuTG = MatriuTG * MatriuT;
+	}
 	MatriuT = glm::eulerAngleY(tgF.VRota.y * PI / 180.f); // Passar angle en radians
 	MatriuTG = MatriuTG * MatriuT;
-	if (TR) {	MatriuT = glm::eulerAngleZ(tg.VRota.z * PI / 180.f); // Passar angle en radians
-				MatriuTG = MatriuTG * MatriuT;
-			}
+	if (TR) {
+		MatriuT = glm::eulerAngleZ(tg.VRota.z * PI / 180.f); // Passar angle en radians
+		MatriuTG = MatriuTG * MatriuT;
+	}
 	MatriuT = glm::eulerAngleX(tgF.VRota.z * PI / 180.f); // Passar angle en radians
 	MatriuTG = MatriuTG * MatriuT;
 
 	if (TR) MatriuTG = glm::scale(MatriuTG, vec3(tg.VScal.x, tg.VScal.y, tg.VScal.z));
 	MatriuTG = glm::scale(MatriuTG, vec3(tgF.VScal.x, tgF.VScal.y, tgF.VScal.z));	// Escalatge fixada amb la INSERT dins l'opcio Transformacions
 
-// Transformacions geometriques sobre objecte (Traslacio, Rotacions i Escalatge) amb Quaternions
+	// Transformacions geometriques sobre objecte (Traslacio, Rotacions i Escalatge) amb Quaternions
 	if (TR) MatriuTG = glm::translate(MatriuTG, glm::vec3(tg.VTras.x, tg.VTras.y, tg.VTras.z));
 	MatriuTG = glm::translate(MatriuTG, glm::vec3(tgF.VTras.x, tgF.VTras.y, tgF.VTras.z));	// Traslacio fixada amb la INSERT dins l'opcio Transformacions
 
@@ -679,91 +658,91 @@ GLuint deixos()
 	GLuint vaoId = 0;	// VAO Index
 	GLuint vboId = 0;	// VBO Index
 
-// vertex coords array for glDrawArrays() =====================================
-// The World Coordinates Axes (WCA) are 3 lines, one over X axis (red), one over Y axis (green), one over Z axis(blue),
-// the WCA cube consists of 6 vertices (3 axes * 4 vertices = 6 vertices). And, each
-// vertex is 3 components (x,y,z) of doubles, therefore, the size of vertex
-// array is 18 doubles (6 * 3 = 18). The size of each double is 4 bytes (72 * 4 = 288 bytes)
+	// vertex coords array for glDrawArrays() =====================================
+	// The World Coordinates Axes (WCA) are 3 lines, one over X axis (red), one over Y axis (green), one over Z axis(blue),
+	// the WCA cube consists of 6 vertices (3 axes * 4 vertices = 6 vertices). And, each
+	// vertex is 3 components (x,y,z) of doubles, therefore, the size of vertex
+	// array is 18 doubles (6 * 3 = 18). The size of each double is 4 bytes (72 * 4 = 288 bytes)
 	GLfloat vertices[] = { 0.0f, 0.0f, 0.0f,  300.0f,   0.0f,   0.0f,  // X-Axis
 						   0.0f, 0.0f, 0.0f,    0.0f, 300.0f,   0.0f,	 // Y-Axis
-						   0.0f, 0.0f, 0.0f,    0.0f,   0.0f, 300.0f}; // Z-Axis
+						   0.0f, 0.0f, 0.0f,    0.0f,   0.0f, 300.0f }; // Z-Axis
 
 	GLfloat colors[] = { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // Red color (X-Axis)
 						 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,   // Green color (Y-Axis)
 						 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f }; // Blue color (Z-Axis)
 
-// Doblar el gruix de la linia dels eixos.
-	//glLineWidth(2.0);
+	// Doblar el gruix de la linia dels eixos.
+		//glLineWidth(2.0);
 
-// Create Vertex Array Object (VAO) for 3D Model Cube
+	// Create Vertex Array Object (VAO) for 3D Model Cube
 	glGenVertexArrays(1, &vaoId);
 
-// Create vertex buffer objects for 3D Model attributes in the VAO
+	// Create vertex buffer objects for 3D Model attributes in the VAO
 	glGenBuffers(1, &vboId);
 
-// Bind our Vertex Array Object as the current used object
+	// Bind our Vertex Array Object as the current used object
 	glBindVertexArray(vaoId);
 
-// Bind first VBO as being active buffer and storing vertex attributes (coordinates)
+	// Bind first VBO as being active buffer and storing vertex attributes (coordinates)
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);							// Activar VBO vèrtexs
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), 0, GL_STATIC_DRAW);	// Allocate data to VBO starting from 0 offest
 
-// Position Vertex attributes
+	// Position Vertex attributes
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices);	// Copy geometry data to VBO starting from 0 offest
 	glEnableVertexAttribArray(0);										// Enable attribute index 0 as being used (position)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);	// Specify that our coordinate data is going into attribute index 0 and contains 3 double
 
-// Normal vertex Attributes
+	// Normal vertex Attributes
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices), sizeof(colors), &colors); // Copy color data to VBO starting from 0 offest
 	glEnableVertexAttribArray(1);										// Enable attribute index 1 as being used (normals)
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)sizeof(vertices));	// Specify that our color data is going into attribute index 0 and contains 3 double
 
-//Unbind the registered VBO as current VBO
+	//Unbind the registered VBO as current VBO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-// Unbind VAO, to prevent bugs
+	// Unbind VAO, to prevent bugs
 	glBindVertexArray(0);
 
-/*
-// Eix X (vermell)
-	glColor3f(1.0,0.0,0.0);
-	glBegin(GL_LINES);
-	 glVertex3f(0.0,0.0,0.0);
-	 glVertex3f(300.0,0.0,0.0);
-	glEnd();
+	/*
+	// Eix X (vermell)
+		glColor3f(1.0,0.0,0.0);
+		glBegin(GL_LINES);
+		 glVertex3f(0.0,0.0,0.0);
+		 glVertex3f(300.0,0.0,0.0);
+		glEnd();
 
-// Eix Y (verd)
-    glColor3f(0.0,1.0,0.0);
-	glBegin(GL_LINES);
-	 glVertex3f(0.0,0.0,0.0);
-	 glVertex3f(0.0,300.0,0.0);
-	glEnd();
+	// Eix Y (verd)
+		glColor3f(0.0,1.0,0.0);
+		glBegin(GL_LINES);
+		 glVertex3f(0.0,0.0,0.0);
+		 glVertex3f(0.0,300.0,0.0);
+		glEnd();
 
-// Eix Z (blau) 
-	glColor3f(0.0,1.0,1.0);
-	glBegin(GL_LINES);
-	 glVertex3f(0.0,0.0,0.0);
-	 glVertex3f(0.0,0.0,300.0);
-	glEnd();
-*/
+	// Eix Z (blau)
+		glColor3f(0.0,1.0,1.0);
+		glBegin(GL_LINES);
+		 glVertex3f(0.0,0.0,0.0);
+		 glVertex3f(0.0,0.0,300.0);
+		glEnd();
+	*/
 	return vaoId;
 }
 
 // draw_Eixos: Dibuix del VAO dels eixos coordenats
 void draw_Eixos(GLuint vaoId)
 {
-// Doblar el gruix de la linia dels eixos.
-//	glEnable(GL_LINE_WIDTH);
-//	glLineWidth(2.0);
+	// Doblar el gruix de la linia dels eixos.
+	//	glEnable(GL_LINE_WIDTH);
+	//	glLineWidth(2.0);
 
 	glBindVertexArray(vaoId);
 	glDrawArrays(GL_LINES, 0, 6);
 	glBindVertexArray(0);
 
-// Restaurar el gruix de la linia dels eixos
-//	glLineWidth(1.0);
-//	glDisable(GL_LINE_WIDTH);
+	// Restaurar el gruix de la linia dels eixos
+	//	glLineWidth(1.0);
+	//	glDisable(GL_LINE_WIDTH);
 }
 
 
@@ -771,18 +750,19 @@ void draw_Eixos(GLuint vaoId)
 
 void draw_Grid(CMask3D quadricula)
 {
-// Switch on transparency to draw the grid over the scene
+	// Switch on transparency to draw the grid over the scene
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-// Grids drawing
+	// Grids drawing
 	if (quadricula.w) draw_LinVAO_Object(GRID_XYZ);			// gridXY(GRID_SIZE);
-	else  {	if (quadricula.x) draw_LinVAO_Object(GRID_XY);	// gridXY(GRID_SIZE, hquadricula.z);
-			if (quadricula.y) draw_LinVAO_Object(GRID_XZ);	// gridXZ(GRID_SIZE, hquadricula.y);
-			if (quadricula.z) draw_LinVAO_Object(GRID_YZ);	// gridYZ(GRID_SIZE, hquadricula.x);
-			}
+	else {
+		if (quadricula.x) draw_LinVAO_Object(GRID_XY);	// gridXY(GRID_SIZE, hquadricula.z);
+		if (quadricula.y) draw_LinVAO_Object(GRID_XZ);	// gridXZ(GRID_SIZE, hquadricula.y);
+		if (quadricula.z) draw_LinVAO_Object(GRID_YZ);	// gridYZ(GRID_SIZE, hquadricula.x);
+	}
 
-// Switch off transparency
+	// Switch off transparency
 	glDisable(GL_BLEND);
 }
 
@@ -792,7 +772,7 @@ CVAO loadGridXY_VAO(int size, GLdouble h)
 {
 	int i;
 
-// VAO, VBO
+	// VAO, VBO
 	CVAO VAOGrid;
 	VAOGrid.vaoId = 0;	VAOGrid.vboId = 0; VAOGrid.eboId = 0; VAOGrid.nVertexs = 0;	VAOGrid.nIndices = 0;
 
@@ -800,41 +780,41 @@ CVAO loadGridXY_VAO(int size, GLdouble h)
 	//vertices.resize(0);		colors.resize(0);	// Reinicialitzar vectors
 	vertices.clear();		colors.clear();		// Reinicialitzar vectors
 
-// Eix X
-	//glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+	// Eix X
+		//glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
 	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-			  colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(i, -size, h);	// glVertex3f(i, -0.5f, 0.0f);
-			  vertices.push_back(-i);		vertices.push_back(-size);		vertices.push_back(h);
-			  
-			  colors.push_back(1.0);			colors.push_back(0.0);		colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(i, +size, h);	// glVertex3f(i, +0.5f, 0.0f);
-			  vertices.push_back(-i);		vertices.push_back(+size);		vertices.push_back(h);
+	{	//glBegin(GL_LINES);
+		colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
+		//glVertex3f(i, -size, h);	// glVertex3f(i, -0.5f, 0.0f);
+		vertices.push_back(-i);		vertices.push_back(-size);		vertices.push_back(h);
 
-			//glEnd();
-		}
+		colors.push_back(1.0);			colors.push_back(0.0);		colors.push_back(0.0);	colors.push_back(0.5);
+		//glVertex3f(i, +size, h);	// glVertex3f(i, +0.5f, 0.0f);
+		vertices.push_back(-i);		vertices.push_back(+size);		vertices.push_back(h);
 
-/* Eix Y
-	//glColor4f(0.0f, 1.0, 0.0f, 0.5f);
-	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-			  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(-size, i, h);	// glVertex3f(-0.5f, i, 0.0f);
-			  vertices.push_back(-size);	vertices.push_back(i);		vertices.push_back(h);
+		//glEnd();
+	}
 
-			  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(+size, i, h);	// glVertex3f(+0.5f, i, 0.0f);
-			  vertices.push_back(+size);	vertices.push_back(i);		vertices.push_back(h);
-			//glEnd();
-		}
-*/
+	/* Eix Y
+		//glColor4f(0.0f, 1.0, 0.0f, 0.5f);
+		for (i = -size; i < size + 1; i++)
+			{	//glBegin(GL_LINES);
+				  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
+				  //glVertex3f(-size, i, h);	// glVertex3f(-0.5f, i, 0.0f);
+				  vertices.push_back(-size);	vertices.push_back(i);		vertices.push_back(h);
 
-// ----------------------- VBO
-	// std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
-	// std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+				  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
+				  //glVertex3f(+size, i, h);	// glVertex3f(+0.5f, i, 0.0f);
+				  vertices.push_back(+size);	vertices.push_back(i);		vertices.push_back(h);
+				//glEnd();
+			}
+	*/
 
-	//draw_GL_LINES_VAO(vertices, colors);
+	// ----------------------- VBO
+		// std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
+		// std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+
+		//draw_GL_LINES_VAO(vertices, colors);
 	VAOGrid = load_LINES_VAO(vertices, colors);
 
 	return VAOGrid;
@@ -860,36 +840,36 @@ CVAO loadGridXZ_VAO(int size, GLdouble h)
 // Eix X
 	//glColor4f(1.0f, 0.0, 0.0f, 0.5f);
 	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-			  colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.0);	colors.push_back(0.5);
-			  // glVertex3f(i, h, -size);
-			  vertices.push_back(i);		vertices.push_back(h);	vertices.push_back(-size);
+	{	//glBegin(GL_LINES);
+		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.0);	colors.push_back(0.5);
+		// glVertex3f(i, h, -size);
+		vertices.push_back(i);		vertices.push_back(h);	vertices.push_back(-size);
 
-			  colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(i, h, +size); 
-			  vertices.push_back(i);	vertices.push_back(h);		vertices.push_back(+size);
-			//glEnd();
-		}
-
-// Eix Z
-	//glColor4f(0.0f, 1.0, 1.0f, 0.5f);
-	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-			  colors.push_back(0.0);		colors.push_back(1.0);	colors.push_back(1.0); colors.push_back(0.5);
-			  //glVertex3f(-size, h, i);
-			  vertices.push_back(-size);	vertices.push_back(h);	vertices.push_back(i);
-
-			  colors.push_back(0.0);		colors.push_back(1.0);	colors.push_back(1.0);	colors.push_back(0.5);
-			  //glVertex3f(size, h, i);
-			  vertices.push_back(size);	vertices.push_back(h);		vertices.push_back(i);
-			//glEnd();
+		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.0);	colors.push_back(0.5);
+		//glVertex3f(i, h, +size); 
+		vertices.push_back(i);	vertices.push_back(h);		vertices.push_back(+size);
+		//glEnd();
 	}
 
-// ----------------------- VBO
-//	std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
-//	std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+	// Eix Z
+		//glColor4f(0.0f, 1.0, 1.0f, 0.5f);
+	for (i = -size; i < size + 1; i++)
+	{	//glBegin(GL_LINES);
+		colors.push_back(0.0);		colors.push_back(1.0);	colors.push_back(1.0); colors.push_back(0.5);
+		//glVertex3f(-size, h, i);
+		vertices.push_back(-size);	vertices.push_back(h);	vertices.push_back(i);
 
-//	draw_GL_LINES_VAO(vertices, colors);
+		colors.push_back(0.0);		colors.push_back(1.0);	colors.push_back(1.0);	colors.push_back(0.5);
+		//glVertex3f(size, h, i);
+		vertices.push_back(size);	vertices.push_back(h);		vertices.push_back(i);
+		//glEnd();
+	}
+
+	// ----------------------- VBO
+	//	std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
+	//	std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+
+	//	draw_GL_LINES_VAO(vertices, colors);
 	VAOGrid = load_LINES_VAO(vertices, colors);
 
 	return VAOGrid;
@@ -916,37 +896,37 @@ CVAO loadGridYZ_VAO(int size, GLdouble h)
 // Eix Y
 	//glColor4f(0.0f, 1.0, 0.0f, 0.5f);
 	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-		      colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(h, i, -size);	// glVertex3f(0.0f, i, -0.5f);
-			  vertices.push_back(h);		vertices.push_back(i);			vertices.push_back(-size);
-			  
-			  colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(0.0);	colors.push_back(0.5);
-			  //glVertex3f(h, i, +size);	// glVertex3f(0.0f, i, 0.5f);
-			  vertices.push_back(h);		vertices.push_back(i);			vertices.push_back(+size);
+	{	//glBegin(GL_LINES);
+		colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(0.0);	colors.push_back(0.5);
+		//glVertex3f(h, i, -size);	// glVertex3f(0.0f, i, -0.5f);
+		vertices.push_back(h);		vertices.push_back(i);			vertices.push_back(-size);
 
-			//glEnd();
-		}
+		colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(0.0);	colors.push_back(0.5);
+		//glVertex3f(h, i, +size);	// glVertex3f(0.0f, i, 0.5f);
+		vertices.push_back(h);		vertices.push_back(i);			vertices.push_back(+size);
 
-// Eix Z
-	//glColor4f(0.0f, 1.0, 1.0f, 0.5f);
-	for (i = -size; i < size + 1; i++)
-		{	//glBegin(GL_LINES);
-			  colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(1.0);	colors.push_back(0.5);
-			  //glVertex3f(h, -size, i);	// glVertex3f(0.0, -0.5f, i);
-			  vertices.push_back(h);		vertices.push_back(-size);		vertices.push_back(i);
-			  
-			  colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(1.0);	colors.push_back(0.5);
-			  //glVertex3f(h, +size, i);	// glVertex3f(0.0f, 0.5f, i);
-			  vertices.push_back(h);		vertices.push_back(+size);		vertices.push_back(i);
-			//glEnd();
+		//glEnd();
 	}
 
-// ----------------------- VBO
-//	std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
-//	std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+	// Eix Z
+		//glColor4f(0.0f, 1.0, 1.0f, 0.5f);
+	for (i = -size; i < size + 1; i++)
+	{	//glBegin(GL_LINES);
+		colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(1.0);	colors.push_back(0.5);
+		//glVertex3f(h, -size, i);	// glVertex3f(0.0, -0.5f, i);
+		vertices.push_back(h);		vertices.push_back(-size);		vertices.push_back(i);
 
-	//draw_GL_LINES_VAO(vertices, colors);
+		colors.push_back(0.0);		colors.push_back(1.0);			colors.push_back(1.0);	colors.push_back(0.5);
+		//glVertex3f(h, +size, i);	// glVertex3f(0.0f, 0.5f, i);
+		vertices.push_back(h);		vertices.push_back(+size);		vertices.push_back(i);
+		//glEnd();
+	}
+
+	// ----------------------- VBO
+	//	std::vector <int>::size_type nv = vertices.size();	// Tamany del vector vertices en elements.
+	//	std::vector <int>::size_type nc = colors.size();	// Tamany del vector colors en elements.
+
+		//draw_GL_LINES_VAO(vertices, colors);
 	VAOGrid = load_LINES_VAO(vertices, colors);
 
 	return VAOGrid;
@@ -970,38 +950,38 @@ CVAO loadGridXYZ_VAO(int size)
 
 	for (j = -size; j < size; j++)
 	{
-// Eix X
-		//glColor4f(1.0f, 0.0, 0.0f, 0.5f);
+		// Eix X
+				//glColor4f(1.0f, 0.0, 0.0f, 0.5f);
 		for (i = -size; i <= size; i++)
-			{	//glBegin(GL_LINES);
-				  colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
-				  //glVertex3f(i, -size, j);	// glVertex3f(i, -0.5f, z);
-				  vertices.push_back(i);		vertices.push_back(-size);		vertices.push_back(j);
+		{	//glBegin(GL_LINES);
+			colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
+			//glVertex3f(i, -size, j);	// glVertex3f(i, -0.5f, z);
+			vertices.push_back(i);		vertices.push_back(-size);		vertices.push_back(j);
 
-				  colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
-				  //glVertex3f(i, +size, j);	// glVertex3f(i, +0.5f, z);
-				  vertices.push_back(i);		vertices.push_back(+size);		vertices.push_back(j);
-				//glEnd();
-			}
+			colors.push_back(1.0);		colors.push_back(0.0);			colors.push_back(0.0);	colors.push_back(0.5);
+			//glVertex3f(i, +size, j);	// glVertex3f(i, +0.5f, z);
+			vertices.push_back(i);		vertices.push_back(+size);		vertices.push_back(j);
+			//glEnd();
+		}
 
-// Eix Y
-		//glColor4f(0.0f, 1.0, 0.0f, 0.5f);
+		// Eix Y
+				//glColor4f(0.0f, 1.0, 0.0f, 0.5f);
 		for (i = -size; i <= size; i++)
-			{	//glBegin(GL_LINES);
-				  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
-				  //glVertex3f(-size, i, j);	// glVertex3f(-0.5f, i, z);
-				  vertices.push_back(-size);	vertices.push_back(i);		vertices.push_back(j);
+		{	//glBegin(GL_LINES);
+			colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
+			//glVertex3f(-size, i, j);	// glVertex3f(-0.5f, i, z);
+			vertices.push_back(-size);	vertices.push_back(i);		vertices.push_back(j);
 
-				  colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
-				  //glVertex3f(+size, i, j);	// glVertex3f(+0.5f, i, z);
-				  vertices.push_back(+size);	vertices.push_back(i);		vertices.push_back(j);
-				//glEnd();
-			}
+			colors.push_back(0.0);		colors.push_back(1.0);		colors.push_back(0.0);	colors.push_back(0.5);
+			//glVertex3f(+size, i, j);	// glVertex3f(+0.5f, i, z);
+			vertices.push_back(+size);	vertices.push_back(i);		vertices.push_back(j);
+			//glEnd();
+		}
 	}
 
 	//draw_GL_LINES_VAO(vertices, colors);
 	VAOGrid = load_LINES_VAO(vertices, colors);
-	
+
 	return VAOGrid;
 }
 
@@ -1009,29 +989,29 @@ CVAO loadGridXYZ_VAO(int size)
 // Fons: Dibuixa el fons variable sefons el color int_fons
 void Fons(CColor int_fons)
 {
-	glClearColor(int_fons.r,int_fons.g,int_fons.b,1.f);
+	glClearColor(int_fons.r, int_fons.g, int_fons.b, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.f,0.f,0.f,1.f);
+	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_DEPTH_BUFFER_BIT);
-   glFlush();
+	glFlush();
 }
 
 // FonsN: Dibuixa el fons negre
 void FonsN()
 {
-	glClearColor(0.f,0.f,0.f,1.f);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-   glFlush();
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glFlush();
 }
 
 // FonsB: Dibuixa el fons blanc
 void FonsB()
 {
-	glClearColor(1.f,1.f,1.f,1.f);
+	glClearColor(1.f, 1.f, 1.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.f,0.f,0.f,1.f);
+	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_DEPTH_BUFFER_BIT);
-   glFlush();
+	glFlush();
 }
 
 // TEXTURES------------------------------------------------------
@@ -1044,48 +1024,49 @@ void FonsB()
 //					BMP, JPG, TIFF, TGA, GIF, i d'altres suportats per SOIL
 //		- Retorna: Identificador dins la taula textures on volem
 //                assignar la imatge
-GLint loadIMA_SOIL(const char * filename)
-{	FILE *file = NULL;
+GLint loadIMA_SOIL(const char* filename)
+{
+	FILE* file = NULL;
 	int errno;
 	GLuint textureID = 0;
 
-// Open the image file for reading
-//  file=fopen(nomf,"r");					// Funció Visual Studio 6.0
+	// Open the image file for reading
+	//  file=fopen(nomf,"r");					// Funció Visual Studio 6.0
 	errno = fopen_s(&file, filename, "rb");		// Funció Visual 2010
 
-// If the file is empty (or non existent) print an error and return false
-// if (file == NULL)
+	// If the file is empty (or non existent) print an error and return false
+	// if (file == NULL)
 	if (errno != 0)
 	{	//	printf("Could not open file '%s'.\n",filename) ;
 		return false;
 	}
 
-// Close the image file
+	// Close the image file
 	fclose(file);
 
-/*
-// SOIL_load_OGL_texture: Funció que llegeix la imatge del fitxer filename
-//				si és compatible amb els formats SOIL (BMP,JPG,GIF,TIF,TGA,etc.)
-//				i defineix la imatge com a textura OpenGL retornant l'identificador 
-//				de textura OpenGL.
-	textureID = SOIL_load_OGL_texture
-	(filename,
-		SOIL_LOAD_AUTO,
-		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_INVERT_Y
-	);
-*/
+	/*
+	// SOIL_load_OGL_texture: Funció que llegeix la imatge del fitxer filename
+	//				si és compatible amb els formats SOIL (BMP,JPG,GIF,TIF,TGA,etc.)
+	//				i defineix la imatge com a textura OpenGL retornant l'identificador
+	//				de textura OpenGL.
+		textureID = SOIL_load_OGL_texture
+		(filename,
+			SOIL_LOAD_AUTO,
+			SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_INVERT_Y
+		);
+	*/
 
-//Generate texture ID and load texture data 
+	//Generate texture ID and load texture data 
 	glGenTextures(1, &textureID);
 	int width, height;
 	unsigned char* image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
-// Assign texture to ID
+	// Assign texture to ID
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-// Parameters
+	// Parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -1093,7 +1074,7 @@ GLint loadIMA_SOIL(const char * filename)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SOIL_free_image_data(image);
 
-// If execution arrives here it means that all went well. Return true
+	// If execution arrives here it means that all went well. Return true
 	return textureID;
 }
 
@@ -1154,11 +1135,11 @@ void SetTextureParameters(GLint IDText, bool extensT, bool filterT, bool blendT,
 {
 	glBindTexture(GL_TEXTURE_2D, IDText);
 
-// Funció de Blending de textura
-	//if (blendT) glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	//else glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	// Funció de Blending de textura
+		//if (blendT) glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		//else glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-// Extensió de textures
+	// Extensió de textures
 	if (extensT) {	// Configuració textura per a que es repereixi més enllà de coordenades (0,0)-(1,1)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -1168,7 +1149,7 @@ void SetTextureParameters(GLint IDText, bool extensT, bool filterT, bool blendT,
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	}
 
-// Filtratge de textures
+	// Filtratge de textures
 	if (filterT) {	// Filtratge de textures (GL_LINEAR)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		if (genMipmpT) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -1180,17 +1161,17 @@ void SetTextureParameters(GLint IDText, bool extensT, bool filterT, bool blendT,
 		else glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
 
-// Activació de MipMaps de la imatge textura
+	// Activació de MipMaps de la imatge textura
 	if (genMipmpT) {	// Activació MIPMAP en textures
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-// Activació i inicialització matriu GL_TEXTURE
-//	glMatrixMode(GL_TEXTURE);
-//	glLoadIdentity();
-//	glRotatef(45.0f, 0.0f, 0.0f, 1.0f); // Rotació 45 graus de la imatge textura
+	// Activació i inicialització matriu GL_TEXTURE
+	//	glMatrixMode(GL_TEXTURE);
+	//	glLoadIdentity();
+	//	glRotatef(45.0f, 0.0f, 0.0f, 1.0f); // Rotació 45 graus de la imatge textura
 
-// Activació i inicialització matriu GL_PROJECTION
-//	glMatrixMode(GL_PROJECTION);
+	// Activació i inicialització matriu GL_PROJECTION
+	//	glMatrixMode(GL_PROJECTION);
 }
 

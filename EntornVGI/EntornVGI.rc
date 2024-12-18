@@ -432,6 +432,50 @@ BEGIN
     BEGIN
         MENUITEM "&Acerca de EntornVGI (Tecla ALT)...", ID_APP_ABOUT
     END
+    POPUP "Sistema Solar"
+    BEGIN
+        MENUITEM "Start",                       ID_SISTEMASOLAR_START
+        MENUITEM "Test Rotacio",                ID_SISTEMASOLAR_TESTROTACIO
+        MENUITEM "Test Translacio",             ID_SISTEMASOLAR_TESTTRANSLACIO
+        MENUITEM "Test Textures",               ID_SISTEMASOLAR_TESTTEXTURES
+        MENUITEM "Test Orbita",                 ID_SISTEMASOLAR_TESTORBITA
+        POPUP "Increment Speed"
+        BEGIN
+            MENUITEM "Pause",                       ID_INCREMENTSPEED_X0
+            MENUITEM "x1",                          ID_INCREMENTSPEED_X1
+            MENUITEM "x2",                          ID_INCREMENTSPEED_X2
+            MENUITEM "x5",                          ID_INCREMENTSPEED_X5
+            MENUITEM "x10",                         ID_INCREMENTSPEED_X10
+            MENUITEM "x100",                        ID_INCREMENTSPEED_X100
+            MENUITEM "x200",                        ID_INCREMENTSPEED_X200
+            MENUITEM "x500",                        ID_INCREMENTSPEED_X500
+            MENUITEM "x1000",                       ID_INCREMENTSPEED_X1000
+        END
+        POPUP "Show"
+        BEGIN
+            MENUITEM "Mercury",                     ID_SHOWPLANETS_MERCURY
+            MENUITEM "Venus",                       ID_SHOWPLANETS_VENUS
+            MENUITEM "Earth",                       ID_SHOWPLANETS_EARTH
+            MENUITEM "Mars",                        ID_SHOWPLANETS_MARS
+            MENUITEM "Jupiter",                     ID_SHOWPLANETS_JUPITER
+            MENUITEM "Saturn",                      ID_SHOWPLANETS_SATURN
+            MENUITEM "Uranus",                      ID_SHOWPLANETS_URANUS
+            MENUITEM "Neptune",                     ID_SHOWPLANETS_NEPTUNE
+            MENUITEM "Orbits",                      ID_SHOWPLANETS_ORBITS
+        END
+    END
+    POPUP "Lock On Planet"
+    BEGIN
+        MENUITEM "Sun",                         ID_LOCKONPLANET_SUN
+        MENUITEM "Mercury",                     ID_LOCKONPLANET_MERCURY
+        MENUITEM "Venus",                       ID_LOCKONPLANET_VENUS
+        MENUITEM "Earth",                       ID_LOCKONPLANET_EARTH
+        MENUITEM "Mars",                        ID_LOCKONPLANET_MARS
+        MENUITEM "Jupiter",                     ID_LOCKONPLANET_JUPITER
+        MENUITEM "Saturn",                      ID_LOCKONPLANET_SATURN
+        MENUITEM "Uranus",                      ID_LOCKONPLANET_URANUS
+        MENUITEM "Neptune",                     ID_LOCKONPLANET_NEPTUNE
+    END
 END
 
 IDR_HELP_MENU MENU
