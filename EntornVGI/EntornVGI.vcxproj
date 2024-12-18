@@ -313,12 +313,6 @@
     <Image Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\x64\Debug\ikpFlac.dll" />
-    <None Include="..\x64\Debug\ikpMP3.dll" />
-    <None Include="..\x64\Debug\irrKlang.dll" />
-    <None Include="..\x64\Release\ikpFlac.dll" />
-    <None Include="..\x64\Release\ikpMP3.dll" />
-    <None Include="..\x64\Release\irrKlang.dll" />
     <None Include="res\EntornVGI.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
