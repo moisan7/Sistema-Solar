@@ -5975,7 +5975,7 @@ void CEntornVGIView::OnSistemasolarStart()
 		}
 
 		// Play some sound stream, looped
-		ISound* snd = engine->play2D("../media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
+		ISound* snd = engine->play2D("media/exoplanet.mp3", true, true); //Segon parametre indica looped, tercer parametre indica paused
 		// Set volum and unpause
 		snd->setVolume(0.1);
 		snd->setIsPaused(false);
