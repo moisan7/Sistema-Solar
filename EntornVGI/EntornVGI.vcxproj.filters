@@ -224,5 +224,23 @@
     <None Include="res\EntornVGI.rc2">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="..\x64\Release\ikpFlac.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\x64\Release\ikpMP3.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\x64\Release\irrKlang.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\x64\Debug\ikpFlac.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\x64\Debug\ikpMP3.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\x64\Debug\irrKlang.dll">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>
