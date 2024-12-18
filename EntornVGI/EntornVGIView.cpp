@@ -515,9 +515,14 @@ CEntornVGIView::CEntornVGIView()
 	// Proyecto Texturas planetas
 	load_textures = false;
 	// Proyecto Traslacion
-	for (int i = 0; i < 9; i++) {
-		orbit_angle[i] = 0.0f; // Asigna 0 a cada elemento
-	}
+	orbit_angle[0] = 3.2925;    // Mercury
+	orbit_angle[1] = 1.7461;    // Venus
+	orbit_angle[2] = 4.7378;    // Earth
+	orbit_angle[3] = 2.7372;    // Mars
+	orbit_angle[4] = 1.4219;    // Jupiter
+	orbit_angle[5] = 2.6708;    // Saturn
+	orbit_angle[6] = 2.0816;    // Uranus
+	orbit_angle[7] = 5.3840;    // Neptune
 	// Proyecto Rotacion
 	for (int i = 0; i < 10; i++) {
 		rotation_angle[i] = 0.0f; // Asigna 0 a cada elemento
